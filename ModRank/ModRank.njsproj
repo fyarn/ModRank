@@ -29,8 +29,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="app.js" />
+    <Compile Include="UpdateDB.js">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="routes\index.js" />
-    <Compile Include="routes\users.js" />
+    <Compile Include="routes\items.js" />
     <Content Include="bin\www" />
     <Content Include="package.json" />
     <Content Include="public\stylesheets\style.css" />
