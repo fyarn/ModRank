@@ -1,0 +1,9 @@
+{
+  "name": "mod-rank",
+  "version": "0.0.0",
+  "description": "ModRank",
+  "main": "server.js",
+  "author": {
+    "name": "Nick"
+  }
+}
