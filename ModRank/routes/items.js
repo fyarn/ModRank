@@ -3,8 +3,8 @@ var router = express.Router();
 
 /* GET users listing. */
 router.get('/', function (req, res, next) {
-    require('../UpdateDB');
-    res.render('items', { title: 'ModRank' });
+    db = require('../UpdateDB');
+    res.render('items', { title: 'ModRank', id: req.param("id", 0) });
 });
 
 module.exports = router;

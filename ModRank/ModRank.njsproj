@@ -29,6 +29,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="app.js" />
+    <Compile Include="Cache.js">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Parser.js">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="UpdateDB.js">
       <SubType>Code</SubType>
     </Compile>
