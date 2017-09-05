@@ -1,8 +1,8 @@
 ﻿var fs = require('fs');
 var request = require('request');
-var parse = require('./parser')
+var parse = require('./parser');
 
-function UpdateDB() {
+function UpdateDB(app) {
     //get stored variables
     var prefs = JSON.parse(fs.readFileSync('../protected/prefs.json', 'utf-8'));
     var devKey = prefs.DevKey;
@@ -10,9 +10,8 @@ function UpdateDB() {
     var results = [];
     var totalItemCount = -1;
 
-
-    //if time to update (default 1 day)
-    if (new Date() - fs.statSync('../protected/db.json').ctime > updateIntervalInMS) {
+    //if time to update (default 1 day) or existing file doesn't exist
+    if (!fs.existsSync('../protected/master.json') || (new Date() - fs.statSync('../protected/master.json').ctime > updateIntervalInMS)) {
         var options = {
             url: 'https://api.steampowered.com/IPublishedFileService/QueryFiles/v1',
             method: 'GET',
@@ -49,7 +48,7 @@ function UpdateDB() {
 
     function rufCallback() {
         console.log("Finished with " + results.length + " results");
-        parse(results);
+        parse(results, app);
     }
 
     function requestUntillFilled(page) {

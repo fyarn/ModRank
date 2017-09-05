@@ -1,0 +1,31 @@
+extends layout
+
+block content
+  img(src=img, alt=itemTitle).img-fluid
+  h1= itemTitle + "(" + id + ")"
+  ul.list-group
+    li
+      .list-group-item
+        h3= "Current Subscriptions: " + subs
+      .list-group-item
+        h2= "In the top " + subsPercent + "% most downloaded (#" + subsRank + ")"
+    li
+      .list-group-item
+        h3= "Current Favorites: " + favs
+      .list-group-item
+        h2= "In the top " + favsPercent + "% most liked (#" + favsRank + ")"
+    li
+      .list-group-item
+        h3= "Current Comments: " + comments
+      .list-group-item
+        h2= "In the top " + commentsPercent + "% most talked about (#" + commentsRank + ")"
+    li
+      .list-group-item
+        h3= "Current Views: " + views
+      .list-group-item
+        h2= "In the top " + viewsPercent + "% most checked out (#" + viewsRank + ")"
+    li
+      .list-group-item
+        h3= "Total Unsubscriptions: " + unsubscribes
+      .list-group-item
+        h2= "In the top " + unsubscribesPercent + "% most uninstalled (#" + unsubscribesRank + ")"

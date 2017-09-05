@@ -35,6 +35,8 @@
     <Compile Include="Parser.js">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="public\vendor\Bootstrap\js\bootstrap.js" />
+    <Compile Include="public\vendor\Bootstrap\js\bootstrap.min.js" />
     <Compile Include="UpdateDB.js">
       <SubType>Code</SubType>
     </Compile>
@@ -42,11 +44,27 @@
     <Compile Include="routes\items.js" />
     <Content Include="bin\www" />
     <Content Include="package.json" />
-    <Content Include="public\stylesheets\style.css" />
+    <Content Include="public\images\bg.jpg" />
+    <Content Include="public\vendor\Bootstrap\css\bootstrap-grid.css" />
+    <Content Include="public\vendor\Bootstrap\css\bootstrap-grid.css.map" />
+    <Content Include="public\vendor\Bootstrap\css\bootstrap-grid.min.css" />
+    <Content Include="public\vendor\Bootstrap\css\bootstrap-grid.min.css.map" />
+    <Content Include="public\vendor\Bootstrap\css\bootstrap-reboot.css" />
+    <Content Include="public\vendor\Bootstrap\css\bootstrap-reboot.css.map" />
+    <Content Include="public\vendor\Bootstrap\css\bootstrap-reboot.min.css" />
+    <Content Include="public\vendor\Bootstrap\css\bootstrap-reboot.min.css.map" />
+    <Content Include="public\vendor\Bootstrap\css\bootstrap.css" />
+    <Content Include="public\vendor\Bootstrap\css\bootstrap.css.map" />
+    <Content Include="public\vendor\Bootstrap\css\bootstrap.min.css" />
+    <Content Include="public\vendor\Bootstrap\css\bootstrap.min.css.map" />
     <Content Include="README.md" />
     <Content Include="views\error.jade" />
+    <Content Include="views\items.jade" />
     <Content Include="views\index.jade" />
     <Content Include="views\layout.jade" />
+    <Content Include="public\stylesheets\style.css">
+      <SubType>Code</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bin\" />
@@ -56,6 +74,10 @@
     <Folder Include="public\images\" />
     <Folder Include="public\javascripts\" />
     <Folder Include="public\stylesheets\" />
+    <Folder Include="public\vendor\" />
+    <Folder Include="public\vendor\Bootstrap\" />
+    <Folder Include="public\vendor\Bootstrap\css\" />
+    <Folder Include="public\vendor\Bootstrap\js\" />
     <Folder Include="routes\" />
     <Folder Include="views\" />
   </ItemGroup>

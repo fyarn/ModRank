@@ -1,7 +1,7 @@
 ﻿var fs = require('fs');
 
 //parses and records lists based off given database
-function Parser(database)
+function Parser(database, app)
 {
     database = trimVariablesFrom(database);
     record('master', database);
@@ -13,7 +13,15 @@ function Parser(database)
     return database;
 
     function sortBySubscriptions(database) {
-        return database.sort(function (a, b) {
+        var db = []
+        database.forEach(function (obj) {
+            db.push({
+                "id": obj.id,
+                "subscriptions": obj.subscriptions
+            })
+        })
+
+        db.sort(function (a, b) {
             if (a.subscriptions < b.subscriptions)
                 return -1;
             else if (a.subscriptions > b.subscriptions)
@@ -21,15 +29,20 @@ function Parser(database)
             else
                 return 0;
         })
+
+        return db;
     }
 
     function sortByFavorited(database) {
-        return database.forEach(function (obj) {
-            obj = {
-                "title": obj.title,
+        var db = []
+        database.forEach(function (obj) {
+            db.push( {
+                "id": obj.id,
                 "favorited": obj.favorites
-            }
-        }).sort(function (a, b) {
+            })
+        })
+
+        db.sort(function (a, b) {
             if (a.favorited < b.favorited)
                 return -1;
             else if (a.favorited > b.favorited)
@@ -37,15 +50,20 @@ function Parser(database)
             else
                 return 0;
         })
+
+        return db;
     }
 
     function sortByViews(database) {
-        return database.forEach(function (obj) {
-            obj = {
-                "title": obj.title,
+        var db = []
+        database.forEach(function (obj) {
+            db.push( {
+                "id": obj.id,
                 "views": obj.views
-            }
-        }).sort(function (a, b) {
+            })
+        })
+
+        db.sort(function (a, b) {
             if (a.views < b.views)
                 return -1;
             else if (a.views > b.views)
@@ -53,15 +71,20 @@ function Parser(database)
             else
                 return 0;
         })
+
+        return db;
     }
 
     function sortByUnsubscribes(database) {
-        return database.forEach(function (obj) {
-            obj = {
-                "title": obj.title,
+        var db = []
+        database.forEach(function (obj) {
+            db.push( {
+                "id": obj.id,
                 "unsubscribes": obj.unsubscribes
-            }
-        }).sort(function (a, b) {
+            })
+        })
+
+        db.sort(function (a, b) {
             if (a.unsubscribes < b.unsubscribes)
                 return -1;
             else if (a.unsubscribes > b.unsubscribes)
@@ -69,15 +92,20 @@ function Parser(database)
             else
                 return 0;
         })
+
+        return db;
     }
 
     function sortByComments(database) {
-        return database.forEach(function (obj) {
-            obj = {
-                "title": obj.title,
+        var db = []
+        database.forEach(function (obj) {
+            db.push( {
+                "id": obj.id,
                 "num_comments_public": obj.num_comments_public
-            }
-        }).sort(function (a, b) {
+            })
+        })
+
+        db.sort(function (a, b) {
             if (a.num_comments_public < b.num_comments_public)
                 return -1;
             else if (a.num_comments_public > b.num_comments_public)
@@ -85,26 +113,29 @@ function Parser(database)
             else
                 return 0;
         })
+
+        return db;
     }
 
     function trimVariablesFrom(db) {
         ret = []
         for (var i = 0; i < db.length; i++) {
             ret.push({
-                "preview_url": db[i].preview_url,
+                "id": db[i].publishedfileid,
                 "title": db[i].title,
                 "num_comments_public": db[i].num_comments_public,
                 "subscriptions": db[i].subscriptions,
                 "favorited": db[i].favorited,
                 "views": db[i].views,
-                "unsubscribes": db[i].lifetime_subscriptions - db[i].subscriptions
+                "unsubscribes": db[i].lifetime_subscriptions - db[i].subscriptions, 
+                "preview_url": db[i].preview_url
             });
         }
-
         return ret;
     }
 
     function record(dest, payload) {
+        app.set(dest, payload);
         fs.writeFile('../protected/'+dest+'.json', JSON.stringify(payload));
     }
 }

@@ -1,14 +1,10 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
-  .row
-    .col-md-6.col-md-offset-3
-        h1.display-4.m-b-2 Mod ID
-        // register form
-        form(method='GET' action='/items')
-            div.form-group
-                label(for='id') ID: 
-                input#id.form-control(type='text', placeholder='ID' name='id')
-            button.btn.btn-primary(type='submit') Search
+  .cover
+    h1.cover-heading Rimworld ModRank
+    form(method='GET' action='/items')
+        div.form-group
+            label(for='id') Steam Workshop ID: 
+            input#id.form-control(type='text', name='id')
+        button.btn.btn-primary(type='submit') Search
