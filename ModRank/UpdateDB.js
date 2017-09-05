@@ -1,7 +1,14 @@
 ﻿var fs = require('fs');
 var request = require('request');
+try {
+    require.paths.push('/opt/app-root/src/');
+    require.paths.push('/opt/app-root/src/modrank/');
+    console.log(require.paths);
+}
+catch (e) {
+}
+var Cache = require('./cache');
 var parse = require('./parser');
-var Cache = require('./Cache');
 
 function UpdateDB(app, forced) {
     //get stored variables

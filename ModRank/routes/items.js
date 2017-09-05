@@ -10,7 +10,7 @@ router.get('/', function (req, res) {
     var item = cache.getItem(id);
 
     if (item === undefined) {
-        res.status(404).send('Item not found.')
+        res.status(404).send('Item not found.');
     }
     else {
         res.render('items', {
@@ -23,15 +23,15 @@ router.get('/', function (req, res) {
             views: item.views,
             unsubscribes: item.unsubscribes,
             img: item.preview_url,
-            favsRank: item.favsRank,
+            favsRank: item.favsRank + 1,
             favsPercent: Math.round(item.favsPercent),
-            subsRank: item.subsRank,
+            subsRank: item.subsRank + 1,
             subsPercent: Math.round(item.subsPercent),
-            unsubscribesRank: item.unsubscribesRank,
+            unsubscribesRank: item.unsubscribesRank + 1,
             unsubscribesPercent: Math.round(item.unsubscribesPercent),
-            viewsRank: item.viewsRank,
+            viewsRank: item.viewsRank + 1,
             viewsPercent: Math.round(item.viewsPercent),
-            commentsRank: item.commentsRank,
+            commentsRank: item.commentsRank + 1,
             commentsPercent: Math.round(item.commentsPercent)
         });
     }
