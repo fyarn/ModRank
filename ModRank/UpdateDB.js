@@ -1,6 +1,9 @@
 ﻿var fs = require('fs');
 var request = require('request');
 try {
+    console.log(process.cwd());
+    console.log(__dirname);
+    console.log(require.paths);
     require.paths.push('/opt/app-root/src/');
     require.paths.push('/opt/app-root/src/modrank/');
     console.log(require.paths);
