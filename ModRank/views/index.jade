@@ -6,5 +6,5 @@ block content
     form(method='GET' action='/items')
         div.form-group
             label(for='id') Steam Workshop ID: 
-            input#id.form-control(type='text', name='id')
+            input#id.form-control(type='text', name='id' required)
         button.btn.btn-primary(type='submit') Search

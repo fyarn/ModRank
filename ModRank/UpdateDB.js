@@ -1,8 +1,9 @@
 ﻿var fs = require('fs');
 var request = require('request');
 var parse = require('./parser');
+var Cache = require('./Cache');
 
-function UpdateDB(app) {
+function UpdateDB(app, forced) {
     //get stored variables
     var prefs = JSON.parse(fs.readFileSync('../protected/prefs.json', 'utf-8'));
     var devKey = prefs.DevKey;
@@ -11,7 +12,7 @@ function UpdateDB(app) {
     var totalItemCount = -1;
 
     //if time to update (default 1 day) or existing file doesn't exist
-    if (!fs.existsSync('../protected/master.json') || (new Date() - fs.statSync('../protected/master.json').ctime > updateIntervalInMS)) {
+    if (forced || !fs.existsSync('../protected/master.json') || new Date() - fs.statSync('../protected/master.json').ctime > updateIntervalInMS) {
         var options = {
             url: 'https://api.steampowered.com/IPublishedFileService/QueryFiles/v1',
             method: 'GET',
@@ -41,10 +42,23 @@ function UpdateDB(app) {
                 'return_for_sale_data': false,
                 'return_playtime_stats': 7
             }
-        }
+        };
         requestUntillFilled(1);
     }
-    return JSON.parse(fs.readFileSync('../protected/master.json'));
+    else if (app.get('Cache') === undefined) {
+        set('master');
+        set('subs');
+        set('favs');
+        set('views');
+        set('unsubs');
+        set('comments');
+        app.set('Cache', new Cache(app));
+        console.log("dbs created, cache set with " + app.get('master').length);
+    }
+
+    function set(path) {
+        app.set(path, JSON.parse(fs.readFileSync('../protected/dbs/'+path+'.json')));
+    }
 
     function rufCallback() {
         console.log("Finished with " + results.length + " results");
@@ -56,23 +70,31 @@ function UpdateDB(app) {
         request(options, function (error, response, body) {
             if (!error) {
                 body = JSON.parse(body);
-                //if first call
-                if (totalItemCount < 0) {
-                    totalItemCount = body.response.total;
-                    console.log("Total Items: " + totalItemCount)
-                }
+                if (body.response.publishedfiledetails !== undefined) {
+                    //if first call
+                    if (totalItemCount < 0) {
+                        totalItemCount = body.response.total;
+                        console.log("Total Items: " + totalItemCount);
+                    }
 
-                results = results.concat(body.response.publishedfiledetails);
-                console.log("Response Length: " + body.response.publishedfiledetails.length)
-                console.log("Result Count: " + results.length)
+                    results = results.concat(body.response.publishedfiledetails);
+                    var len = body.response.publishedfiledetails.length;
+                    if (len !== undefined) {
+                        console.log("Response Length: " + len);
+                    }
+                    console.log("Result Count: " + results.length);
 
-                //if done
-                if (results.length >= totalItemCount) {
-                    rufCallback();
+                    //if done
+                    if (results.length >= totalItemCount) {
+                        rufCallback();
+                    }
+                    else {
+                        console.log("Requesting page " + (page + 1));
+                        requestUntillFilled(page + 1);
+                    }
                 }
                 else {
-                    console.log("Requesting page " + (page + 1))
-                    requestUntillFilled(page + 1);
+                    rufCallback();
                 }
             }
         });

@@ -1,16 +1,24 @@
 var express = require('express');
 var router = express.Router();
-function item(app) {
-    /* GET users listing. */
-    router.get('/', function (req, res, next) {
-        require('../UpdateDB')(app);
-        var cache = app.get('Cache');
+var sanitizer = require('sanitize')();
 
-        var item = cache.getItem(req.query.id)
+/* GET users listing. */
+router.get('/items', function (req, res) {
+    require('../UpdateDB')(app, false);
+    var cache = app.get('Cache');
+    console.log("cache: " + JSON.stringify(cache));
+    var id = (sanitizer.value(req.query.id, 'int')).toString();
+    var item = cache.getItem(id);
+    console.log("got id " + item.id);
 
+    if (item === undefined) {
+        res.status(404).send('Item not found.')
+    }
+    else {
+        console.log('rendering ' + JSON.stringify(item));
         res.render('items', {
-            title: 'ModRank - ' + req.query.id,
-            id: req.query.id,
+            title: 'ModRank - ' + id,
+            id: id,
             itemTitle: item.title,
             comments: item.num_comments_public,
             subs: item.subscriptions,
@@ -19,17 +27,17 @@ function item(app) {
             unsubscribes: item.unsubscribes,
             img: item.preview_url,
             favsRank: item.favsRank,
-            favsPercent: item.favsPercent,
+            favsPercent: Math.round(item.favsPercent),
             subsRank: item.subsRank,
-            subsPercent: item.subsPercent,
+            subsPercent: Math.round(item.subsPercent),
             unsubscribesRank: item.unsubscribesRank,
-            unsubscribesPercent: item.unsubscribesPercent,
+            unsubscribesPercent: Math.round(item.unsubscribesPercent),
             viewsRank: item.viewsRank,
-            viewsPercent: item.viewsPercent,
+            viewsPercent: Math.round(item.viewsPercent),
             commentsRank: item.commentsRank,
-            commentsPercent: item.commentsPercent
+            commentsPercent: Math.round(item.commentsPercent)
         });
-    });
-}
+    }
+});
 
 module.exports = router;
