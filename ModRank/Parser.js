@@ -11,8 +11,8 @@ function Parser(database, app)
     record('views', sortByViews(database));
     record('unsubs', sortByUnsubscribes(database));
     record('comments', sortByComments(database));
-    app.set('Cache', new Cache(app));
-    console.log("dbs created, cache set " + JSON.stringify(app.get('Cache')));
+    app.set('Cacher', new Cache(app));
+    console.log("dbs created, cache set " + JSON.stringify(app.get('Cacher').getItem(1117784063)));
 
     function sortBySubscriptions(database) {
         var db = [];
@@ -123,7 +123,7 @@ function Parser(database, app)
         ret = [];
         for (var i = 0; i < db.length; i++) {
             ret.push({
-                "id": db[i].publishedfileid,
+                "id": parseInt(db[i].publishedfileid),
                 "title": db[i].title,
                 "num_comments_public": db[i].num_comments_public,
                 "subscriptions": db[i].subscriptions,
@@ -137,8 +137,8 @@ function Parser(database, app)
     }
 
     function record(dest, payload) {
-        app.set(dest, payload);
-        fs.writeFile('../protected/dbs/'+dest+'.json', JSON.stringify(payload));
+        app.set(dest + "DB", payload);
+        fs.writeFile('../protected/dbs/' + dest +'DB.json', JSON.stringify(payload));
     }
 }
 

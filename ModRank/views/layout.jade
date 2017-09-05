@@ -6,23 +6,23 @@ html
     link(rel='stylesheet', href='/vendor/Bootstrap/css/bootstrap.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
     link(rel='icon', href='/images/favicon.jpg')
-    
+
   body
-    header.header
-        .site-wrapper
-          .site-wrapper-inner
+    .site-wrapper
+        .site-wrapper-inner
             .cover-container
-              .masthead.clearfix
-                .inner
-                  h3.masthead-brand Rimworld ModRank
-                  nav
-                    ul.nav.masthead-nav
-                      li.active
-                        a(href='#') Home
-        .inner
-        block content
-        .mastfoot
-        .inner
-            p &copy; Nick Fisher 2017
+                .masthead.clearfix
+                        .inner
+                            a(href='/')
+                                h3.masthead-brand Rimworld ModRank
+                            nav
+                                ul.nav.masthead-nav
+                                    li
+                                        a(href='/') Home
+                .inner.cover
+                  block content
+                .mastfoot
+                  .inner
+                    p &copy; Nick Fisher 2017
 
     script(href='/vendor/Bootstrap/js/bootstrap.js')

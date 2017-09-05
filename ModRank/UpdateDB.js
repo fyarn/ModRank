@@ -11,8 +11,8 @@ function UpdateDB(app, forced) {
     var results = [];
     var totalItemCount = -1;
 
-    //if time to update (default 1 day) or existing file doesn't exist
-    if (forced || !fs.existsSync('../protected/master.json') || new Date() - fs.statSync('../protected/master.json').ctime > updateIntervalInMS) {
+    //if time to update (default 1 day) or file doesn't exist
+    if (forced || !fs.existsSync('../protected/dbs/masterDB.json') || new Date() - fs.statSync('../protected/dbs/masterDB.json').ctime > updateIntervalInMS) {
         var options = {
             url: 'https://api.steampowered.com/IPublishedFileService/QueryFiles/v1',
             method: 'GET',
@@ -45,15 +45,14 @@ function UpdateDB(app, forced) {
         };
         requestUntillFilled(1);
     }
-    else if (app.get('Cache') === undefined) {
-        set('master');
-        set('subs');
-        set('favs');
-        set('views');
-        set('unsubs');
-        set('comments');
-        app.set('Cache', new Cache(app));
-        console.log("dbs created, cache set with " + app.get('master').length);
+    else if (app.get('Cacher') === undefined) {
+        set('masterDB');
+        set('subsDB');
+        set('favsDB');
+        set('viewsDB');
+        set('unsubsDB');
+        set('commentsDB');
+        app.set('Cacher', new Cache(app));
     }
 
     function set(path) {

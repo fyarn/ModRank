@@ -3,19 +3,16 @@ var router = express.Router();
 var sanitizer = require('sanitize')();
 
 /* GET users listing. */
-router.get('/items', function (req, res) {
+router.get('/', function (req, res) {
     require('../UpdateDB')(app, false);
-    var cache = app.get('Cache');
-    console.log("cache: " + JSON.stringify(cache));
-    var id = (sanitizer.value(req.query.id, 'int')).toString();
+    var cache = app.get('Cacher');
+    var id = sanitizer.value(req.query.id, 'int');
     var item = cache.getItem(id);
-    console.log("got id " + item.id);
 
     if (item === undefined) {
         res.status(404).send('Item not found.')
     }
     else {
-        console.log('rendering ' + JSON.stringify(item));
         res.render('items', {
             title: 'ModRank - ' + id,
             id: id,

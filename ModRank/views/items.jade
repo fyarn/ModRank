@@ -1,31 +1,37 @@
 extends layout
 
 block content
+  h1= itemTitle + " - " + id
   img(src=img, alt=itemTitle).img-fluid
-  h1= itemTitle + "(" + id + ")"
+  hr.bg-white
   ul.list-group
-    li
-      .list-group-item
-        h3= "Current Subscriptions: " + subs
-      .list-group-item
-        h2= "In the top " + subsPercent + "% most downloaded (#" + subsRank + ")"
-    li
-      .list-group-item
-        h3= "Current Favorites: " + favs
-      .list-group-item
-        h2= "In the top " + favsPercent + "% most liked (#" + favsRank + ")"
-    li
-      .list-group-item
-        h3= "Current Comments: " + comments
-      .list-group-item
-        h2= "In the top " + commentsPercent + "% most talked about (#" + commentsRank + ")"
-    li
-      .list-group-item
-        h3= "Current Views: " + views
-      .list-group-item
-        h2= "In the top " + viewsPercent + "% most checked out (#" + viewsRank + ")"
-    li
-      .list-group-item
-        h3= "Total Unsubscriptions: " + unsubscribes
-      .list-group-item
-        h2= "In the top " + unsubscribesPercent + "% most uninstalled (#" + unsubscribesRank + ")"
+    li.list-group-item.bg-secondary
+        .row
+            .col-md-5
+                h3= "Current Subscriptions: " + subs
+            .col-md-5.text-align-right
+                h3= "In the top " + subsPercent + "% most downloaded (#" + subsRank + ")"
+    li.list-group-item.bg-primary
+        .row
+            .col-md-5
+                h3= "Current Favorites: " + favs
+            .col-md-5.text-align-right
+                h3= "In the top " + favsPercent + "% most liked (#" + favsRank + ")"
+    li.list-group-item.bg-success
+        .row
+            .col-md-5
+                h3= "Current Comments: " + comments
+            .col-md-5.text-align-right
+                h3= "In the top " + commentsPercent + "% most talked about (#" + commentsRank + ")"
+    li.list-group-item.bg-danger
+        .row
+            .col-md-5
+                h3= "Current Views: " + views
+            .col-md-5.text-align-right
+                h3= "In the top " + viewsPercent + "% most checked out (#" + viewsRank + ")"
+    li.list-group-item.bg-warning
+        .row
+            .col-md-5
+                h3= "Total Unsubscriptions: " + unsubscribes
+            .col-md-5.text-align-right
+                h3= "In the top " + unsubscribesPercent + "% most uninstalled (#" + unsubscribesRank + ")"
