@@ -2,7 +2,7 @@
 var Cache = require('./Cache');
 
 //parses and records lists based off given database
-function Parser(database, app)
+function parser(database, app)
 {
     database = trimVariablesFrom(database);
     record('master', database);
@@ -142,4 +142,4 @@ function Parser(database, app)
     }
 }
 
-module.exports = Parser;
+module.exports = parser;

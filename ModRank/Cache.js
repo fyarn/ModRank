@@ -1,13 +1,13 @@
 ﻿var fs = require('fs');
 
-function Cache(app) {
+function cache(app) {
     var master = app.get('masterDB');
     var subs = app.get('subsDB');
     var favs = app.get('favsDB');
     var views = app.get('viewsDB');
     var unsubscribes = app.get('unsubsDB');
     var comments = app.get('commentsDB');
-    Cache.prototype.getItem = function (id) {
+    cache.prototype.getItem = function (id) {
         if (typeof(id) == "") {
             id = parseInt(id);
         }
@@ -50,4 +50,4 @@ function Cache(app) {
     };
 }
 
-module.exports = Cache;
+module.exports = cache;
