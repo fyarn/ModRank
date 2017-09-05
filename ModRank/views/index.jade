@@ -1,9 +1,11 @@
 extends layout
 
 block content
-    h1.cover-heading Rimworld ModRank
-    form(method='GET' action='/items')
-        div.form-group
-            label(for='id') Steam Workshop ID: 
-            input#id.form-control(type='text', name='id' required)
-        button.btn.btn-primary(type='submit') Search
+    .row
+        .col-sm-6(style='margin:auto')
+            h1.cover-heading Rimworld ModRank
+            form(method='GET' action='/items')
+                div.form-group
+                    label(for='id') Steam Workshop ID: 
+                    input#id.form-control(type='text', name='id' required)
+                button.btn.btn-primary(type='submit') Search

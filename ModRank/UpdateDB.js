@@ -13,6 +13,7 @@ function UpdateDB(app, forced) {
 
     //if time to update (default 1 day) or file doesn't exist
     if (forced || !fs.existsSync('../protected/dbs/masterDB.json') || new Date() - fs.statSync('../protected/dbs/masterDB.json').ctime > updateIntervalInMS) {
+        fs.writeFileSync('../protected/dbs/masterDB.json', '');
         var options = {
             url: 'https://api.steampowered.com/IPublishedFileService/QueryFiles/v1',
             method: 'GET',
