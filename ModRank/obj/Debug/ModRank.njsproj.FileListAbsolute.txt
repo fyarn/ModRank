@@ -1,0 +1,3 @@
+D:\Libraries\Documents\Google Drive\Professional\ModRank\ModRank\obj\Debug\ModRank.njsprojResolveAssemblyReference.cache
+D:\Libraries\Documents\Google Drive\Professional\ModRank\ModRank\obj\Debug\ModRank.njsproj.CoreCompileInputs.cache
+D:\Libraries\Documents\Google Drive\Professional\ModRank\ModRank\bin\Microsoft.NodejsTools.WebRole.dll
