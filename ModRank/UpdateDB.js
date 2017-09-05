@@ -1,7 +1,8 @@
 ﻿var fs = require('fs');
 var request = require('request');
-var Cache = require('../cache');
-var parse = require('../parser');
+throw new Error(process.cwd());
+var Cache = require('/modrank/cache');
+var parse = require('/modrank/parser');
 
 function UpdateDB(app, forced) {
     //get stored variables
