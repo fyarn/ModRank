@@ -5,9 +5,9 @@ var parse = require('./Parser');
 
 function UpdateDB(app, forced) {
     //get stored variables
-    var prefs = JSON.parse(fs.readFileSync('/protected/prefs.json', 'utf-8'));
-    var devKey = prefs.DevKey;
-    var updateIntervalInMS = prefs.UpdateIntervalInMS;
+    var devKey = process.env.DevKey;
+    // 1 day = 86400000ms
+    var updateIntervalInMS = 86400000;
     var results = [];
     var totalItemCount = -1;
 
