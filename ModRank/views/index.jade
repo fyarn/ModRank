@@ -8,4 +8,10 @@ block content
                 div.form-group
                     label(for='id') Steam Workshop ID: 
                     input#id.form-control(type='text', name='id' required)
-                button.btn.btn-primary(type='submit') Search
+                .row
+                    .col-sm-1
+                    .col-sm-8.nopadding
+                        button.btn.btn-primary.rounded-0.rounded-left(type='submit', style='width:100%') Search
+                    .col-sm-2.nopadding
+                        a(href='/items?id=random').btn.btn-danger.rounded-0.rounded-right Random
+            em= 'Search ' + llen + ' total published mods and scenarios!'

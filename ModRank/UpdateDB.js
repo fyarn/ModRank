@@ -14,7 +14,7 @@ function UpdateDB(app, forced) {
     
     //if time to update (default 1 day) or file doesn't exist
     if (forced || lastUpdate === undefined || new Date() - lastUpdate > updateIntervalInMS) {
-        lastUpdate = new Date().getMilliseconds;
+        app.set('lastUpdate', new Date().getMilliseconds);
         var options = {
             url: 'https://api.steampowered.com/IPublishedFileService/QueryFiles/v1',
             method: 'GET',

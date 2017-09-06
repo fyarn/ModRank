@@ -1,0 +1,77 @@
+﻿extends layout
+
+block content
+  h1 ModRank Comparison
+  hr.bg-white
+  ul.list-group
+    li.list-group-item.active
+        .row
+            .col-md-4
+                h1 Item
+            .col-md-2
+                h1
+                    i.fa.fa-download.fa-2(aria-hidden="true")
+            .col-md-2
+                h1
+                    i.fa.fa-star.fa-2(aria-hidden="true")
+            .col-md-2
+                h1
+                    i.fa.fa-comment.fa-2(aria-hidden="true")
+            .col-md-2
+                h1
+                    i.fa.fa-eye.fa-2(aria-hidden="true")
+    if (comps.length > 0)
+        each comp, index in comps
+            if(index % 2 == 0) 
+                li.list-group-item.bg-white.text-black
+                    .row
+                        .col-lg-2.col-md-1.margin-auto
+                            img.img-fluid(src=comp.img alt=comp.itemTitle)
+                        .col-md-3.col-lg-2.margin-auto
+                            h4= comp.itemTitle
+                        .col-md-2.col-lg-2.margin-auto
+                            p= "#" + comp.subsRank + "/" + comp.subs + "/" + comp.subsPercent + "%"
+                        .col-md-2.col-lg-2.margin-auto
+                            p= "#" + comp.favsRank + "/" + comp.favs + "/" + comp.favsPercent + "%"
+                        .col-md-2.col-lg-2.margin-auto
+                            p= "#" + comp.commentsRank + "/" + comp.comments + "/" + comp.commentsPercent + "%"
+                        .col-md-2.col-lg-2.margin-auto
+                            p= "#" + comp.viewsRank + "/" + comp.views + "/" + comp.viewsPercent + "%"
+            else
+                li.list-group-item.bg-danger.text-black
+                    .row
+                        .col-lg-2.col-md-1.margin-auto
+                            img.img-fluid(src=comp.img alt=comp.itemTitle)
+                        .col-md-3.col-lg-2.margin-auto
+                            h4= comp.itemTitle
+                        .col-md-2.margin-auto
+                            p= "#" + comp.subsRank + "/" + comp.subs + "/" + comp.subsPercent + "%"
+                        .col-md-2.margin-auto
+                            p= "#" + comp.favsRank + "/" + comp.favs + "/" + comp.favsPercent + "%"
+                        .col-md-2.margin-auto
+                            p= "#" + comp.commentsRank + "/" + comp.comments + "/" + comp.commentsPercent + "%"
+                        .col-md-2.margin-auto
+                            p= "#" + comp.viewsRank + "/" + comp.views + "/" + comp.viewsPercent + "%"
+            if(index == comps.length - 1)
+                li.list-group-item.text-black.bg-warning(style='margin-top:15px')
+                    .row
+                        .col-md-6(style="margin:auto")
+                            form(method='GET' action='/compare')
+                                div.form-group
+                                    label(for='id') Add a Mod ID: 
+                                    each comp, idx in comps
+                                        - var currID = "id" + (idx + 1)
+                                            input.form-control(name=currID type='text' value=comp.id hidden).text-center
+                                    - var newID = "id" + (index + 2);
+                                        input#id.form-control(type='text' name=newID placeholder="Add an ID" required).text-center
+                                button.btn.btn-primary(type='submit') Search
+    else
+        li.list-group-item.text-black
+            .row
+                .col-md-6(style="margin:auto")
+                    form(method='GET' action='/compare')
+                        div.form-group
+                            label(for='id') Add Mod IDs:                               
+                            input#id.form-control(type='text' name='id1' placeholder="Mod ID 1" required).text-center
+                            input#id.form-control(type='text' name='id2' placeholder="Mod ID 2" required).text-center
+                        button.btn.btn-primary(type='submit') Search

@@ -8,8 +8,15 @@ function cache(app) {
     var unsubscribes = app.get('unsubsDB');
     var comments = app.get('commentsDB');
     cache.prototype.getItem = function (id) {
-        if (typeof(id) === "") {
-            id = parseInt(id);
+        if (typeof id === "string") {
+            if (id.toLowerCase() == 'rand' || id.toLowerCase() == 'random')
+            {
+                //get random id
+                id = app.get('masterDB')[Math.floor(Math.random() * master.length)].id;
+            }
+            else {
+                id = parseInt(id);
+            }
         }
         var record = master.find(function (value) { return value.id === id; });
         if (record === undefined) {

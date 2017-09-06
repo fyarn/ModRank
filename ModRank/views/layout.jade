@@ -3,6 +3,7 @@ doctype html
 html
   head
     title= title
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css')
     link(rel='stylesheet', href='/vendor/Bootstrap/css/bootstrap.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
     link(rel='icon', href='/images/favicon.jpg')
@@ -14,16 +15,28 @@ html
                 .masthead
                     .inner
                         a(href='/')
-                            h3.masthead-brand Rimworld ModRank
+                            h3.masthead-brand RW-MR
                         nav
                             ul.nav.masthead-nav
                                 li
-                                    a(href='/') Home
+                                    h5
+                                        a(href='/') Search
+                                li
+                                    h5
+                                        a(href='/compare') Compare
+                                li
+                                    h5
+                                        a(href='/items?id=random') Random
+                                li
+                                    h5
+                                        a(href='/compare?id1=random&id2=random') Random Matchup
+                                    
+            
                 .inner.cover
                   block content
                 .mastfoot
                   .inner
-                    p &copy; Nick Fisher 2017
+                    //p &copy; Nick Fisher 2017
 
     script(src='https://code.jquery.com/jquery-3.2.1.min.js')
     script(src='/vendor/Bootstrap/js/bootstrap.js')

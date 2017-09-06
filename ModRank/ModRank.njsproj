@@ -5,6 +5,8 @@
     <Name>ModRank</Name>
     <RootNamespace>ModRank</RootNamespace>
     <NameOfLastUsedPublishProfile>modrank - Web Deploy</NameOfLastUsedPublishProfile>
+    <Environment>
+    </Environment>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -41,15 +43,18 @@
     </Compile>
     <Compile Include="public\vendor\Bootstrap\js\bootstrap.js" />
     <Compile Include="public\vendor\Bootstrap\js\bootstrap.min.js" />
+    <Compile Include="routes\compare.js">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="UpdateDB.js">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="routes\index.js" />
     <Compile Include="routes\items.js" />
     <Content Include="bin\www" />
-    <None Include="modrank - FTP.pubxml" />
-    <None Include="modrank - Web Deploy.pubxml" />
-    <Content Include="web.config" />
+    <Content Include="views\compare.jade">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="package.json" />
     <Content Include="public\images\bg.jpg" />
     <Content Include="public\vendor\Bootstrap\css\bootstrap-grid.css" />

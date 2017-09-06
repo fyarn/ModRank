@@ -1,47 +1,71 @@
 extends layout
 
 block content
-  h1= itemTitle + " - " + id
-  img(src=img, alt=itemTitle, style='max-width:400px').img-fluid
-  hr.bg-white
-  ul.list-group
-    li.list-group-item.bg-secondary
-        .row
-            .col-md-8
-                h3= "Current Subscriptions: " + subs
-            .col-md-2.text-align-right.border-left
-                h3= "#" + subsRank + ""
-            .col-md-2.border-left
-                h1= "Top " + subsPercent + "%"
-    li.list-group-item.bg-primary
-        .row
-            .col-md-8
-                h3= "Current Favorites: " + favs
-            .col-md-2.text-align-right.border-left
-                h3= "#" + favsRank + ""
-            .col-md-2.border-left
-                h1= "Top " + favsPercent + "%"
-    li.list-group-item.bg-success
-        .row
-            .col-md-8
-                h3= "Current Comments: " + comments
-            .col-md-2.text-align-right.border-left
-                h3= "#" + commentsRank + ""
-            .col-md-2.border-left
-                h1= "Top " + commentsPercent + "%"
-    li.list-group-item.bg-danger
-        .row
-            .col-md-8
-                h3= "Current Views: " + views
-            .col-md-2.text-align-right
-                h3= "#" + viewsRank + ""
-            .col-md-2.border-left
-                h1= "Top " + viewsPercent + "%"
-    li.list-group-item.bg-warning
-        .row
-            .col-md-8
-                h3= "Current Unsubscriptions: " + unsubscribes
-            .col-md-2.text-align-right
-                h3= "#" + unsubscribesRank + ""
-            .col-md-2.border-left
-                h1= "Top " + unsubscribesPercent + "%"
+    h1= itemTitle + " (" + id + ")"
+    img(src=img, alt=itemTitle, style='max-width:400px').img-fluid
+    hr.bg-white
+    ul.list-group
+        li.list-group-item.bg-secondary
+            .row
+                .col-md-5.col-sm-8
+                    h2= "Subscriptions: "
+                .col-md-2.border-left.col-sm-4
+                    h2= subs
+                .col-md-2.border-left
+                    h2= "#" + subsRank + ""
+                .col-md-3.border-left
+                    h2= "Top " + subsPercent + "%"
+        li.list-group-item.bg-primary
+            .row
+                .col-md-5.col-sm-8
+                    h2= "Favorites: "
+                .col-md-2.border-left.col-sm-4
+                    h2= favs
+                .col-md-2.border-left
+                    h2= "#" + favsRank + ""
+                .col-md-3.border-left
+                    h2= "Top " + favsPercent + "%"
+        li.list-group-item.bg-success
+            .row
+                .col-md-5.col-sm-8
+                    h2= "Comments: "
+                .col-md-2.border-left.col-sm-4
+                    h2= comments
+                .col-md-2.border-left
+                    h2= "#" + commentsRank + ""
+                .col-md-3.border-left
+                    h2= "Top " + commentsPercent + "%"
+        li.list-group-item.bg-danger
+            .row
+                .col-md-5.col-sm-8
+                    h2= "Views: "
+                .col-md-2.border-left.col-sm-4
+                    h2= views
+                .col-md-2.border-left
+                    h2= "#" + viewsRank + ""
+                .col-md-3.border-left
+                    h2= "Top " + viewsPercent + "%"
+        li.list-group-item.bg-warning
+            .row
+                .col-md-5.col-sm-8
+                    h2= "Unsubscriptions: "
+                .col-md-2.border-left.col-sm-4
+                    h2= unsubscribes
+                .col-md-2.border-left
+                    h2= "#" + unsubscribesRank + ""
+                .col-md-3.border-left
+                    h2= "Top " + unsubscribesPercent + "%"
+
+    .row
+        .col-md-6(style="margin:auto")
+            form(method='GET' action='/compare')
+                div.form-group
+                    label(for='id') Compare to another mod or scenario: 
+                    input.form-control(name='id1' type='text' value=id hidden).text-center
+                    input#id.form-control(type='text' name='id2' placeholder="Add an ID, or type RAND for a random matchup!" required).text-center
+                .row
+                    .col-sm-1
+                    .col-sm-8.nopadding
+                        button.btn.btn-primary.rounded-0.rounded-left(type='submit', style='width:100%') Go head to head!
+                    .col-sm-2.nopadding
+                        a(href='/compare?id1=' + id + '&id2=random').btn.btn-danger.rounded-0.rounded-right Random

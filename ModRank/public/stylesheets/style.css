@@ -19,6 +19,29 @@ a:hover {
   border: 1px solid #fff;
 }
 
+.nopadding
+{
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.margin-auto {
+    margin: auto;
+}
+
+.border-left {
+    border-left: 1px solid black;
+}
+
+.text-black {
+    color:black;
+}
+
+.text-center {
+    text-align: center;
+}
+
+
 .text-align-right {
     text-align: right;
 }
@@ -69,19 +92,15 @@ body {
  */
 .masthead {
     margin-bottom: 20px;
+    margin-top: 10px;
 }
 .masthead-brand {
-  margin-top: 10px;
   margin-bottom: 10px;
 }
 
 .masthead-nav > li {
   display: inline-block;
 }
-
-    .masthead-nav > li {
-        margin-left: 50%;
-    }
   .masthead-nav > li + li {
     margin-left: 20px;
   }
