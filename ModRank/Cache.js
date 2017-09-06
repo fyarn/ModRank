@@ -16,16 +16,16 @@ function cache(app) {
             console.log("record is undefined");
             return null;
         }
-        var favsRank = favs.findIndex(function (value) { return value.id === id; });
-        var favsPercent = favsRank / favs.length * 100;
-        var subsRank = subs.findIndex(function (value) { return value.id === id; });
-        var subsPercent = subsRank / subs.length * 100;
-        var unsubscribesRank = unsubscribes.findIndex(function (value) { return value.id === id; });
-        var unsubscribesPercent = unsubscribesRank / unsubscribes.length * 100;
-        var viewsRank = views.findIndex(function (value) { return value.id === id; });
-        var viewsPercent = viewsRank / views.length * 100;
-        var commentsRank = comments.findIndex(function (value) { return value.id === id; });
-        var commentsPercent = commentsRank / comments.length * 100;
+        var favsRank = 1 +  favs.findIndex(function (value) { return value.id === id; });
+        var favsPercent = (favsRank / favs.length * 100).toFixed(2);
+        var subsRank = 1 + subs.findIndex(function (value) { return value.id === id; });
+        var subsPercent = (subsRank / subs.length * 100).toFixed(2);
+        var unsubscribesRank = 1 + unsubscribes.findIndex(function (value) { return value.id === id; });
+        var unsubscribesPercent = (unsubscribesRank / unsubscribes.length * 100).toFixed(2);
+        var viewsRank = 1 + views.findIndex(function (value) { return value.id === id; });
+        var viewsPercent = (viewsRank / views.length * 100).toFixed(2);
+        var commentsRank = 1 + comments.findIndex(function (value) { return value.id === id; });
+        var commentsPercent = (commentsRank / comments.length * 100).toFixed(2);
 
         return {
             id: id,

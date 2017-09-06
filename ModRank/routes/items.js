@@ -32,15 +32,15 @@ router.get('/', function (req, res) {
             views: item.views,
             unsubscribes: item.unsubscribes,
             img: item.preview_url,
-            favsRank: item.favsRank + 1,
+            favsRank: item.favsRank,
             favsPercent: Math.round(item.favsPercent),
-            subsRank: item.subsRank + 1,
+            subsRank: item.subsRank,
             subsPercent: Math.round(item.subsPercent),
-            unsubscribesRank: item.unsubscribesRank + 1,
+            unsubscribesRank: item.unsubscribesRank,
             unsubscribesPercent: Math.round(item.unsubscribesPercent),
-            viewsRank: item.viewsRank + 1,
+            viewsRank: item.viewsRank,
             viewsPercent: Math.round(item.viewsPercent),
-            commentsRank: item.commentsRank + 1,
+            commentsRank: item.commentsRank,
             commentsPercent: Math.round(item.commentsPercent)
         });
     }
