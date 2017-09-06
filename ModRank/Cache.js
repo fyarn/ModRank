@@ -8,14 +8,14 @@ function cache(app) {
     var unsubscribes = app.get('unsubsDB');
     var comments = app.get('commentsDB');
     cache.prototype.getItem = function (id) {
-        if (typeof(id) == "") {
+        if (typeof(id) === "") {
             id = parseInt(id);
         }
         var record = master.find(function (value) { return value.id === id; });
         if (record === undefined) {
-            console.log("record is undefined")
+            console.log("record is undefined");
             return null;
-        };
+        }
         var favsRank = favs.findIndex(function (value) { return value.id === id; });
         var favsPercent = favsRank / favs.length * 100;
         var subsRank = subs.findIndex(function (value) { return value.id === id; });
