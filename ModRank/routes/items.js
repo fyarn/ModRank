@@ -9,7 +9,7 @@ router.get('/', function (req, res) {
     var id = sanitizer.value(req.query.id, 'int');
     var item = cache.getItem(id);
 
-    if (item === undefined) {
+    if (item === null) {
         res.status(404).send('Item not found.');
     }
     else {

@@ -12,7 +12,6 @@ function parser(database, app)
     record('unsubs', sortByUnsubscribes(database));
     record('comments', sortByComments(database));
     app.set('Cacher', new Cache(app));
-    console.log("dbs created, cache set " + JSON.stringify(app.get('Cacher').getItem(1117784063)));
 
     function sortBySubscriptions(database) {
         var db = [];
