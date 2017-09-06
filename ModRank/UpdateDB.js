@@ -5,15 +5,15 @@ var parse = require('./Parser');
 
 function UpdateDB(app, forced) {
     //get stored variables
-    var prefs = JSON.parse(fs.readFileSync('../protected/prefs.json', 'utf-8'));
+    var prefs = JSON.parse(fs.readFileSync('/protected/prefs.json', 'utf-8'));
     var devKey = prefs.DevKey;
     var updateIntervalInMS = prefs.UpdateIntervalInMS;
     var results = [];
     var totalItemCount = -1;
 
     //if time to update (default 1 day) or file doesn't exist
-    if (forced || !fs.existsSync('../protected/dbs/masterDB.json') || new Date() - fs.statSync('../protected/dbs/masterDB.json').ctime > updateIntervalInMS) {
-        fs.writeFileSync('../protected/dbs/masterDB.json', '');
+    if (forced || !fs.existsSync('/protected/dbs/masterDB.json') || new Date() - fs.statSync('/protected/dbs/masterDB.json').ctime > updateIntervalInMS) {
+        fs.writeFileSync('/protected/dbs/masterDB.json', '');
         var options = {
             url: 'https://api.steampowered.com/IPublishedFileService/QueryFiles/v1',
             method: 'GET',
@@ -57,7 +57,7 @@ function UpdateDB(app, forced) {
     }
 
     function set(path) {
-        app.set(path, JSON.parse(fs.readFileSync('../protected/dbs/'+path+'.json')));
+        app.set(path, JSON.parse(fs.readFileSync('/protected/dbs/'+path+'.json')));
     }
 
     function rufCallback() {
