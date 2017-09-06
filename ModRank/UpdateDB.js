@@ -1,12 +1,7 @@
 ﻿var fs = require('fs');
 var request = require('request');
-try {
-    var Cache = require('cache');
-    var parse = require('parser');
-}
-catch (e) {
-    throw new Error(fs.readdirSync(process.cwd()));
-}
+var Cache = require('./Cache');
+var parse = require('./Parser');
 
 function UpdateDB(app, forced) {
     //get stored variables
