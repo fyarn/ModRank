@@ -31,7 +31,7 @@ router.get('/', function (req, res) {
         }
         else {
             comps.push({
-                id: id,
+                id: item.id,
                 itemTitle: item.title,
                 comments: item.num_comments_public,
                 subs: item.subscriptions,

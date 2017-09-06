@@ -26,32 +26,44 @@ block content
                 li.list-group-item.bg-white.text-black
                     .row
                         .col-lg-2.col-md-1.margin-auto
-                            img.img-fluid(src=comp.img alt=comp.itemTitle)
+                            a(href=("https://steamcommunity.com/sharedfiles/filedetails/?id=" + comp.id))
+                                img.img-fluid(src=comp.img alt=comp.itemTitle)
                         .col-md-3.col-lg-2.margin-auto
-                            h4= comp.itemTitle
+                            a(href=("https://steamcommunity.com/sharedfiles/filedetails/?id=" + comp.id))
+                                h4.text-black= comp.itemTitle
                         .col-md-2.col-lg-2.margin-auto
-                            p= "#" + comp.subsRank + "/" + comp.subs + "/" + comp.subsPercent + "%"
+                            p.margin-no-bottom= comp.subs
+                            p.margin-no-top= "#" + comp.subsRank + " | " + comp.subsPercent + "%"
                         .col-md-2.col-lg-2.margin-auto
-                            p= "#" + comp.favsRank + "/" + comp.favs + "/" + comp.favsPercent + "%"
+                            p.margin-no-bottom= comp.favs
+                            p.margin-no-top= "#" + comp.favsRank + " | " + comp.favsPercent + "%"
                         .col-md-2.col-lg-2.margin-auto
-                            p= "#" + comp.commentsRank + "/" + comp.comments + "/" + comp.commentsPercent + "%"
+                            p.margin-no-bottom= comp.comments
+                            p.margin-no-top= "#" + comp.commentsRank + " | " + comp.commentsPercent + "%"
                         .col-md-2.col-lg-2.margin-auto
-                            p= "#" + comp.viewsRank + "/" + comp.views + "/" + comp.viewsPercent + "%"
+                            p.margin-no-bottom= comp.views
+                            p.margin-no-top= "#" + comp.viewsRank + " | " + comp.viewsPercent + "%"
             else
                 li.list-group-item.bg-danger.text-black
                     .row
                         .col-lg-2.col-md-1.margin-auto
-                            img.img-fluid(src=comp.img alt=comp.itemTitle)
+                            a(href=("https://steamcommunity.com/sharedfiles/filedetails/?id=" + comp.id))
+                                img.img-fluid(src=comp.img alt=comp.itemTitle)
                         .col-md-3.col-lg-2.margin-auto
-                            h4= comp.itemTitle
-                        .col-md-2.margin-auto
-                            p= "#" + comp.subsRank + "/" + comp.subs + "/" + comp.subsPercent + "%"
-                        .col-md-2.margin-auto
-                            p= "#" + comp.favsRank + "/" + comp.favs + "/" + comp.favsPercent + "%"
-                        .col-md-2.margin-auto
-                            p= "#" + comp.commentsRank + "/" + comp.comments + "/" + comp.commentsPercent + "%"
-                        .col-md-2.margin-auto
-                            p= "#" + comp.viewsRank + "/" + comp.views + "/" + comp.viewsPercent + "%"
+                            a(href=("https://steamcommunity.com/sharedfiles/filedetails/?id=" + comp.id))
+                                h4.text-black= comp.itemTitle
+                        .col-md-2.col-lg-2.margin-auto
+                            p.margin-no-bottom= comp.subs
+                            p.margin-no-top= "#" + comp.subsRank + " | " + comp.subsPercent + "%"
+                        .col-md-2.col-lg-2.margin-auto
+                            p.margin-no-bottom= comp.favs
+                            p.margin-no-top= "#" + comp.favsRank + " | " + comp.favsPercent + "%"
+                        .col-md-2.col-lg-2.margin-auto
+                            p.margin-no-bottom= comp.comments
+                            p.margin-no-top= "#" + comp.commentsRank + " | " + comp.commentsPercent + "%"
+                        .col-md-2.col-lg-2.margin-auto
+                            p.margin-no-bottom= comp.views
+                            p.margin-no-top= "#" + comp.viewsRank + " | " + comp.viewsPercent + "%"
             if(index == comps.length - 1)
                 li.list-group-item.text-black.bg-warning(style='margin-top:15px')
                     .row

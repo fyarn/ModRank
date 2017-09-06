@@ -29,6 +29,14 @@ a:hover {
     margin: auto;
 }
 
+.margin-no-top {
+    margin-top: 0px;
+}
+
+.margin-no-bottom {
+    margin-bottom: 0px;
+}
+
 .border-left {
     border-left: 1px solid black;
 }
