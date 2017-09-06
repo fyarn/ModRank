@@ -12,7 +12,7 @@ function UpdateDB(app, forced) {
     var totalItemCount = -1;
 
     //if time to update (default 1 day) or file doesn't exist
-    if (forced || !fs.existsSync('/protected/masterDB.json') || new Date() - fs.statSync('/protected/masterDB.json').ctime > updateIntervalInMS) {
+    if (forced || !fs.existsSync('/protected/masterDB.json') || fs.statSync('/protected/masterDB.json').size == 0 || new Date() - fs.statSync('/protected/masterDB.json').ctime > updateIntervalInMS) {
         fs.writeFileSync('/protected/masterDB.json', '');
         var options = {
             url: 'https://api.steampowered.com/IPublishedFileService/QueryFiles/v1',
@@ -57,6 +57,7 @@ function UpdateDB(app, forced) {
     }
 
     function set(path) {
+
         app.set(path, JSON.parse(fs.readFileSync('/protected/'+path+'.json')));
     }
 

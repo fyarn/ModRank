@@ -36,6 +36,9 @@
     <Compile Include="Parser.js">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="public\javascripts\JavaScript.js">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="public\vendor\Bootstrap\js\bootstrap.js" />
     <Compile Include="public\vendor\Bootstrap\js\bootstrap.min.js" />
     <Compile Include="UpdateDB.js">
