@@ -14,7 +14,7 @@ router.get('/', function (req, res) {
         // set locals, only providing error in development
         res.locals.message = "Item " + id + " not found.";
         // render the error page
-        res.status(err.status = 404);
+        res.status(404);
         res.render('error');
     }
     else {
