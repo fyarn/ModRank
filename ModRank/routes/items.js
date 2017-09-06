@@ -10,12 +10,16 @@ router.get('/', function (req, res) {
     var item = cache.getItem(id);
 
     if (item === null) {
-        res.locals.title = "ModRank - Not Found"
+        var title = "ModRank - Not Found"
         // set locals, only providing error in development
-        res.locals.message = "Item " + id + " not found.";
+        var message = "Item " + id + " not found.";
         // render the error page
         res.status(404);
-        res.render('error');
+        res.render('error', {
+            status: 404,
+            message: message,
+            title: title
+        });
     }
     else {
         res.render('items', {
