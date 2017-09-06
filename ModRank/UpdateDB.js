@@ -10,18 +10,11 @@ function UpdateDB(app, forced) {
     var updateIntervalInMS = 86400000;
     var results = [];
     var totalItemCount = -1;
-
-    if (!fs.existsSync('/protected/')) {
-        fs.mkdirSync('/protected/');
-    }
-
+    lastUpdate = app.get('lastUpdate');
+    
     //if time to update (default 1 day) or file doesn't exist
-    if (forced || !fs.existsSync('/protected/') || !fs.existsSync('/protected/masterDB.json') || fs.statSync('/protected/masterDB.json').size == 0
-        || new Date() - fs.statSync('/protected/masterDB.json').ctime > updateIntervalInMS) {
-
-        if (!fs.existsSync('/protected/masterDB.json')) {
-            fs.writeFileSync('/protected/masterDB.json', '');
-        };
+    if (forced || lastUpdate === undefined || new Date() - lastUpdate > updateIntervalInMS) {
+        lastUpdate = new Date().getMilliseconds;
         var options = {
             url: 'https://api.steampowered.com/IPublishedFileService/QueryFiles/v1',
             method: 'GET',
@@ -53,20 +46,6 @@ function UpdateDB(app, forced) {
             }
         };
         requestUntillFilled(1);
-    }
-    else if (app.get('Cacher') === undefined) {
-        set('masterDB');
-        set('subsDB');
-        set('favsDB');
-        set('viewsDB');
-        set('unsubsDB');
-        set('commentsDB');
-        app.set('Cacher', new Cache(app));
-    }
-
-    function set(path) {
-
-        app.set(path, JSON.parse(fs.readFileSync('/protected/'+path+'.json')));
     }
 
     function rufCallback() {

@@ -138,7 +138,6 @@ function parser(database, app)
 
     function record(dest, payload) {
         app.set(dest + "DB", payload);
-        fs.writeFile('/protected/' + dest +'DB.json', JSON.stringify(payload));
     }
 }
 

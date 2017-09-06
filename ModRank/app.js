@@ -42,6 +42,6 @@ app.use(function(err, req, res, next) {
 });
 
 
-require('./UpdateDB')(app, false);
+require('./UpdateDB')(app, true);
 
 module.exports = app;
