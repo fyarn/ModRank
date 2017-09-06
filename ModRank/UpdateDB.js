@@ -10,10 +10,13 @@ function UpdateDB(app, forced) {
     var updateIntervalInMS = 86400000;
     var results = [];
     var totalItemCount = -1;
-
     //if time to update (default 1 day) or file doesn't exist
-    if (forced || !fs.existsSync('/protected/masterDB.json') || fs.statSync('/protected/masterDB.json').size == 0 || new Date() - fs.statSync('/protected/masterDB.json').ctime > updateIntervalInMS) {
-        fs.writeFileSync('/protected/masterDB.json', '');
+    if (forced || !fs.existsSync('/protected/') || !fs.existsSync('/protected/masterDB.json') || fs.statSync('/protected/masterDB.json').size == 0
+        || new Date() - fs.statSync('/protected/masterDB.json').ctime > updateIntervalInMS) {
+
+        if (!fs.existsSync('/protected/') || !fs.existsSync('/protected/masterDB.json')) {
+            fs.writeFileSync('/protected/masterDB.json', '');
+        };
         var options = {
             url: 'https://api.steampowered.com/IPublishedFileService/QueryFiles/v1',
             method: 'GET',
