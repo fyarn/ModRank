@@ -4,7 +4,7 @@ block content
   h1 ModRank Comparison
   hr.bg-white
   ul.list-group
-    li.list-group-item.active
+    li.list-group-item.active.bg-warning
         .row
             .col-md-4
                 h1 Item
@@ -23,7 +23,7 @@ block content
     if (comps.length > 0)
         each comp, index in comps
             if(index % 2 == 0) 
-                li.list-group-item.bg-white.text-black
+                li.list-group-item.bg-info.text-black
                     .row
                         .col-lg-2.col-md-1.margin-auto
                             a(href=("https://steamcommunity.com/sharedfiles/filedetails/?id=" + comp.id))
@@ -65,7 +65,7 @@ block content
                             p.margin-no-bottom= comp.views
                             p.margin-no-top= "#" + comp.viewsRank + " | " + comp.viewsPercent + "%"
             if(index == comps.length - 1)
-                li.list-group-item.text-black.bg-warning(style='margin-top:15px')
+                li.list-group-item.text-black.bg-warning
                     .row
                         .col-md-6(style="margin:auto")
                             form(method='GET' action='/compare')
