@@ -2,7 +2,7 @@
 var sanitizer = require('sanitize')();
 function discord(app) {
     var client = new Discord.Client();
-    var commandPrefix = '!modrank ';
+    var commandPrefix = '!modrank';
 
     client.on('ready', () => {
         console.log(`Logged in as ${client.user.tag}!`);
@@ -10,6 +10,7 @@ function discord(app) {
     });
 
     client.on('message', msg => {
+        msg.content = msg.content.toLowerCase();
         if (msg.author.id !== client.user.id && msg.content.startsWith(commandPrefix)) {
             var reply = "";
             //get first word after !modrank
@@ -86,11 +87,11 @@ function discord(app) {
                     }
                     reply = '\n' + titlePadding + titlePadding + '`' + item.title + '`\n' +
                         itemTitlePadding + itemTitlePadding + '`' + item.itemTitle + '`\n`' +
-                        'Subscriptions:   ' + subsPadding + item.subs + ' | #' + subsRankPadding + item.subsRank + " | " + item.subsPercent + "%\n" +
-                        'Favorites:       ' + favsPadding + item.favs + ' | #' + favsRankPadding + item.favsRank + " | " + item.favsPercent + "%\n" +
-                        'Comments:        ' + commentsPadding + item.comments + ' | #' + commentsRankPadding + item.commentsRank + " | " + item.commentsPercent + "%\n" +
-                        'Views:           ' + viewsPadding + item.views + ' | #' + viewsRankPadding + item.viewsRank + " | " + item.viewsPercent + "%\n" +
-                        'Unsubscriptions: ' + unsubscribesPadding + item.unsubscribes + ' | #' + unsubscribesRankPadding + item.unsubscribesRank + " | " + item.unsubscribesPercent + "%`\n" +
+                        'Subscriptions:   ' + subsPadding + item.subs + ' |' + subsRankPadding + '#' + item.subsRank + " | " + item.subsPercent + "%\n" +
+                        'Favorites:       ' + favsPadding + item.favs + ' |' + favsRankPadding + '#' +  item.favsRank + " | " + item.favsPercent + "%\n" +
+                        'Comments:        ' + commentsPadding + item.comments + ' |' + commentsRankPadding + '#' +  item.commentsRank + " | " + item.commentsPercent + "%\n" +
+                        'Views:           ' + viewsPadding + item.views + ' |' + viewsRankPadding + '#' +  item.viewsRank + " | " + item.viewsPercent + "%\n" +
+                        'Unsubscriptions: ' + unsubscribesPadding + item.unsubscribes + ' |' + unsubscribesRankPadding + '#' +  item.unsubscribesRank + " | " + item.unsubscribesPercent + "%`\n" +
                         'See more at: http://tinyurl.com/ModRank';
                 }
                 else {
@@ -99,8 +100,8 @@ function discord(app) {
                 console.log("New Message: '" + msg + "'\nReplying with: " + reply);
                 msg.reply(reply);
             }
-            else {
-                msg.reply("is it me you're looking for?\nUse !modrank <ID> to get a mod's rank! `ID` can be a Steam ID, URL to a Steam mod page, or `random`!")
+            else if (msg.content.startsWith(commandPrefix + ' ') || msg.content === commandPrefix) {
+                msg.reply("is it me you're looking for?\nUse `!modrank ID` to get a mod's rank! ID can be a Steam ID, URL to a Steam mod page, or `random`!\nAm I broken? Contact @fyarn!")
             }
         }
     });
