@@ -11,8 +11,7 @@ router.get('/', function (req, res) {
 
     if (item === null) {
         var title = "ModRank - Not Found"
-        // set locals, only providing error in development
-        var message = "Item not found.";
+        var message = "Item '" + sanitizer.value(id, string) + "' not found.";
         // render the error page
         res.status(404);
         res.render('error', {

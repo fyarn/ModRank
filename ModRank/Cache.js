@@ -1,4 +1,5 @@
 ﻿var fs = require('fs');
+var ModInfo = require('./models/ModInfo');
 
 function cache(app) {
     var master = app.get('masterDB');
@@ -34,26 +35,10 @@ function cache(app) {
         var commentsRank = 1 + comments.findIndex(function (value) { return value.id === id; });
         var commentsPercent = (commentsRank / comments.length * 100).toFixed(2);
 
-        return {
-            id: id,
-            title: record.title,
-            num_comments_public: record.num_comments_public,
-            subscriptions: record.subscriptions,
-            favorited: record.favorited,
-            views: record.views,
-            unsubscribes: record.unsubscribes,
-            preview_url: record.preview_url,
-            favsRank: favsRank,
-            favsPercent: favsPercent,
-            subsRank: subsRank,
-            subsPercent: subsPercent,
-            unsubscribesRank: unsubscribesRank,
-            unsubscribesPercent: unsubscribesPercent,
-            viewsRank: viewsRank,
-            viewsPercent: viewsPercent,
-            commentsRank: commentsRank,
-            commentsPercent: commentsPercent
-        };
+        return new ModInfo(id, record.title, record.num_comments_public, record.subscriptions,
+            record.favorited, record.views, record.unsubscribes, record.preview_url, favsRank,
+            favsPercent, subsRank, subsPercent, unsubscribesRank, unsubscribesPercent, viewsRank,
+            viewsPercent, commentsRank, commentsPercent);
     };
 }
 

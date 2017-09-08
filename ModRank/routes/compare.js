@@ -19,8 +19,7 @@ router.get('/', function (req, res) {
 
         if (item === null) {
             var title = "ModRank - Not Found"
-            // set locals, only providing error in development
-            var message = "Item not found.";
+            var message = "Item '" + sanitizer.value(id, string) + "' not found.";
             // render the error page
             res.status(404);
             res.render('error', {
@@ -30,26 +29,7 @@ router.get('/', function (req, res) {
             });
         }
         else {
-            comps.push({
-                id: item.id,
-                itemTitle: item.title,
-                comments: item.num_comments_public,
-                subs: item.subscriptions,
-                favs: item.favorited,
-                views: item.views,
-                unsubscribes: item.unsubscribes,
-                img: item.preview_url,
-                favsRank: item.favsRank,
-                favsPercent: Math.round(item.favsPercent),
-                subsRank: item.subsRank,
-                subsPercent: Math.round(item.subsPercent),
-                unsubscribesRank: item.unsubscribesRank,
-                unsubscribesPercent: Math.round(item.unsubscribesPercent),
-                viewsRank: item.viewsRank,
-                viewsPercent: Math.round(item.viewsPercent),
-                commentsRank: item.commentsRank,
-                commentsPercent: Math.round(item.commentsPercent)
-            });
+            comps.push(item);
         }
     }
     res.render('compare', { title: 'ModRank Comparison', comps});

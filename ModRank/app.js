@@ -5,7 +5,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var fs = require('fs');
 app = express();
-app.debug = true;
+express.Router()
 
 var index = require('./routes/index');
 var items = require('./routes/items');
@@ -21,10 +21,16 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '/public')));
 
+//api middleware
+router.use(function (req, res, next) {
+    console.log("API | Request made: " + JSON.stringify(req));
+    next();
+});
+
 app.use('/', index);
 app.use('/items', items);
 app.use('/compare', compare);
-app.use('/api', express.Router());
+app.use('/api', router);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
