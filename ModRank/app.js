@@ -4,6 +4,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var fs = require('fs');
+var cache = require('./Cache');
 app = express();
 express.Router()
 
@@ -32,7 +33,19 @@ app.use('/item', item);
 app.use('/compare', compare);
 app.use('/api', router);
 
-router.route('/item')
+router.route('/item/:').get(function (req, res) {
+    var item = cache.getItem(sanitizer.value(req.query.id, /((\d+)+)|([Rr][Aa][Nn][Dd]([Oo][Mm])?)/));
+
+    //item not found
+    if (item === null) {
+        res.status(404).send({error: "404 item not found"});
+        return;
+    }
+    else {
+        res.json(item);
+        return;
+    }
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
