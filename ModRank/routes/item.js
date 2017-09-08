@@ -21,7 +21,7 @@ router.get('/', function (req, res) {
         });
     }
     else {
-        res.render('items', item);
+        res.render('item', item);
     }
 });
 

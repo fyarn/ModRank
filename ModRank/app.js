@@ -8,7 +8,7 @@ app = express();
 express.Router()
 
 var index = require('./routes/index');
-var items = require('./routes/items');
+var item = require('./routes/item');
 var compare = require('./routes/compare');
 
 // view engine setup
@@ -28,9 +28,11 @@ router.use(function (req, res, next) {
 });
 
 app.use('/', index);
-app.use('/items', items);
+app.use('/item', item);
 app.use('/compare', compare);
 app.use('/api', router);
+
+router.route('/item')
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
