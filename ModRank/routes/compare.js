@@ -13,7 +13,7 @@ router.get('/', function (req, res) {
         if (id === undefined) {
             break;
         }
-        id = sanitizer.value(id, /(\d+)|([Rr][Aa][Nn][Dd]([Oo][Mm])?)/);
+        id = sanitizer.value(id, app.get('parserRegex'));
         console.log("id:" + id);
         item = cache.getItem(id);
 

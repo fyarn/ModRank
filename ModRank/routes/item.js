@@ -6,7 +6,7 @@ var sanitizer = require('sanitize')();
 router.get('/', function (req, res) {
     require('../UpdateDB')(app, false);
     var cache = app.get('Cacher');
-    var id = sanitizer.value(req.query.id, /((\d+)+)|([Rr][Aa][Nn][Dd]([Oo][Mm])?)/);
+    var id = sanitizer.value(req.query.id, app.get('parserRegex'));
     var item = cache.getItem(id);
 
     if (item === null) {

@@ -10,7 +10,10 @@ function cache(app) {
     var comments = app.get('commentsDB');
     cache.prototype.getItem = function (id) {
         if (typeof id === "string") {
-            if (id.toLowerCase() == 'rand' || id.toLowerCase() == 'random')
+            if (id.startsWith('https://steamcommunity.com/sharedfiles/filedetails/?id=')) {
+                id = parseInt(id.split('=')[1]);
+            }
+            else if (id.toLowerCase() == 'rand' || id.toLowerCase() == 'random')
             {
                 //get random id
                 id = app.get('masterDB')[Math.floor(Math.random() * master.length)].id;
