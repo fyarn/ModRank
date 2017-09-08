@@ -11,6 +11,7 @@ express.Router()
 var index = require('./routes/index');
 var item = require('./routes/item');
 var compare = require('./routes/compare');
+var discordBot = require('./discord')(app);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
