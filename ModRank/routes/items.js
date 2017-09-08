@@ -22,27 +22,7 @@ router.get('/', function (req, res) {
         });
     }
     else {
-        res.render('items', {
-            title: 'ModRank - ' + item.id,
-            id: item.id,
-            itemTitle: item.title,
-            comments: item.num_comments_public,
-            subs: item.subscriptions,
-            favs: item.favorited,
-            views: item.views,
-            unsubscribes: item.unsubscribes,
-            img: item.preview_url,
-            favsRank: item.favsRank,
-            favsPercent: Math.round(item.favsPercent),
-            subsRank: item.subsRank,
-            subsPercent: Math.round(item.subsPercent),
-            unsubscribesRank: item.unsubscribesRank,
-            unsubscribesPercent: Math.round(item.unsubscribesPercent),
-            viewsRank: item.viewsRank,
-            viewsPercent: Math.round(item.viewsPercent),
-            commentsRank: item.commentsRank,
-            commentsPercent: Math.round(item.commentsPercent)
-        });
+        res.render('items', item);
     }
 });
 
