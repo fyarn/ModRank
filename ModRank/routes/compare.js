@@ -19,7 +19,7 @@ router.get('/', function (req, res) {
 
         if (item === null) {
             var title = "ModRank - Not Found"
-            var message = "Item '" + sanitizer.value(id, string) + "' not found.";
+            var message = "Item not found.";
             // render the error page
             res.status(404);
             res.render('error', {
