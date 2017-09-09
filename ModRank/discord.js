@@ -16,16 +16,17 @@ function discord(app) {
                 },
                 body: JSON.stringify({ "email": process.env.acctEmail, "password": process.env.acctPwd })
             }, function (err, res, body) {
-                console.log(body);
                 if (err) {
                     return console.log('login fail: ' + err);
                 }
                 else {
-                    client.login(JSON.parse(body).token);
+                    client.login(JSON.parse(body).token).catch((e) => { console.log(e); setTimeout(makeRequest, 30000) });
                 }
             }
         );
     }
+
+    makeRequest();
 
     var commandPrefix = '!modrank';
 
