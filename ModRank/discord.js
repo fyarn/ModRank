@@ -16,13 +16,12 @@ function discord(app) {
                 },
                 body: JSON.stringify({ "email": process.env.acctEmail, "password": process.env.acctPwd })
             }, function (err, res, body) {
+                console.log(body);
                 if (err) {
-                    setTimeout(makeRequest, (1000 * 30));
                     return console.log('login fail: ' + err);
                 }
                 else {
-                    console.log(body);
-                    client.login(JSON.parse(body).token).catch((e) => console.log(e));
+                    client.login(JSON.parse(body).token);
                 }
             }
         );
