@@ -4,7 +4,7 @@ var request = require('request');
 
 function discord(app) {
     var token;
-    console.log('posting');
+    console.log('Starting Discord...')
     var client = new Discord.Client();
 
     function makeRequest() {

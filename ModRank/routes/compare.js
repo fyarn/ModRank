@@ -16,7 +16,6 @@ router.get('/', function (req, res) {
         }
         id = sanitizer.value(id, app.get('parserRegex'));
         var item = cache.getItem(id);
-        console.log('id: ' + item.id)
 
         if (id != item.id) {
             redirect = true;
@@ -44,7 +43,6 @@ router.get('/', function (req, res) {
             url += 'id' + (i + 1) + '=' + comps[i].id + '&';
         }
         url = url.substring(0, url.length - 1);
-        console.log(url)
         res.redirect(url);
     }
 

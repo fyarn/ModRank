@@ -44,7 +44,7 @@
     <Compile Include="Parser.js">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="public\javascripts\JavaScript.js">
+    <Compile Include="public\javascripts\analytics.js">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="public\vendor\Bootstrap\js\bootstrap.js" />
@@ -58,6 +58,8 @@
     <Compile Include="routes\index.js" />
     <Compile Include="routes\item.js" />
     <Content Include="bin\www" />
+    <Content Include="public\images\favicon.jpg" />
+    <Content Include="public\images\mr.png" />
     <Content Include="views\compare.jade">
       <SubType>Code</SubType>
     </Content>

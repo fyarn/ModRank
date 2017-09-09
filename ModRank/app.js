@@ -47,7 +47,6 @@ router.route('item', function (req, res) {
 });
 
 router.route('/item/:item_id').get(function (req, res) {
-    console.log(req.params.item_id.substring(1));
     cache = app.get('Cacher');
     var item = cache.getItem(sanitizer.value(req.params.item_id.substring(1), app.get('parserRegex')));
     //item not found

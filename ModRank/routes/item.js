@@ -21,7 +21,6 @@ router.get('/', function (req, res) {
         });
     }
     else if (id != item.id) {
-        console.log('id='+item.id)
         res.redirect('/item?id=' + item.id);
     }
     else {

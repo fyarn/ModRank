@@ -11,6 +11,7 @@ router.get('/', function (req, res) {
         title: 'ModRank',
         llen: list.length ? list.length : 0,
 
+        favTop: cache.getMostFavsItem(1),
         subTop: cache.getMostSubsItem(1),
         viewTop: cache.getMostViewsItem(1),
         commentTop: cache.getMostCommentsItem(1),
