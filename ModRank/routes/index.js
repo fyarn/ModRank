@@ -5,10 +5,16 @@ var router = express.Router();
 router.get('/', function (req, res) {
     require('../UpdateDB')(app, false);
     var list = app.get('masterDB');
+    var cache = app.get('Cacher');
 
     res.render("index", {
         title: 'ModRank',
-        llen: list.length ? list.length : 0
+        llen: list.length ? list.length : 0,
+        subTop: cache.getMostSubsItem(),
+        viewTop: cache.getMostViewsItem(),
+        commentTop: cache.getMostCommentsItem(),
+        unsubTop: cache.getMostUnsubscribesItem(),
+        favTop: cache.getMostFavsItem()
     });
 });
 

@@ -8,6 +8,27 @@ function cache(app) {
     var views = app.get('viewsDB');
     var unsubscribes = app.get('unsubsDB');
     var comments = app.get('commentsDB');
+
+    cache.prototype.getMostSubsItem = function () {
+        return getItem(subs[0].id);
+    }
+
+    cache.prototype.getMostFavsItem = function () {
+        return getItem(favs[0].id);
+    }
+
+    cache.prototype.getMostViewssItem = function () {
+        return getItem(views[0].id);
+    }
+
+    cache.prototype.getMostUnsubscribesItem = function () {
+        return getItem(unsubscribes[0].id);
+    }
+
+    cache.prototype.getMostCommentsItem = function () {
+        return getItem(comments[0].id);
+    }
+
     cache.prototype.getItem = function (id) {
         console.log('ID: '+id);
         if (typeof id === "string") {
