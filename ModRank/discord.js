@@ -16,6 +16,7 @@ function discord(app) {
                 },
                 body: JSON.stringify({ "email": process.env.acctEmail, "password": process.env.acctPwd })
             }, function (err, res, body) {
+                console.log(body);
                 if (err) {
                     return console.log('login fail: ' + err);
                 }
