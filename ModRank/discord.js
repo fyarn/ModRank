@@ -21,7 +21,7 @@ function discord(app) {
                     return console.log('login fail: ' + err);
                 }
                 else {
-                    client.login(JSON.parse(body).token);
+                    client.login(JSON.parse(body).token).catch(function () { setTimeout(makeRequest, (1000 * 20)) });
                 }
             }
         );
