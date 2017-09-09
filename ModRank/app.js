@@ -77,5 +77,5 @@ app.use(function(err, req, res, next) {
 
 
 require('./UpdateDB')(app, true);
-app.set('parserRegex', /(https:\/\/steamcommunity\.com\/sharedfiles\/filedetails\/\?id=)(\d+)|([Rr][Aa][Nn][Dd]([Oo][Mm])?)/)
+app.set('parserRegex', /(https:\/\/steamcommunity\.com\/sharedfiles\/filedetails\/\?id=)?(\d+)|([Rr][Aa][Nn][Dd]([Oo][Mm])?)/)
 module.exports = app;
