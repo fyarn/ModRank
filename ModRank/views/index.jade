@@ -15,41 +15,111 @@ block content
                     .col-sm-2.nopadding
                         a(href='/item?id=random', style="width:100%").btn.btn-danger.rounded-0.rounded-right Random
             em= 'Search ' + llen + ' total published mods and scenarios!'
-    ul.list-group
-        li.list-group-item
-            h2 Hall of Famers
-        li.list-group-item.bg-secondary
-            .row
-                .col-md-4 Most Subscribed
-                .col-md-2
-                    img(src=subTop.img alt=subTop.itemTitle)
-                .col-md-4= subTop.itemTitle
-                .col-md-2= subTop.subs
-        li.list-group-item.bg-primary
-            .row
-                .col-md-4 Most Favorited
-                .col-md-2
-                    img(src=subTop.img alt=subTop.itemTitle)
-                .col-md-4= subTop.itemTitle
-                .col-md-2= subTop.favs
-        li.list-group-item.bg-success
-            .row
-                .col-md-4 Most Comments
-                .col-md-2
-                    img(src=subTop.img alt=subTop.itemTitle)
-                .col-md-4= subTop.itemTitle
-                .col-md-2= subTop.comments
-        li.list-group-item.bg-danger
-            .row
-                .col-md-4 Most Viewed
-                .col-md-2
-                    img(src=subTop.img alt=subTop.itemTitle)
-                .col-md-4= subTop.itemTitle
-                .col-md-2= subTop.views
-        li.list-group-item.bg-warning
-            .row
-                .col-md-4 Most Unsubscribed
-                .col-md-2
-                    img(src=subTop.img alt=subTop.itemTitle)
-                .col-md-4= subTop.itemTitle
-                .col-md-2= subTop.unsubscribes
+    .row
+        h2 Hall of Famers
+        .col-md-6
+            ul.list-group.bg-secondary
+                li.list-group-item
+                    h4 Most Subscribed
+                li.list-group-item
+                    .row
+                        .col-md-2
+                            img(src=subTop.img alt=subTop.itemTitle).img-fluid
+                        .col-md-4= subTop.itemTitle
+                        .col-md-6= subTop.subs
+                li.list-group-item
+                    .row
+                        .col-md-2
+                            img(src=subTop2.img alt=subTop2.itemTitle).img-fluid
+                        .col-md-4= subTop2.itemTitle
+                        .col-md-6= subTop2.subs
+                li.list-group-item
+                    .row
+                        .col-md-2
+                            img(src=subTop3.img alt=subTop3.itemTitle).img-fluid
+                        .col-md-4= subTop3.itemTitle
+                        .col-md-6= subTop3.subs
+            ul.list-group.bg-primary
+                li.list-group-item
+                    h4 Most Favorited
+                li.list-group-item
+                    .row
+                        .col-md-2
+                            img(src=favTop.img alt=favTop.itemTitle).img-fluid
+                        .col-md-4= favTop.itemTitle
+                        .col-md-6= favTop.favs
+                li.list-group-item
+                    .row
+                        .col-md-2
+                            img(src=favTop2.img alt=favTop2.itemTitle).img-fluid
+                        .col-md-4= favTop2.itemTitle
+                        .col-md-6= favTop2.favs
+                li.list-group-item
+                    .row
+                        .col-md-2
+                            img(src=favTop3.img alt=favTop3.itemTitle).img-fluid
+                        .col-md-4= favTop3.itemTitle
+                        .col-md-6= favTop3.favs
+            ul.list-group.bg-success
+                li.list-group-item
+                    h4 Most Commented On
+                li.list-group-item
+                    .row
+                        .col-md-2
+                            img(src=commentTop.img alt=commentTop.itemTitle).img-fluid
+                        .col-md-4= commentTop.itemTitle
+                        .col-md-6= commentTop.comments
+                li.list-group-item
+                    .row
+                        .col-md-2
+                            img(src=commentTop2.img alt=commentTop2.itemTitle).img-fluid
+                        .col-md-4= commentTop2.itemTitle
+                        .col-md-6= commentTop2.comments
+                li.list-group-item
+                    .row
+                        .col-md-2
+                            img(src=commentTop3.img alt=commentTop3.itemTitle).img-fluid
+                        .col-md-4= commentTop3.itemTitle
+                        .col-md-6= commentTop3.comments
+            ul.list-group.bg-danger
+                li.list-group-item
+                    h4 Most Viewed
+                li.list-group-item
+                    .row
+                        .col-md-2
+                            img(src=viewTop.img alt=viewTop.itemTitle).img-fluid
+                        .col-md-4= viewTop.itemTitle
+                        .col-md-6= viewTop.views
+                li.list-group-item
+                    .row
+                        .col-md-2
+                            img(src=viewTop2.img alt=viewTop2.itemTitle).img-fluid
+                        .col-md-4= viewTop2.itemTitle
+                        .col-md-6= viewTop2.views
+                li.list-group-item
+                    .row
+                        .col-md-2
+                            img(src=viewTop3.img alt=viewTop3.itemTitle).img-fluid
+                        .col-md-4= viewTop3.itemTitle
+                        .col-md-6= viewTop3.views
+            ul.list-group.bg-warning
+                li.list-group-item
+                    h4 Most Unsubscribed
+                li.list-group-item
+                    .row
+                        .col-md-2
+                            img(src=unsubTop.img alt=unsubTop.itemTitle).img-fluid
+                        .col-md-4= unsubTop.itemTitle
+                        .col-md-6= unsubTop.unsubs
+                li.list-group-item
+                    .row
+                        .col-md-2
+                            img(src=unsubTop2.img alt=unsubTop2.itemTitle).img-fluid
+                        .col-md-4= unsubTop2.itemTitle
+                        .col-md-6= unsubTop2.unsubs
+                li.list-group-item
+                    .row
+                        .col-md-2
+                            img(src=unsubTop3.img alt=unsubTop3.itemTitle).img-fluid
+                        .col-md-4= unsubTop3.itemTitle
+                        .col-md-6= unsubTop3.unsubs

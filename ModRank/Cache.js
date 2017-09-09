@@ -9,24 +9,25 @@ function cache(app) {
     var unsubscribes = app.get('unsubsDB');
     var comments = app.get('commentsDB');
 
-    cache.prototype.getMostSubsItem = function () {
-        return getItem(subs[0].id);
+    //all of these are 1 indexed (getMostSubsItem(1) returns the first best item)
+    cache.prototype.getMostSubsItem = function (index = 1) {
+        return this.getItem(subs[index - 1].id);
     }
 
-    cache.prototype.getMostFavsItem = function () {
-        return getItem(favs[0].id);
+    cache.prototype.getMostFavsItem = function (index = 1) {
+        return this.getItem(favs[index - 1].id);
     }
 
-    cache.prototype.getMostViewssItem = function () {
-        return getItem(views[0].id);
+    cache.prototype.getMostViewsItem = function (index = 1) {
+        return this.getItem(views[index - 1].id);
     }
 
-    cache.prototype.getMostUnsubscribesItem = function () {
-        return getItem(unsubscribes[0].id);
+    cache.prototype.getMostUnsubscribesItem = function (index = 1) {
+        return this.getItem(unsubscribes[index - 1].id);
     }
 
-    cache.prototype.getMostCommentsItem = function () {
-        return getItem(comments[0].id);
+    cache.prototype.getMostCommentsItem = function (index = 1) {
+        return this.getItem(comments[index - 1].id);
     }
 
     cache.prototype.getItem = function (id) {
