@@ -7,7 +7,12 @@ function discord(app) {
     console.log('Starting Discord...')
     var client = new Discord.Client();
 
+    //set initial interval to 30 seconds (/2 because of initial multiplication by 2)
+    var interval = 30000 / 2;
+
     function makeRequest() {
+        //increase interval every time to avoid breaking API rate limit if site reboots while afk
+        interval *= 2;
         request.post('https://discordapp.com/api/auth/login',
             {
                 url: 'https://discordapp.com/api/auth/login',
@@ -20,7 +25,7 @@ function discord(app) {
                     return console.log('login fail: ' + err);
                 }
                 else {
-                    client.login(JSON.parse(body).token).catch((e) => { console.log(e); setTimeout(makeRequest, 30000) });
+                    client.login(JSON.parse(body).token).catch((e) => { console.log(e); setTimeout(makeRequest, interval) });
                 }
             }
         );
