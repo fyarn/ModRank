@@ -6,23 +6,27 @@ function discord(app) {
     var token;
     console.log('posting');
     var client = new Discord.Client();
-    request.post('https://discordapp.com/api/auth/login',
-        {
-            url: 'https://discordapp.com/api/auth/login',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ "email": process.env.acctEmail, "password": process.env.acctPwd })
-        }, function(err, res, body) {
-            if (err) {
-                return console.log('login fail: ' + err);
+
+    function makeRequest() {
+        request.post('https://discordapp.com/api/auth/login',
+            {
+                url: 'https://discordapp.com/api/auth/login',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ "email": process.env.acctEmail, "password": process.env.acctPwd })
+            }, function (err, res, body) {
+                if (err) {
+                    setTimeout(makeRequest, (1000 * 30));
+                    return console.log('login fail: ' + err);
+                }
+                else {
+                    client.login(JSON.parse(body).token);
+                }
             }
-            else {
-                console.log(body);
-            }
-            client.login(JSON.parse(body).token);
-        }
-    );
+        );
+    }
+
     var commandPrefix = '!modrank';
 
     client.on('ready', () => {
