@@ -11,7 +11,8 @@ function cache(app) {
     cache.prototype.getItem = function (id) {
         console.log('ID: '+id);
         if (typeof id === "string") {
-            if (id.startsWith('https://steamcommunity.com/sharedfiles/filedetails/?id=')) {
+            if (id.startsWith('https://steamcommunity.com/sharedfiles/filedetails/?id=')
+                || id.startsWith('http://steamcommunity.com/sharedfiles/filedetails/?id=')) {
                 id = parseInt(id.split('=')[1]);
             }
             else if (id.toLowerCase() == 'rand' || id.toLowerCase() == 'random')
@@ -23,6 +24,7 @@ function cache(app) {
                 id = parseInt(id);
             }
         }
+
         var record = master.find(function (value) { return value.id === id; });
         if (record === undefined) {
             console.log("record is undefined");
