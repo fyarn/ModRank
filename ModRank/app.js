@@ -44,17 +44,19 @@ app.use('//', function (req, res) {
 
 router.get('/', function (req, res) {
     res.json({ message: 'Connection succesful: ModRank API v1.0.0' })
-    visitor.event("API", "Connection Test");
+    visitor.event("API", "Connection Test").send();
 });
+
+//being taken over by app.use, currently not being called
 router.route('item', function (req, res) {
     res.json({ message: 'Connection succesful: ModRank Item API v1.0.0' });
-    visitor.event("API", "Item Connection Test");
+    visitor.event("API", "Item Connection Test").send();
 });
 
 router.route('/item/:item_id').get(function (req, res) {
     var cache = app.get('Cacher');
     var item = cache.getItem(sanitizer.value(req.params.item_id.substring(1), app.get('parserRegex')));
-    visitor.event("API", "Item Lookup", req.params.item_id, (item != null) ? item.id : -1);
+    visitor.event("API", "Item Lookup", req.params.item_id, (item != null) ? item.id : -1).send();
     //item not found
     if (item === null) {
         res.status(404).send({error: "404 item not found"});

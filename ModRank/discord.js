@@ -16,7 +16,6 @@ function discord(app) {
                 },
                 body: JSON.stringify({ "email": process.env.acctEmail, "password": process.env.acctPwd })
             }, function (err, res, body) {
-                console.log(body);
                 if (err) {
                     return console.log('login fail: ' + err);
                 }
@@ -36,9 +35,9 @@ function discord(app) {
         client.user.setGame('ranking mods');
     });
 
-    var visitor = app.get('visitor');
 
     client.on('message', msg => {
+        var visitor = app.get('visitor');
         msg.content = msg.content.toLowerCase();
         if (msg.author.id !== client.user.id && msg.content.startsWith(commandPrefix)) {
             var reply = "";
@@ -49,7 +48,7 @@ function discord(app) {
                 var id = sanitizer.value(lookupString, app.get('parserRegex'));
                 var item = cache.getItem(id);
                 if (item !== null) {
-                    visitor.event("Chatbot", "Item Lookup", id, item.id);
+                    visitor.event("Chatbot", "Item Lookup", id, item.id).send();
                     //pad columns
                     var column1Length = Math.max(("" + item.subs).length, ("" + item.favs).length, ("" + item.comments).length,
                         ("" + item.views).length, ("" + item.unsubscribes).length);
@@ -126,12 +125,14 @@ function discord(app) {
                         'Find online anytime at: http://tinyurl.com/ModRank/item?id=' + item.id;
                 }
                 else {
+                    visitor.event("Chatbot", "Item Lookup", id, -1).send();
                     reply = 'item not found :(';
                 }
                 console.log("New Message: '" + msg + "'\nReplying with: " + reply);
                 msg.reply(reply);
             }
             else if (msg.content.startsWith(commandPrefix + ' ') || msg.content === commandPrefix) {
+                visitor.event("Chatbot", "Base Command").send();
                 msg.reply("Hi, I'm ModRank Bot! (online at http://tinyurl.com/ModRank) \n" +
                     "Use `!modrank ID` to get a mod's rank! ID can be a Steam ID, URL to a Steam mod page, or `random`!\n" +
                     "Am I broken? Contact the other fyarn!")
