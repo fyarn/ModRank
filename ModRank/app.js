@@ -4,15 +4,19 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var fs = require('fs');
-app = express();
-var router = express.Router();
+var discord = require('./discord');
+var ua = require('universal-analytics');
 var sanitizer = require('sanitize')();
 
 var index = require('./routes/index');
 var item = require('./routes/item');
 var compare = require('./routes/compare');
-var discord = require('./discord');
+
+var router = express.Router();
+app = express();
 var discordBot = new discord(app);
+var visitor = ua('UA-64719618-2');
+app.set('visitor', visitor);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -26,7 +30,6 @@ app.use(express.static(path.join(__dirname, '/public')));
 
 //api middleware
 router.use(function (req, res, next) {
-    console.log("API | Request made: " + req.url);
     next();
 });
 
@@ -41,14 +44,17 @@ app.use('//', function (req, res) {
 
 router.get('/', function (req, res) {
     res.json({ message: 'Connection succesful: ModRank API v1.0.0' })
+    visitor.event("API", "Connection Test");
 });
 router.route('item', function (req, res) {
-    res.json({ message: 'Connection succesful: ModRank Item API v1.0.0' })
+    res.json({ message: 'Connection succesful: ModRank Item API v1.0.0' });
+    visitor.event("API", "Item Connection Test");
 });
 
 router.route('/item/:item_id').get(function (req, res) {
-    cache = app.get('Cacher');
+    var cache = app.get('Cacher');
     var item = cache.getItem(sanitizer.value(req.params.item_id.substring(1), app.get('parserRegex')));
+    visitor.event("API", "Item Lookup", req.params.item_id, (item != null) ? item.id : -1);
     //item not found
     if (item === null) {
         res.status(404).send({error: "404 item not found"});

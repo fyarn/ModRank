@@ -36,6 +36,8 @@ function discord(app) {
         client.user.setGame('ranking mods');
     });
 
+    var visitor = app.get('visitor');
+
     client.on('message', msg => {
         msg.content = msg.content.toLowerCase();
         if (msg.author.id !== client.user.id && msg.content.startsWith(commandPrefix)) {
@@ -44,8 +46,10 @@ function discord(app) {
             var lookupString = msg.content.split(' ')[1];
             if (lookupString != undefined) {
                 var cache = app.get('Cacher');
-                var item = cache.getItem(sanitizer.value(lookupString, app.get('parserRegex')));
+                var id = sanitizer.value(lookupString, app.get('parserRegex'));
+                var item = cache.getItem(id);
                 if (item !== null) {
+                    visitor.event("Chatbot", "Item Lookup", id, item.id);
                     //pad columns
                     var column1Length = Math.max(("" + item.subs).length, ("" + item.favs).length, ("" + item.comments).length,
                         ("" + item.views).length, ("" + item.unsubscribes).length);
@@ -128,7 +132,9 @@ function discord(app) {
                 msg.reply(reply);
             }
             else if (msg.content.startsWith(commandPrefix + ' ') || msg.content === commandPrefix) {
-                msg.reply("Hi, I'm ModRank Bot!\nUse `!modrank ID` to get a mod's rank! ID can be a Steam ID, URL to a Steam mod page, or `random`!\nAm I broken? Contact the other fyarn!")
+                msg.reply("Hi, I'm ModRank Bot! (online at http://tinyurl.com/ModRank) \n" +
+                    "Use `!modrank ID` to get a mod's rank! ID can be a Steam ID, URL to a Steam mod page, or `random`!\n" +
+                    "Am I broken? Contact the other fyarn!")
             }
         }
     });
