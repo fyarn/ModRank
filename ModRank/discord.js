@@ -5,6 +5,7 @@ var request = require('request');
 function discord(app) {
     var token;
     console.log('posting');
+    var client = new Discord.Client();
     request.post('https://discordapp.com/api/auth/login',
         {
             url: 'https://discordapp.com/api/auth/login',
@@ -16,10 +17,12 @@ function discord(app) {
             if (err) {
                 return console.log('login fail: ' + err);
             }
+            else {
+                console.log(body);
+            }
             client.login(JSON.parse(body).token);
         }
     );
-    var client = new Discord.Client();
     var commandPrefix = '!modrank';
 
     client.on('ready', () => {
