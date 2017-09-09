@@ -34,6 +34,10 @@ app.use('/', index);
 app.use('/item', item);
 app.use('/compare', compare);
 app.use('/api', router);
+//replace double slashes after URL
+app.use('//', function (req, res) {
+    res.redirect(req.url.replace(/([^:]\/)\/+/g, "$1"));
+});
 
 router.get('/', function (req, res) {
     res.json({ message: 'Connection succesful: ModRank API v1.0.0' })
@@ -77,5 +81,7 @@ app.use(function(err, req, res, next) {
 
 
 require('./UpdateDB')(app, true);
-app.set('parserRegex', /(https:\/\/steamcommunity\.com\/sharedfiles\/filedetails\/\?id=)?(\d+)|([Rr][Aa][Nn][Dd]([Oo][Mm])?)/)
-module.exports = app;
+app.set('parserRegex', /(https:\/\/steamcommunity\.com\/sharedfiles\/filedetails\/\?id=)?(\d+)|([Rr][Aa][Nn][Dd]([Oo][Mm])?)/);
+app.set('steamRegex', /https:\/\/steamcommunity\.com\/sharedfiles\/filedetails\/\?id=/);
+app.set('idRegex', /\d+/);
+module.exports = app; module.exports = app;

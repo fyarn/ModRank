@@ -7,18 +7,23 @@ router.get('/', function (req, res) {
     require('../UpdateDB')(app, false);
     var cache = app.get('Cacher');
     var comps = [];
+    var redirect = false;
 
-    for (var i = 1; i < app.get('masterDB').length; i++) {
+    for (var i = 1; i <= app.get('masterDB').length; i++) {
         var id = req.param('id' + i);
         if (id === undefined) {
             break;
         }
         id = sanitizer.value(id, app.get('parserRegex'));
-        console.log("id:" + id);
-        item = cache.getItem(id);
+        var item = cache.getItem(id);
+        console.log('id: ' + item.id)
+
+        if (id != item.id) {
+            redirect = true;
+        }
 
         if (item === null) {
-            var title = "ModRank - Not Found"
+            var title = "ModRank - Not Found";
             var message = "Item not found.";
             // render the error page
             res.status(404);
@@ -32,6 +37,17 @@ router.get('/', function (req, res) {
             comps.push(item);
         }
     }
+
+    if (redirect) {
+        url = '/compare?';
+        for (var i = 0; i < comps.length; i++) {
+            url += 'id' + (i + 1) + '=' + comps[i].id + '&';
+        }
+        url = url.substring(0, url.length - 1);
+        console.log(url)
+        res.redirect(url);
+    }
+
     res.render('compare', { title: 'ModRank Comparison', comps});
 });
 

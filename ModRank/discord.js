@@ -118,7 +118,7 @@ function discord(app) {
                         'Comments:        ' + commentsPadding + item.comments + ' | ' + commentsRankPadding + '#' + item.commentsRank + " | " + item.commentsPercent + "%\n" +
                         'Views:           ' + viewsPadding + item.views + ' | ' + viewsRankPadding + '#' + item.viewsRank + " | " + item.viewsPercent + "%\n" +
                         'Unsubscriptions: ' + unsubscribesPadding + item.unsubscribes + ' | ' + unsubscribesRankPadding + '#' + item.unsubscribesRank + " | " + item.unsubscribesPercent + "%`\n" +
-                        'See more at: http://tinyurl.com/ModRank';
+                        'Find online anytime at: http://tinyurl.com/ModRank/item?id=' + item.id;
                 }
                 else {
                     reply = 'item not found :(';

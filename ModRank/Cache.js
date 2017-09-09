@@ -9,6 +9,7 @@ function cache(app) {
     var unsubscribes = app.get('unsubsDB');
     var comments = app.get('commentsDB');
     cache.prototype.getItem = function (id) {
+        console.log('ID: '+id);
         if (typeof id === "string") {
             if (id.startsWith('https://steamcommunity.com/sharedfiles/filedetails/?id=')) {
                 id = parseInt(id.split('=')[1]);
