@@ -18,30 +18,37 @@ html
                             h3.masthead-brand
                                 img(src='/images/mr.png' alt='RW-MR' style='max-height:40px').img-fluid
                         nav
-                            ul.nav.masthead-nav
-                                li
-                                    h5
-                                        a(href='/') Search
-                                li
-                                    h5
-                                        a(href='/compare') Compare
-                                li
-                                    h5
-                                        a(href='/item?id=random') Random
-                                li
-                                    h5
-                                        a(href='/compare?id1=random&id2=random') Random Matchup
-                            ul.nav.masthead-nav
-                                li
-                                    a(href='/chart?cat=subs') Most Subscribed
-                                li
-                                    a(href='/chart?cat=favs') Most Favorited
-                                li
-                                    a(href='/chart?cat=comments') Most Commented
-                                li
-                                    a(href='/chart?cat=views') Most Viewed
-                                li
-                                    a(href='/chart?cat=unsubs') Most Unsubscribed
+                            .row
+                                ul.nav.masthead-nav(style='margin-left:auto')
+                                    li
+                                        h5
+                                            a(href='/') Search
+                                    li
+                                        h5
+                                            a(href='/compare') Compare
+                                    li
+                                        h5
+                                            a(href='/item?id=random') Random
+                                    li
+                                        h5
+                                            a(href='/compare?id1=random&id2=random') Random Matchup
+                            .row
+                                ul.nav.masthead-nav(style='margin-left:auto')
+                                    li
+                                        h6
+                                            a(href='/chart?cat=subs') Most Subscribed
+                                    li
+                                        h6
+                                            a(href='/chart?cat=favs') Most Favorited
+                                    li
+                                        h6
+                                            a(href='/chart?cat=comments') Most Commented
+                                    li
+                                        h6
+                                            a(href='/chart?cat=views') Most Viewed
+                                    li
+                                        h6
+                                            a(href='/chart?cat=unsubs') Most Unsubscribed
                             .clearfix
                 .inner.cover
                   block content
