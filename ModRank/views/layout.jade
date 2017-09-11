@@ -4,7 +4,7 @@ html
   head
     title= title
     link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css')
-    link(rel='stylesheet', href='/vendor/Bootstrap/css/bootstrap.css')
+    link(rel='stylesheet', href='/vendor/Bootstrap/css/bootstrap.min.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
     link(rel='icon', href='/images/mr.png')
 
@@ -31,14 +31,27 @@ html
                                 li
                                     h5
                                         a(href='/compare?id1=random&id2=random') Random Matchup
-                                    
-            
+                            ul.nav.masthead-nav
+                                li
+                                    a(href='/chart?cat=subs') Most Subscribed
+                                li
+                                    a(href='/chart?cat=favs') Most Favorited
+                                li
+                                    a(href='/chart?cat=comments') Most Commented
+                                li
+                                    a(href='/chart?cat=views') Most Viewed
+                                li
+                                    a(href='/chart?cat=unsubs') Most Unsubscribed
+                            .clearfix
                 .inner.cover
                   block content
                 .mastfoot
                   .inner
+                    em Data may be up to 3 hours old*
                     //p &copy; Nick Fisher 2017
 
     script(src='https://code.jquery.com/jquery-3.2.1.min.js')
-    script(src='/vendor/Bootstrap/js/bootstrap.js')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.min.js')
+    script(src='/vendor/Bootstrap/js/bootstrap.min.js')
     script(src='/javascripts/analytics.js')
+    script $("img.lazy").lazyload();

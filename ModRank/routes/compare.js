@@ -4,7 +4,6 @@ var sanitizer = require('sanitize')();
 
 /* GET compare listings. */
 router.get('/', function (req, res) {
-    require('../UpdateDB')(app, false);
     var cache = app.get('Cacher');
     var comps = [];
     var redirect = false;
@@ -39,7 +38,7 @@ router.get('/', function (req, res) {
 
     if (redirect) {
         url = '/compare?';
-        for (var i = 0; i < comps.length; i++) {
+        for (i = 0; i < comps.length; i++) {
             url += 'id' + (i + 1) + '=' + comps[i].id + '&';
         }
         url = url.substring(0, url.length - 1);

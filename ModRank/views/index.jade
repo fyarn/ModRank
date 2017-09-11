@@ -21,8 +21,9 @@ block content
         .clearfix
         .col-md-6.col-lg-4(style='margin-bottom:30px')
             ul.list-group
-                li.list-group-item.bg-danger(style='border-bottom:4px solid white')
-                    h4 Most Subscribed
+                a(href='/chart?cat=subs')
+                    li.list-group-item.bg-danger(style='border-bottom:4px solid white')
+                        h4 Most Subscribed
                 li.list-group-item.bg-warning
                     a(href=('/item?id=' + subTop.id))
                         .row
@@ -49,8 +50,9 @@ block content
                             .col-md-2= subTop3.subs
         .col-md-6.col-lg-4(style='margin-bottom:30px')
             ul.list-group
-                li.list-group-item.bg-danger(style='border-bottom:4px solid white')
-                    h4 Most Favorited
+                a(href='/chart?cat=favs')
+                    li.list-group-item.bg-danger(style='border-bottom:4px solid white')
+                        h4 Most Favorited
                 li.list-group-item.bg-warning
                     a(href=('/item?id=' + favTop.id))
                         .row
@@ -77,8 +79,9 @@ block content
                             .col-md-2= favTop3.favs
         .col-md-6.col-lg-4(style='margin-bottom:30px')
             ul.list-group
-                li.list-group-item.bg-danger(style='border-bottom:4px solid white')
-                    h4 Most Comments
+                a(href='/chart?cat=comments')
+                    li.list-group-item.bg-danger(style='border-bottom:4px solid white')
+                        h4 Most Comments
                 li.list-group-item.bg-warning
                     a(href=('/item?id=' + commentTop.id))
                         .row
@@ -103,10 +106,12 @@ block content
                                 img(src=commentTop3.img alt=commentTop3.itemTitle).img-fluid
                             .col-md-6= commentTop3.itemTitle
                             .col-md-2= commentTop3.comments
+        .clearfix
         .col-md-6.col-lg-4(style='margin-bottom:30px')
             ul.list-group
-                li.list-group-item.bg-danger(style='border-bottom:4px solid white')
-                    h4 Most Viewed
+                a(href='/chart?cat=views')
+                    li.list-group-item.bg-danger(style='border-bottom:4px solid white')
+                        h4 Most Viewed
                 li.list-group-item.bg-warning
                     a(href=('/item?id=' + viewTop.id))
                         .row
@@ -133,8 +138,9 @@ block content
                             .col-md-2= viewTop3.views
         .col-md-6.col-lg-4(style='margin-bottom:30px')
             ul.list-group
-                li.list-group-item.bg-danger(style='border-bottom:4px solid white')
-                    h4 Most Unsubscribed
+                a(href='/chart?cat=unsubs')
+                    li.list-group-item.bg-danger(style='border-bottom:4px solid white')
+                        h4 Most Unsubscribed
                 li.list-group-item.bg-warning
                     a(href=('/item?id=' + unsubTop.id))
                         .row

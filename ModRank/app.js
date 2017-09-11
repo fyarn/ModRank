@@ -11,6 +11,7 @@ var sanitizer = require('sanitize')();
 var index = require('./routes/index');
 var item = require('./routes/item');
 var compare = require('./routes/compare');
+var chart = require('./routes/chart');
 
 var router = express.Router();
 app = express();
@@ -30,12 +31,14 @@ app.use(express.static(path.join(__dirname, '/public')));
 
 //api middleware
 router.use(function (req, res, next) {
+    require('./updateDB')(app, false);
     next();
 });
 
 app.use('/', index);
 app.use('/item', item);
 app.use('/compare', compare);
+app.use('/chart', chart);
 app.use('/api', router);
 //replace double slashes after URL
 app.use('//', function (req, res) {
@@ -43,20 +46,20 @@ app.use('//', function (req, res) {
 });
 
 router.get('/', function (req, res) {
-    res.json({ message: 'Connection succesful: ModRank API v1.0.0' })
+    res.json({ message: 'Connection succesful: ModRank API v1.0.0' });
     visitor.event("API", "Connection Test").send();
 });
 
-//being taken over by app.use, currently not being called
-router.route('item', function (req, res) {
-    res.json({ message: 'Connection succesful: ModRank Item API v1.0.0' });
+
+router.route('items', function (req, res) {
+    res.json({ message: 'Connection succesful: ModRank Items API v1.0.0' });
     visitor.event("API", "Item Connection Test").send();
 });
 
-router.route('/item/:item_id').get(function (req, res) {
+router.route('/items/:item_id').get(function (req, res) {
     var cache = app.get('Cacher');
     var item = cache.getItem(sanitizer.value(req.params.item_id.substring(1), app.get('parserRegex')));
-    visitor.event("API", "Item Lookup", req.params.item_id, (item != null) ? item.id : -1).send();
+    visitor.event("API", "Item Lookup", req.params.item_id, item !== null ? item.id : -1).send();
     //item not found
     if (item === null) {
         res.status(404).send({error: "404 item not found"});

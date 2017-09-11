@@ -11,14 +11,20 @@ function parser(database, app)
     record('views', sortByViews(database));
     record('unsubs', sortByUnsubscribes(database));
     record('comments', sortByComments(database));
-    app.set('Cacher', new Cache(app));
+    if (app.get('Cacher') === undefined) {
+        app.set('Cacher', new Cache(app));
+    }
 
     function sortBySubscriptions(database) {
         var db = [];
         database.forEach(function (obj) {
             db.push({
                 id: obj.id,
-                subscriptions: obj.subscriptions
+                subscriptions: obj.subscriptions,
+                hits: obj.subscriptions,
+                name: obj.title,
+                img: obj.preview_url,
+                rank: -1
             });
         });
 
@@ -31,6 +37,13 @@ function parser(database, app)
                 return 0;
         });
 
+        var rank = 1;
+        for (var i = 0; i < db.length; i++) {
+            db[i].rank = rank++;
+            if (i > 0 && db[i].subscriptions === db[i - 1].subscriptions) {
+                db[i].rank = db[i - 1].rank;
+            }
+        }
         return db;
     }
 
@@ -39,7 +52,11 @@ function parser(database, app)
         database.forEach(function (obj) {
             db.push({
                 id: obj.id,
-                favorited: obj.favorited
+                favorited: obj.favorited,
+                hits: obj.favorited,
+                name: obj.title,
+                img: obj.preview_url,
+                rank: -1
             });
         });
 
@@ -52,6 +69,14 @@ function parser(database, app)
                 return 0;
         });
 
+        var rank = 1;
+        for (var i = 0; i < db.length; i++) {
+            db[i].rank = rank++;
+            if (i > 0 && db[i].favorited === db[i - 1].favorited) {
+                db[i].rank = db[i - 1].rank;
+            }
+        }
+
         return db;
     }
 
@@ -60,7 +85,11 @@ function parser(database, app)
         database.forEach(function (obj) {
             db.push({
                 id: obj.id,
-                views: obj.views
+                views: obj.views,
+                hits: obj.views,
+                name: obj.title,
+                img: obj.preview_url,
+                rank: -1
             });
         });
 
@@ -73,6 +102,14 @@ function parser(database, app)
                 return 0;
         });
 
+        var rank = 1;
+        for (var i = 0; i < db.length; i++) {
+            db[i].rank = rank++;
+            if (i > 0 && db[i].views === db[i - 1].views) {
+                db[i].rank = db[i - 1].rank;
+            }
+        }
+
         return db;
     }
 
@@ -81,7 +118,11 @@ function parser(database, app)
         database.forEach(function (obj) {
             db.push({
                 id: obj.id,
-                unsubscribes: obj.unsubscribes
+                unsubscribes: obj.unsubscribes,
+                hits: obj.unsubscribes,
+                name: obj.title,
+                img: obj.preview_url,
+                rank: -1
             });
         });
 
@@ -94,6 +135,14 @@ function parser(database, app)
                 return 0;
         });
 
+        var rank = 1;
+        for (var i = 0; i < db.length; i++) {
+            db[i].rank = rank++;
+            if (i > 0 && db[i].unsubscribes === db[i - 1].unsubscribes) {
+                db[i].rank = db[i - 1].rank;
+            }
+        }
+
         return db;
     }
 
@@ -102,7 +151,11 @@ function parser(database, app)
         database.forEach(function (obj) {
             db.push({
                 id: obj.id,
-                num_comments_public: obj.num_comments_public
+                num_comments_public: obj.num_comments_public,
+                hits: obj.num_comments_public,
+                name: obj.title,
+                img: obj.preview_url,
+                rank: -1
             });
         });
 
@@ -114,6 +167,14 @@ function parser(database, app)
             else
                 return 0;
         });
+
+        var rank = 1;
+        for (var i = 0; i < db.length; i++) {
+            db[i].rank = rank++;
+            if (i > 0 && db[i].num_comments_public === db[i - 1].num_comments_public) {
+                db[i].rank = db[i - 1].rank;
+            }
+        }
 
         return db;
     }

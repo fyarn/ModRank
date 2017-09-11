@@ -6,8 +6,8 @@ var parse = require('./Parser');
 function UpdateDB(app, forced) {
     //get stored variables
     var devKey = process.env.DevKey;
-    // 1 day = 86400000ms
-    var updateIntervalInMS = 86400000;
+    // 1 day = 86400000ms, refresh every 3 hours
+    var updateIntervalInMS = 86400000 / 8;
     var results = [];
     var totalItemCount = -1;
     lastUpdate = app.get('lastUpdate');
@@ -67,9 +67,6 @@ function UpdateDB(app, forced) {
 
                     results = results.concat(body.response.publishedfiledetails);
                     var len = body.response.publishedfiledetails.length;
-                    if (len !== undefined) {
-                        console.log("Response Length: " + len);
-                    }
                     console.log("Result Count: " + results.length);
 
                     //if done
@@ -77,7 +74,6 @@ function UpdateDB(app, forced) {
                         rufCallback();
                     }
                     else {
-                        console.log("Requesting page " + (page + 1));
                         requestUntillFilled(page + 1);
                     }
                 }

@@ -4,7 +4,7 @@ var request = require('request');
 
 function discord(app) {
     var token;
-    console.log('Starting Discord...')
+    console.log('Starting Discord...');
     var client = new Discord.Client();
 
     //set initial interval to 30 seconds (/2 because of initial multiplication by 2)
@@ -25,7 +25,7 @@ function discord(app) {
                     return console.log('login fail: ' + err);
                 }
                 else {
-                    client.login(JSON.parse(body).token).catch((e) => { console.log(e); setTimeout(makeRequest, interval) });
+                    client.login(JSON.parse(body).token).catch((e) => { console.log(e); setTimeout(makeRequest, interval); });
                 }
             }
         );
@@ -48,7 +48,7 @@ function discord(app) {
             var reply = "";
             //get first word after !modrank
             var lookupString = msg.content.split(' ')[1];
-            if (lookupString != undefined) {
+            if (lookupString !== undefined) {
                 var cache = app.get('Cacher');
                 var id = sanitizer.value(lookupString, app.get('parserRegex'));
                 var item = cache.getItem(id);
@@ -64,60 +64,60 @@ function discord(app) {
                     }
                     var favsPaddingLength = column1Length - ("" + item.favs).length;
                     var favsPadding = "";
-                    for (var i = 0; i < favsPaddingLength; i++) {
+                    for (i = 0; i < favsPaddingLength; i++) {
                         favsPadding += " ";
                     }
                     var unsubscribesPaddingLength = column1Length - ("" + item.unsubscribes).length;
                     var unsubscribesPadding = "";
-                    for (var i = 0; i < unsubscribesPaddingLength; i++) {
+                    for (i = 0; i < unsubscribesPaddingLength; i++) {
                         unsubscribesPadding += " ";
                     }
                     var viewsPaddingLength = column1Length - ("" + item.views).length;
                     var viewsPadding = "";
-                    for (var i = 0; i < viewsPaddingLength; i++) {
+                    for (i = 0; i < viewsPaddingLength; i++) {
                         viewsPadding += " ";
                     }
                     var commentsPaddingLength = column1Length - ("" + item.comments).length;
                     var commentsPadding = "";
-                    for (var i = 0; i < commentsPaddingLength; i++) {
+                    for (i = 0; i < commentsPaddingLength; i++) {
                         commentsPadding += " ";
                     }
                     var column2Length = Math.max(("" + item.subsRank).length, ("" + item.favsRank).length, ("" + item.commentsRank).length,
                         ("" + item.viewsRank).length, ("" + item.unsubsRankcribes).length);
                     var subsRankPaddingLength = column1Length - ("" + item.subsRank).length;
                     var subsRankPadding = "";
-                    for (var i = 0; i < subsRankPaddingLength; i++) {
+                    for (i = 0; i < subsRankPaddingLength; i++) {
                         subsRankPadding += " ";
                     }
                     var favsRankPaddingLength = column1Length - ("" + item.favsRank).length;
                     var favsRankPadding = "";
-                    for (var i = 0; i < favsRankPaddingLength; i++) {
+                    for (i = 0; i < favsRankPaddingLength; i++) {
                         favsRankPadding += " ";
                     }
                     var unsubscribesRankPaddingLength = column1Length - ("" + item.unsubscribesRank).length;
                     var unsubscribesRankPadding = "";
-                    for (var i = 0; i < unsubscribesRankPaddingLength; i++) {
+                    for (i = 0; i < unsubscribesRankPaddingLength; i++) {
                         unsubscribesRankPadding += " ";
                     }
                     var viewsRankPaddingLength = column1Length - ("" + item.viewsRank).length;
                     var viewsRankPadding = "";
-                    for (var i = 0; i < viewsRankPaddingLength; i++) {
+                    for (i = 0; i < viewsRankPaddingLength; i++) {
                         viewsRankPadding += " ";
                     }
                     var commentsRankPaddingLength = column1Length - ("" + item.commentsRank).length;
                     var commentsRankPadding = "";
-                    for (var i = 0; i < commentsRankPaddingLength; i++) {
+                    for (i = 0; i < commentsRankPaddingLength; i++) {
                         commentsRankPadding += " ";
                     }
                     var totalLength = ('Views:           ' + viewsPadding + item.views + ' | #' + viewsRankPadding + item.viewsRank + " | " + item.viewsPercent + "%\n").length;
                     var titlePaddingAmount = (totalLength - item.title.length) / 2;
                     var titlePadding = "";
-                    for (var i = 0; i < titlePaddingAmount; i++) {
+                    for (i = 0; i < titlePaddingAmount; i++) {
                         titlePadding += " ";
                     }
                     var itemTitlePaddingAmount = (totalLength - item.itemTitle.length) / 2;
                     var itemTitlePadding = "";
-                    for (var i = 0; i < itemTitlePaddingAmount; i++) {
+                    for (i = 0; i < itemTitlePaddingAmount; i++) {
                         itemTitlePadding += " ";
                     }
                     reply = '\n' + titlePadding + titlePadding + '`' + item.title + '`\n' +
@@ -140,7 +140,7 @@ function discord(app) {
                 visitor.event("Chatbot", "Base Command").send();
                 msg.reply("Hi, I'm ModRank Bot! (online at http://tinyurl.com/ModRank) \n" +
                     "Use `!modrank ID` to get a mod's rank! ID can be a Steam ID, URL to a Steam mod page, or `random`!\n" +
-                    "Am I broken? Contact the other fyarn!")
+                    "Am I broken? Contact the other fyarn!");
             }
         }
     });

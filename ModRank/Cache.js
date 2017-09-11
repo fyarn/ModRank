@@ -12,23 +12,23 @@ function cache(app) {
     //all of these are 1 indexed (getMostSubsItem(1) returns the first best item)
     cache.prototype.getMostSubsItem = function (index = 1) {
         return this.getItem(subs[index - 1].id);
-    }
+    };
 
     cache.prototype.getMostFavsItem = function (index = 1) {
         return this.getItem(favs[index - 1].id);
-    }
+    };
 
     cache.prototype.getMostViewsItem = function (index = 1) {
         return this.getItem(views[index - 1].id);
-    }
+    };
 
     cache.prototype.getMostUnsubscribesItem = function (index = 1) {
         return this.getItem(unsubscribes[index - 1].id);
-    }
+    };
 
     cache.prototype.getMostCommentsItem = function (index = 1) {
         return this.getItem(comments[index - 1].id);
-    }
+    };
 
     cache.prototype.getItem = function (id) {
         if (typeof id === "string") {
@@ -36,7 +36,7 @@ function cache(app) {
                 || id.startsWith('http://steamcommunity.com/sharedfiles/filedetails/?id=')) {
                 id = parseInt(id.split('=')[1]);
             }
-            else if (id.toLowerCase() == 'rand' || id.toLowerCase() == 'random')
+            else if (id.toLowerCase() === 'rand' || id.toLowerCase() === 'random')
             {
                 //get random id
                 id = app.get('masterDB')[Math.floor(Math.random() * master.length)].id;
@@ -51,15 +51,15 @@ function cache(app) {
             console.log("Record is undefined");
             return null;
         }
-        var favsRank = 1 +  favs.findIndex(function (value) { return value.id === id; });
+        var favsRank = favs.find(function (value) { return value.id === id; }).rank;
         var favsPercent = (favsRank / favs.length * 100).toFixed(2);
-        var subsRank = 1 + subs.findIndex(function (value) { return value.id === id; });
+        var subsRank = subs.find(function (value) { return value.id === id; }).rank;
         var subsPercent = (subsRank / subs.length * 100).toFixed(2);
-        var unsubscribesRank = 1 + unsubscribes.findIndex(function (value) { return value.id === id; });
+        var unsubscribesRank = unsubscribes.find(function (value) { return value.id === id; }).rank;
         var unsubscribesPercent = (unsubscribesRank / unsubscribes.length * 100).toFixed(2);
-        var viewsRank = 1 + views.findIndex(function (value) { return value.id === id; });
+        var viewsRank = views.find(function (value) { return value.id === id; }).rank;
         var viewsPercent = (viewsRank / views.length * 100).toFixed(2);
-        var commentsRank = 1 + comments.findIndex(function (value) { return value.id === id; });
+        var commentsRank = comments.find(function (value) { return value.id === id; }).rank;
         var commentsPercent = (commentsRank / comments.length * 100).toFixed(2);
 
         return new ModInfo(id, record.title, record.num_comments_public, record.subscriptions,

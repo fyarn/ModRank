@@ -52,12 +52,14 @@
     <Compile Include="routes\compare.js">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="routes\chart.js" />
     <Compile Include="UpdateDB.js">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="routes\index.js" />
     <Compile Include="routes\item.js" />
     <Content Include="bin\www" />
+    <Content Include="public\google3c56fec5129b458a.html" />
     <Content Include="public\images\favicon.jpg" />
     <Content Include="public\images\mr.png" />
     <Content Include="views\compare.jade">
@@ -79,6 +81,7 @@
     <Content Include="public\vendor\Bootstrap\css\bootstrap.min.css.map" />
     <Content Include="README.md" />
     <Content Include="views\error.jade" />
+    <Content Include="views\chart.jade" />
     <Content Include="views\item.jade" />
     <Content Include="views\index.jade" />
     <Content Include="views\layout.jade" />

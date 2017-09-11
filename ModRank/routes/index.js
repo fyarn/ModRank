@@ -3,7 +3,6 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function (req, res) {
-    require('../UpdateDB')(app, false);
     var list = app.get('masterDB');
     var cache = app.get('Cacher');
 
@@ -27,8 +26,7 @@ router.get('/', function (req, res) {
         subTop3: cache.getMostSubsItem(3),
         viewTop3: cache.getMostViewsItem(3),
         commentTop3: cache.getMostCommentsItem(3),
-        unsubTop3: cache.getMostUnsubscribesItem(3),
-        favTop3: cache.getMostFavsItem(3),
+        unsubTop3: cache.getMostUnsubscribesItem(3)
     });
 });
 

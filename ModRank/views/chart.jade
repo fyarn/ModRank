@@ -1,0 +1,45 @@
+extends layout
+
+block content
+    .row
+        .col-sm-6.margin-auto
+            h1.cover-heading= 'Rimworld ' + title
+    .row
+        .col-sm-12.margin-auto(style='margin-top:50px')
+            form(method='GET' action=('/chart?cat=' + name)).margin-auto
+                .form-group
+                    label Get More Results:
+                    .row
+                        .col-sm-3
+                            input#id.form-control(name='cat' value=name hidden)
+                        .col-sm-2
+                            input#id.form-control(type='number', name='from' placeholder='From:' min='1' max=chart.length required)
+                        .col-sm-2
+                            input#id.form-control(type='number', name='to' placeholder='To:' min='0' max=chart.length required)
+                        .col-sm-2
+                            button.btn.btn-primary.rounded-0.rounded-left(type='submit', style='width:100%') Search
+                    label (type 0 in the To box to get all results after From)
+            hr.bg-white
+        .clearfix
+        .col-lg-8.margin-auto
+            ul.list-group
+                each comp, index in chart
+                    if(index >= from - 1 && index < to)
+                        if(index % 2 === 0)
+                            li.list-group-item.bg-info
+                                a(href=('/item?id=' + comp.id))
+                                    .row
+                                        .col-sm-2.margin-auto= '#' + comp.rank
+                                        .col-sm-2.margin-auto
+                                            img(data-original=comp.img).img-fluid.lazy
+                                        .col-sm-6.margin-auto= comp.name + ' (' + comp.id + ')'
+                                        .col-sm-2.margin-auto= comp.hits
+                        else
+                            li.list-group-item.bg-success
+                                a(href=('/item?id=' + comp.id))
+                                    .row
+                                        .col-sm-2.margin-auto= '#' + comp.rank
+                                        .col-sm-2.margin-auto
+                                            img(data-original=comp.img).img-fluid.lazy
+                                        .col-sm-6.margin-auto= comp.name + ' (' + comp.id + ')'
+                                        .col-sm-2.margin-auto= comp.hits
