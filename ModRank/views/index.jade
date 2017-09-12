@@ -1,17 +1,24 @@
 extends layout
 
+mixin rankedItem(index, cat)
+    a(href='/item?id=' + locals[cat + 'Top' + index].id)
+        .row
+            .col-2= '#' + index
+            .col= locals[cat + 'Top' + index].itemTitle
+            .col.col-sm-3= locals[cat + 'Top' + index][cat+'s']
+
 block content
     .row
-        .col-sm-6.margin-auto
+        .col-sm-8.margin-auto(style='margin-top:15px')
             h1.cover-heading Rimworld ModRank
+            br
             form(method='GET' action='/item').margin-auto
                 div.form-group
-                    label(for='id') Steam Workshop ID: 
-                    input#id.form-control(type='text', name='id' required)
+                    input#id.form-control(type='text', name='id' placeholder='Search with Steam ID' required)
                 .row
                     .col-sm-9.nopadding
                         button.btn.btn-primary.rounded-0.rounded-left(type='submit', style='width:100%') Search
-                    .col-sm-3.nopadding
+                    .col-sm-3.nopadding.d-none.d-sm-block
                         a(href='/item?id=random', style="width:100%").btn.btn-danger.rounded-0.rounded-right Random
             em= 'Search ' + llen + ' total published mods and scenarios!'
     .row
@@ -19,149 +26,30 @@ block content
             h2 Hall of Famers
             hr.bg-white
         .clearfix
-        .col-md-6.col-lg-4(style='margin-bottom:30px')
-            ul.list-group
-                a(href='/chart?cat=subs')
-                    li.list-group-item.bg-danger(style='border-bottom:4px solid white')
-                        h4 Most Subscribed
-                li.list-group-item.bg-warning
-                    a(href=('/item?id=' + subTop.id))
-                        .row
-                            .col-md-2 #1
-                            .col-md-2
-                                img(src=subTop.img alt=subTop.itemTitle).img-fluid
-                            .col-md-6= subTop.itemTitle
-                            .col-md-2= subTop.subs
-                li.list-group-item.bg-secondary
-                    a(href=('/item?id=' + subTop2.id))
-                        .row
-                            .col-md-2 #2
-                            .col-md-2
-                                img(src=subTop2.img alt=subTop2.itemTitle).img-fluid
-                            .col-md-6= subTop2.itemTitle
-                            .col-md-2= subTop2.subs
-                li.list-group-item.bg-info
-                    a(href=('/item?id=' + subTop3.id))
-                        .row
-                            .col-md-2 #3
-                            .col-md-2
-                                img(src=subTop3.img alt=subTop3.itemTitle).img-fluid
-                            .col-md-6= subTop3.itemTitle
-                            .col-md-2= subTop3.subs
-        .col-md-6.col-lg-4(style='margin-bottom:30px')
-            ul.list-group
-                a(href='/chart?cat=favs')
-                    li.list-group-item.bg-danger(style='border-bottom:4px solid white')
-                        h4 Most Favorited
-                li.list-group-item.bg-warning
-                    a(href=('/item?id=' + favTop.id))
-                        .row
-                            .col-md-2 #1
-                            .col-md-2
-                                img(src=favTop.img alt=favTop.itemTitle).img-fluid
-                            .col-md-6= favTop.itemTitle
-                            .col-md-2= favTop.favs
-                li.list-group-item.bg-secondary
-                    a(href=('/item?id=' + favTop2.id))
-                        .row
-                            .col-md-2 #2
-                            .col-md-2
-                                img(src=favTop2.img alt=favTop2.itemTitle).img-fluid
-                            .col-md-6= favTop2.itemTitle
-                            .col-md-2= favTop2.favs
-                li.list-group-item.bg-info
-                    a(href=('/item?id=' + favTop3.id))
-                        .row
-                            .col-md-2 #3
-                            .col-md-2
-                                img(src=favTop3.img alt=favTop3.itemTitle).img-fluid
-                            .col-md-6= favTop3.itemTitle
-                            .col-md-2= favTop3.favs
-        .col-md-6.col-lg-4(style='margin-bottom:30px')
-            ul.list-group
-                a(href='/chart?cat=comments')
-                    li.list-group-item.bg-danger(style='border-bottom:4px solid white')
-                        h4 Most Comments
-                li.list-group-item.bg-warning
-                    a(href=('/item?id=' + commentTop.id))
-                        .row
-                            .col-md-2 #1
-                            .col-md-2
-                                img(src=commentTop.img alt=commentTop.itemTitle).img-fluid
-                            .col-md-6= commentTop.itemTitle
-                            .col-md-2= commentTop.comments
-                li.list-group-item.bg-secondary
-                    a(href=('/item?id=' + commentTop2.id))
-                        .row
-                            .col-md-2 #2
-                            .col-md-2
-                                img(src=commentTop2.img alt=commentTop2.itemTitle).img-fluid
-                            .col-md-6= commentTop2.itemTitle
-                            .col-md-2= commentTop2.comments
-                li.list-group-item.bg-info
-                    a(href=('/item?id=' + commentTop3.id))
-                        .row
-                            .col-md-2 #3
-                            .col-md-2
-                                img(src=commentTop3.img alt=commentTop3.itemTitle).img-fluid
-                            .col-md-6= commentTop3.itemTitle
-                            .col-md-2= commentTop3.comments
-        .clearfix
-        .col-md-6.col-lg-4(style='margin-bottom:30px')
-            ul.list-group
-                a(href='/chart?cat=views')
-                    li.list-group-item.bg-danger(style='border-bottom:4px solid white')
-                        h4 Most Viewed
-                li.list-group-item.bg-warning
-                    a(href=('/item?id=' + viewTop.id))
-                        .row
-                            .col-md-2 #1
-                            .col-md-2
-                                img(src=viewTop.img alt=viewTop.itemTitle).img-fluid
-                            .col-md-6= viewTop.itemTitle
-                            .col-md-2= viewTop.views
-                li.list-group-item.bg-secondary
-                    a(href=('/item?id=' + viewTop2.id))
-                        .row
-                            .col-md-2 #2
-                            .col-md-2
-                                img(src=viewTop2.img alt=viewTop2.itemTitle).img-fluid
-                            .col-md-6= viewTop2.itemTitle
-                            .col-md-2= viewTop2.views
-                li.list-group-item.bg-info
-                    a(href=('/item?id=' + viewTop3.id))
-                        .row
-                            .col-md-2 #3
-                            .col-md-2
-                                img(src=viewTop3.img alt=viewTop3.itemTitle).img-fluid
-                            .col-md-6= viewTop3.itemTitle
-                            .col-md-2= viewTop3.views
-        .col-md-6.col-lg-4(style='margin-bottom:30px')
-            ul.list-group
-                a(href='/chart?cat=unsubs')
-                    li.list-group-item.bg-danger(style='border-bottom:4px solid white')
-                        h4 Most Unsubscribed
-                li.list-group-item.bg-warning
-                    a(href=('/item?id=' + unsubTop.id))
-                        .row
-                            .col-md-2 #1
-                            .col-md-2
-                                img(src=unsubTop.img alt=unsubTop.itemTitle).img-fluid
-                            .col-md-6= unsubTop.itemTitle
-                            .col-md-2= unsubTop.unsubs
-                li.list-group-item.bg-secondary
-                    a(href=('/item?id=' + unsubTop2.id))
-                        .row
-                            .col-md-2 #2
-                            .col-md-2
-                                img(src=unsubTop2.img alt=unsubTop2.itemTitle).img-fluid
-                            .col-md-6= unsubTop2.itemTitle
-                            .col-md-2= unsubTop2.unsubs
-                li.list-group-item.bg-info
-                    a(href=('/item?id=' + unsubTop3.id))
-                        .row
-                            .col-md-2 #3
-                            .col-md-2
-                                img(src=unsubTop3.img alt=unsubTop3.itemTitle).img-fluid
-                            .col-md-6= unsubTop3.itemTitle
-                            .col-md-2= unsubTop3.unsubs
+        each cat, i in ['sub', 'fav', 'comment', 'view', 'unsubscribe']
+            if (i === 3) 
+                .col-lg-2.d-none.d-lg-block
+            .col-md-6.col-lg-4(style='margin-bottom:30px')
+                ul.list-group
+                    a(href='/chart?cat=subs')
+                        li.list-group-item.bg-danger(style='border-bottom:4px solid white')
+                            case cat
+                                when 'sub'
+                                    h4 Most Subscribed
+                                when 'fav'
+                                    h4 Most Favorited
+                                when 'comment'
+                                    h4 Most Commented
+                                when 'view'
+                                    h4 Most Viewed
+                                when 'unsubscribe'
+                                    h4 Most Unsubscribed
+                    each index in [1, 2, 3]
+                        a(href='/item?id=' + locals[cat + 'Top'  + index].id) 
+                        case index
+                            when 1: li.list-group-item.bg-warning
+                                +rankedItem(1, cat)
+                            when 2: li.list-group-item.bg-secondary
+                                +rankedItem(2, cat)
+                            when 3: li.list-group-item.bg-info
+                                +rankedItem(3, cat)

@@ -1,69 +1,66 @@
 ﻿extends layout
 
+mixin listItem(comp)
+    .row
+        .col-lg-2.col-sm-1.margin-auto.d-none.d-sm-block
+            a(href=("https://steamcommunity.com/sharedfiles/filedetails/?id=" + comp.id))
+                img.img-fluid(src=comp.img alt=comp.itemTitle)
+        .col-sm-3.col-lg-2.margin-auto
+            a(href=("https://steamcommunity.com/sharedfiles/filedetails/?id=" + comp.id))
+                h4.text-black= comp.itemTitle
+        .col-4.d-sm-none
+                h1
+                    i.fa.fa-download.fa-2(aria-hidden="true")
+        .col-8.col-sm-2.margin-auto
+            p.margin-no-bottom= comp.subs
+            p.margin-no-top= "#" + comp.subsRank + " | " + comp.subsPercent + "%"
+        .col-4.d-sm-none
+                h1
+                    i.fa.fa-star.fa-2(aria-hidden="true")
+        .col-8.col-sm-2.margin-auto
+            p.margin-no-bottom= comp.favs
+            p.margin-no-top= "#" + comp.favsRank + " | " + comp.favsPercent + "%"
+        .col-4.d-sm-none
+                h1
+                    i.fa.fa-comment.fa-2(aria-hidden="true")
+        .col-8.col-sm-2.margin-auto
+            p.margin-no-bottom= comp.comments
+            p.margin-no-top= "#" + comp.commentsRank + " | " + comp.commentsPercent + "%"
+        .col-4.d-sm-none
+                h1
+                    i.fa.fa-eye.fa-2(aria-hidden="true")
+        .col-8.col-sm-2.margin-auto
+            p.margin-no-bottom= comp.views
+            p.margin-no-top= "#" + comp.viewsRank + " | " + comp.viewsPercent + "%"
+
 block content
   h1 ModRank Comparison
   hr.bg-white
   ul.list-group
-    li.list-group-item.bg-warning
+    li.list-group-item.bg-warning.d-none.d-sm-block
         .row
-            .col-md-4
+            .col-sm-4
                 h1 Item
-            .col-md-2
+            .col-sm-2
                 h1
                     i.fa.fa-download.fa-2(aria-hidden="true")
-            .col-md-2
+            .col-sm-2
                 h1
                     i.fa.fa-star.fa-2(aria-hidden="true")
-            .col-md-2
+            .col-sm-2
                 h1
                     i.fa.fa-comment.fa-2(aria-hidden="true")
-            .col-md-2
+            .col-sm-2
                 h1
                     i.fa.fa-eye.fa-2(aria-hidden="true")
     if (comps.length > 0)
         each comp, index in comps
             if(index % 2 == 0) 
                 li.list-group-item.bg-info.text-black
-                    .row
-                        .col-lg-2.col-md-1.margin-auto
-                            a(href=("https://steamcommunity.com/sharedfiles/filedetails/?id=" + comp.id))
-                                img.img-fluid(src=comp.img alt=comp.itemTitle)
-                        .col-md-3.col-lg-2.margin-auto
-                            a(href=("https://steamcommunity.com/sharedfiles/filedetails/?id=" + comp.id))
-                                h4.text-black= comp.itemTitle
-                        .col-md-2.col-lg-2.margin-auto
-                            p.margin-no-bottom= comp.subs
-                            p.margin-no-top= "#" + comp.subsRank + " | " + comp.subsPercent + "%"
-                        .col-md-2.col-lg-2.margin-auto
-                            p.margin-no-bottom= comp.favs
-                            p.margin-no-top= "#" + comp.favsRank + " | " + comp.favsPercent + "%"
-                        .col-md-2.col-lg-2.margin-auto
-                            p.margin-no-bottom= comp.comments
-                            p.margin-no-top= "#" + comp.commentsRank + " | " + comp.commentsPercent + "%"
-                        .col-md-2.col-lg-2.margin-auto
-                            p.margin-no-bottom= comp.views
-                            p.margin-no-top= "#" + comp.viewsRank + " | " + comp.viewsPercent + "%"
+                    +listItem(comp)
             else
                 li.list-group-item.bg-success.text-black
-                    .row
-                        .col-lg-2.col-md-1.margin-auto
-                            a(href=("https://steamcommunity.com/sharedfiles/filedetails/?id=" + comp.id))
-                                img.img-fluid(src=comp.img alt=comp.itemTitle)
-                        .col-md-3.col-lg-2.margin-auto
-                            a(href=("https://steamcommunity.com/sharedfiles/filedetails/?id=" + comp.id))
-                                h4.text-black= comp.itemTitle
-                        .col-md-2.col-lg-2.margin-auto
-                            p.margin-no-bottom= comp.subs
-                            p.margin-no-top= "#" + comp.subsRank + " | " + comp.subsPercent + "%"
-                        .col-md-2.col-lg-2.margin-auto
-                            p.margin-no-bottom= comp.favs
-                            p.margin-no-top= "#" + comp.favsRank + " | " + comp.favsPercent + "%"
-                        .col-md-2.col-lg-2.margin-auto
-                            p.margin-no-bottom= comp.comments
-                            p.margin-no-top= "#" + comp.commentsRank + " | " + comp.commentsPercent + "%"
-                        .col-md-2.col-lg-2.margin-auto
-                            p.margin-no-bottom= comp.views
-                            p.margin-no-top= "#" + comp.viewsRank + " | " + comp.viewsPercent + "%"
+                    +listItem(comp)
             if(index == comps.length - 1)
                 li.list-group-item.text-black.bg-warning
                     .row

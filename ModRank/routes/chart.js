@@ -77,6 +77,16 @@ router.get('/', function (req, res) {
         });
     }
 
+    if (chart === undefined) {
+        // render the error page
+        res.status(404);
+        res.render('error', {
+            status: 404,
+            message: "Category not found",
+            title: "ModRank - Not Found"
+        });
+    }
+
 
     res.render("chart", {
         title: 'ModRank - ' + name + ' Charts',

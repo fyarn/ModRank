@@ -2,11 +2,11 @@ extends layout
 
 block content
     a(href=("https://steamcommunity.com/sharedfiles/filedetails/?id=" + id))
-        h1= itemTitle + " (" + id + ")"
+        h1.text-black(style='margin-top:50px')= itemTitle + " (" + id + ")"
     a(href=("https://steamcommunity.com/sharedfiles/filedetails/?id=" + id))
-        img(src=img, alt=itemTitle, style='max-width:400px').img-fluid
+        img(src=img, alt=itemTitle, style='max-height:150px').img-fluid
     hr.bg-white
-    ul.list-group
+    ul.list-group.text-white
         li.list-group-item.bg-secondary
             .row
                 .col-md-5.col-sm-8
