@@ -3,13 +3,13 @@ extends layout
 mixin rankedItem(index, cat)
     a(href='/item?id=' + locals[cat + 'Top' + index].id)
         .row
-            .col-2= '#' + index
+            .col-2= '#' + locals[cat + 'Top' + index][cat + 'sRank']
             .col= locals[cat + 'Top' + index].itemTitle
-            .col.col-sm-3= locals[cat + 'Top' + index][cat+'s']
+            .col.col-sm-3= locals[cat + 'Top' + index][cat+'s'] + (cat === 'unsubscribe' ? '%' : '')
 
 block content
     .row
-        .col-sm-8.margin-auto(style='margin-top:15px')
+        .col-sm-8.margin-auto
             h1.cover-heading Rimworld ModRank
             br
             form(method='GET' action='/item').margin-auto
@@ -31,7 +31,7 @@ block content
                 .col-lg-2.d-none.d-lg-block
             .col-md-6.col-lg-4(style='margin-bottom:30px')
                 ul.list-group
-                    a(href='/chart?cat=subs')
+                    a(href='/chart?cat=' + cat)
                         li.list-group-item.bg-danger(style='border-bottom:4px solid white')
                             case cat
                                 when 'sub'

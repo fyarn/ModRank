@@ -182,6 +182,15 @@ function parser(database, app)
     function trimVariablesFrom(db) {
         ret = [];
         for (var i = 0; i < db.length; i++) {
+            var subs = db[i].lifetime_subscriptions;
+            //check for undefined subscriptions
+            if (typeof subs !== "number" || isNaN(subs)) {
+                continue;
+            }
+            // prevent / by 0 error
+            subs = subs === 0 ? 1 : subs;
+            // calculate subs as a percentage of unsubscribers
+            subs = parseFloat(((subs - db[i].subscriptions) / subs * 100).toFixed(2));
             ret.push({
                 "id": parseInt(db[i].publishedfileid),
                 "title": db[i].title,
@@ -189,7 +198,7 @@ function parser(database, app)
                 "subscriptions": db[i].subscriptions,
                 "favorited": db[i].favorited,
                 "views": db[i].views,
-                "unsubscribes": db[i].lifetime_subscriptions - db[i].subscriptions, 
+                "unsubscribes": subs, 
                 "preview_url": db[i].preview_url
             });
         }

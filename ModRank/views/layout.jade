@@ -11,7 +11,7 @@ html(lang='en')
     link(rel='icon', href='/images/mr.png')
 
   body
-    nav.navbar.navbar-expand-md.navbar-dark.bg-dark
+    nav.navbar.navbar-expand-md.navbar-dark.bg-dark.fixed-top
         a.navbar-brand(href='/')
             img(src='/images/mr.png' alt='RW-MR' style='max-height:40px').img-fluid
         button.navbar-toggler(type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation")                    
@@ -37,7 +37,8 @@ html(lang='en')
             form.form-inline.my-2.my-lg-0(action="/item")
                 input.form-control.mr-sm-2(type="text" placeholder="Search with Steam ID" name="id" aria-label="Search")
                 button.btn.btn-info.btn-outline-white.my-2.my-sm-0(type="submit") Search
-    .container
+    .container.mt-5
+        .pt-5
         block content
     footer
         hr

@@ -47,23 +47,24 @@ router.get('/', function (req, res) {
     var cache = app.get('Cacher');
     var chart;
     var name = '';
-    if (chartName === 'subs' || chartName === 'subscriptions') {
+    if (chartName === 'subs' || chartName === 'subscriptions' || chartName === 'sub') {
         chart = app.get('subsDB');
         name = 'Subscriptions';
     }
-    else if (chartName === 'favs' || chartName === 'favorites') {
+    else if (chartName === 'favs' || chartName === 'favorites' || chartName === 'fav') {
         chart = app.get('favsDB');
         name = 'Favorites';
     }
-    else if (chartName === 'comments') {
+    else if (chartName === 'comments' || chartName === 'comment') {
         chart = app.get('commentsDB');
         name = 'Comments';
     }
-    else if (chartName === 'views') {
+    else if (chartName === 'views' || chartName === 'view') {
         chart = app.get('viewsDB');
         name = 'Views';
     }
-    else if (chartName === 'unsubs' || chartName === 'unsubscribes' || chartName === 'unsubscriptions') {
+    else if (chartName === 'unsubs' || chartName === 'unsubscribe' || chartName === 'unsubscribes'
+        || chartName === 'unsubscriptions') {
         chart = app.get('unsubsDB');
         name = 'Unsubscriptions';
     }

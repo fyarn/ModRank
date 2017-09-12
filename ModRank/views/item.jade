@@ -2,60 +2,73 @@ extends layout
 
 block content
     a(href=("https://steamcommunity.com/sharedfiles/filedetails/?id=" + id))
-        h1.text-black(style='margin-top:50px')= itemTitle + " (" + id + ")"
+        h1.text-black= itemTitle + " (" + id + ")"
     a(href=("https://steamcommunity.com/sharedfiles/filedetails/?id=" + id))
         img(src=img, alt=itemTitle, style='max-height:150px').img-fluid
     hr.bg-white
     ul.list-group.text-white
+        li.list-group-item.bg-dark.d-none.d-sm-block
+            .row
+                .col-md-5.col-8
+                    h2 Category
+                .col-md-2.col-4
+                    h2
+                        i.fa.fa-hashtag
+                .col-md-2
+                    h2
+                        i.fa.fa-trophy
+                .col-md-3
+                    h2
+                        i.fa.fa-percent
         li.list-group-item.bg-secondary
             .row
-                .col-md-5.col-sm-8
+                .col-md-5.col-12
                     h2= "Subscriptions: "
-                .col-md-2.border-left.col-sm-4
+                .col-md-2.col
                     h2= subs
-                .col-md-2.border-left
+                .col-md-2.col
                     h2= "#" + subsRank + ""
-                .col-md-3.border-left
+                .col-md-3.col
                     h2= "Top " + subsPercent + "%"
         li.list-group-item.bg-primary
             .row
-                .col-md-5.col-sm-8
+                .col-md-5.col-12
                     h2= "Favorites: "
-                .col-md-2.border-left.col-sm-4
+                .col-md-2.col
                     h2= favs
-                .col-md-2.border-left
+                .col-md-2.col
                     h2= "#" + favsRank + ""
-                .col-md-3.border-left
+                .col-md-3.col
                     h2= "Top " + favsPercent + "%"
         li.list-group-item.bg-success
             .row
-                .col-md-5.col-sm-8
+                .col-md-5.col-12
                     h2= "Comments: "
-                .col-md-2.border-left.col-sm-4
+                .col-md-2.col
                     h2= comments
-                .col-md-2.border-left
+                .col-md-2.col
                     h2= "#" + commentsRank + ""
-                .col-md-3.border-left
+                .col-md-3.col
                     h2= "Top " + commentsPercent + "%"
         li.list-group-item.bg-danger
             .row
-                .col-md-5.col-sm-8
+                .col-md-5.col-12
                     h2= "Views: "
-                .col-md-2.border-left.col-sm-4
+                .col-md-2.col
                     h2= views
-                .col-md-2.border-left
+                .col-md-2.col
                     h2= "#" + viewsRank + ""
-                .col-md-3.border-left
+                .col-md-3.col
                     h2= "Top " + viewsPercent + "%"
         li.list-group-item.bg-warning
             .row
-                .col-md-5.col-sm-8
+                .col-md-5.col-12
                     h2= "Unsubscriptions: "
-                .col-md-2.border-left.col-sm-4
-                    h2= unsubscribes
-                .col-md-2.border-left
-                    h2= "#" + unsubscribesRank + ""
-                .col-md-3.border-left
+                .col-md-2.col
+                    h2= unsubscribes + "%"
+                .col-md-2.col
+                    h2= "#" + unsubscribesRank
+                .col-md-3.col
                     h2= "Top " + unsubscribesPercent + "%"
 
     .row
@@ -66,8 +79,8 @@ block content
                     input.form-control(name='id1' type='text' value=id hidden).text-center
                     input#id.form-control(type='text' name='id2' placeholder="Add an ID, or type RAND for a random matchup!" required).text-center
                 .row
-                    .col-sm-1
-                    .col-sm-8.nopadding
+                    .col-1
+                    .col-8.nopadding
                         button.btn.btn-primary.rounded-0.rounded-left(type='submit', style='width:100%') Go head to head!
-                    .col-sm-2.nopadding
+                    .col-2.nopadding
                         a(href='/compare?id1=' + id + '&id2=random', style="width:100%").btn.btn-danger.rounded-0.rounded-right Random

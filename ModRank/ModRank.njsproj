@@ -47,6 +47,9 @@
     <Compile Include="public\javascripts\analytics.js">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="public\javascripts\layout.js">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="public\vendor\Bootstrap\js\bootstrap.js" />
     <Compile Include="public\vendor\Bootstrap\js\bootstrap.min.js" />
     <Compile Include="routes\compare.js">
