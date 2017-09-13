@@ -31,7 +31,7 @@ function discord(app) {
         );
     }
 
-    makeRequest();
+    //makeRequest();
 
     var commandPrefix = '!modrank';
 
@@ -56,7 +56,7 @@ function discord(app) {
                     visitor.event("Chatbot", "Item Lookup", id, item.id).send();
                     //pad columns
                     var column1Length = Math.max(("" + item.subs).length, ("" + item.favs).length, ("" + item.comments).length,
-                        ("" + item.views).length, ("" + item.unsubscribes).length);
+                        ("" + item.views).length, (item.unsubscribes + '%').length);
                     var subsPaddingLength = column1Length - ("" + item.subs).length;
                     var subsPadding = "";
                     for (var i = 0; i < subsPaddingLength; i++) {
@@ -67,7 +67,7 @@ function discord(app) {
                     for (i = 0; i < favsPaddingLength; i++) {
                         favsPadding += " ";
                     }
-                    var unsubscribesPaddingLength = column1Length - ("" + item.unsubscribes).length;
+                    var unsubscribesPaddingLength = column1Length - (item.unsubscribes + "%").length;
                     var unsubscribesPadding = "";
                     for (i = 0; i < unsubscribesPaddingLength; i++) {
                         unsubscribesPadding += " ";
@@ -126,7 +126,7 @@ function discord(app) {
                         'Favorites:       ' + favsPadding + item.favs + ' | ' + favsRankPadding + '#' + item.favsRank + " | " + item.favsPercent + "%\n" +
                         'Comments:        ' + commentsPadding + item.comments + ' | ' + commentsRankPadding + '#' + item.commentsRank + " | " + item.commentsPercent + "%\n" +
                         'Views:           ' + viewsPadding + item.views + ' | ' + viewsRankPadding + '#' + item.viewsRank + " | " + item.viewsPercent + "%\n" +
-                        'Unsubscriptions: ' + unsubscribesPadding + item.unsubscribes + ' | ' + unsubscribesRankPadding + '#' + item.unsubscribesRank + " | " + item.unsubscribesPercent + "%`\n" +
+                        'Unsubscriptions: ' + unsubscribesPadding + item.unsubscribes + '% | ' + unsubscribesRankPadding + '#' + item.unsubscribesRank + " | " + item.unsubscribesPercent + "%`\n" +
                         'Find online anytime at: http://tinyurl.com/ModRank/item?id=' + item.id;
                 }
                 else {
