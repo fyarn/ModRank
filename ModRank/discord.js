@@ -31,7 +31,7 @@ function discord(app) {
         );
     }
 
-    //makeRequest();
+    makeRequest();
 
     var commandPrefix = '!modrank';
 
