@@ -6,15 +6,15 @@ var parse = require('./Parser');
 function UpdateDB(app, forced) {
     //get stored variables
     var devKey = process.env.DevKey;
-    // 1 day = 86400000ms, refresh every 3 hours
-    var updateIntervalInMS = 86400000 / 8;
+    // 10800000ms = refresh every 3 hours
+    var updateIntervalInMS = 10800000;
     var results = [];
     var totalItemCount = -1;
     lastUpdate = app.get('lastUpdate');
     
     //if time to update (default 1 day) or file doesn't exist
-    if (forced || lastUpdate === undefined || new Date() - lastUpdate > updateIntervalInMS) {
-        app.set('lastUpdate', new Date().getMilliseconds);
+    if (forced || lastUpdate === undefined || new Date().getTime() - lastUpdate > updateIntervalInMS) {
+        app.set('lastUpdate', new Date().getTime());
         var options = {
             url: 'https://api.steampowered.com/IPublishedFileService/QueryFiles/v1',
             method: 'GET',

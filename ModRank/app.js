@@ -29,11 +29,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '/public')));
 
-//api middleware
-router.use(function (req, res, next) {
-    require('./updateDB')(app, false);
-    next();
-});
 
 app.use('/', index);
 app.use('/item', item);

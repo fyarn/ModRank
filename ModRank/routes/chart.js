@@ -3,6 +3,7 @@ var router = express.Router();
 
 /* GET chart. */
 router.get('/', function (req, res) {
+    require('../updateDB')(app, false);
     var chartName = req.query.cat;
     if (chartName === undefined) {
         var title = "ModRank - Not Found";

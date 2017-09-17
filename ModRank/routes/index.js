@@ -3,6 +3,7 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function (req, res) {
+    require('../updateDB')(app, false);
     var list = app.get('masterDB');
     var cache = app.get('Cacher');
 
