@@ -84,6 +84,7 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+require('./UpdateDB')(app, true);
 // check for update every 30 minutes
 setInterval( () => {require('./UpdateDB')(app, false)}, 1000 * 60 * 30);
 
