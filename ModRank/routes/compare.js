@@ -4,7 +4,6 @@ var sanitizer = require('sanitize')();
 
 /* GET compare listings. */
 router.get('/', function (req, res) {
-    require('../updateDB')(app, false);
     var cache = app.get('Cacher');
     var comps = [];
     var redirect = false;

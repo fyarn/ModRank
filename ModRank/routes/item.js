@@ -4,7 +4,6 @@ var sanitizer = require('sanitize')();
 
 /* GET users listing. */
 router.get('/', function (req, res) {
-    require('../UpdateDB')(app, false);
     var cache = app.get('Cacher');
     var id = sanitizer.value(req.query.id, app.get('parserRegex'));
     var item = cache.getItem(id);
