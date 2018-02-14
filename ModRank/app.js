@@ -45,6 +45,10 @@ router.get('/', function (req, res) {
     visitor.event("API", "Connection Test").send();
 });
 
+app.get('/robots.txt', function (req, res) {
+    res.send("User-agent: *\nDisallow:\/*random");
+});
+
 
 router.route('items', function (req, res) {
     res.json({ message: 'Connection succesful: ModRank Items API v1.0.0' });
@@ -54,7 +58,7 @@ router.route('items', function (req, res) {
 router.route('/items/:item_id').get(function (req, res) {
     var cache = app.get('Cacher');
     var item = cache.getItem(sanitizer.value(req.params.item_id.substring(1), app.get('parserRegex')));
-    visitor.event("API", "Item Lookup", req.params.item_id, item !== null ? item.id : -1).send();
+    visitor.event("API", "Item Lookup", req.params.item_id).send();
     //item not found
     if (item === null) {
         res.status(404).send({error: "404 item not found"});
