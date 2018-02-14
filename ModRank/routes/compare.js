@@ -16,7 +16,7 @@ router.get('/', function (req, res) {
         id = sanitizer.value(id, app.get('parserRegex'));
         var item = cache.getItem(id);
 
-        if (id != item.id) {
+        if (id !== item.id) {
             redirect = true;
         }
 

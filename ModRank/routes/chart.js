@@ -25,7 +25,7 @@ router.get('/', function (req, res) {
     }
     else {
         from = parseInt(req.query.from);
-        if (from == null) {
+        if (from === null) {
             from = 1;
         }
     }
