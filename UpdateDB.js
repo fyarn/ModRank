@@ -2,10 +2,10 @@
 var request = require('request');
 var Cache = require('./Cache');
 var parse = require('./Parser');
+var DevKey = JSON.parse(fs.readFileSync("./Protected/keys.json")).DevKey;
 
 function UpdateDB(app, forced) {
     //get stored variables
-    var devKey = process.env.DevKey;
     // 10800000ms = refresh every 3 hours
     var updateIntervalInMS = 10800000;
     var results = [];
@@ -19,7 +19,7 @@ function UpdateDB(app, forced) {
             url: 'https://api.steampowered.com/IPublishedFileService/QueryFiles/v1',
             method: 'GET',
             qs: {
-                'key': devKey,
+                'key': DevKey || process.env.DevKey,
                 'query_type': 0,
                 'page': '1',
                 'numperpage': '100',
