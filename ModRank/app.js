@@ -4,7 +4,6 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var fs = require('fs');
-var discord = require('./discord');
 var ua = require('universal-analytics');
 var sanitizer = require('sanitize')();
 
@@ -15,7 +14,6 @@ var chart = require('./routes/chart');
 
 var router = express.Router();
 app = express();
-var discordBot = new discord(app);
 var visitor = ua('UA-64719618-2');
 app.set('visitor', visitor);
 
