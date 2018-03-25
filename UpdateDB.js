@@ -77,7 +77,7 @@ function DatabaseUpdater(app) {
                   console.log("Result Count: " + results.length);
 
                   //if done
-                  if (true || results.length >= totalItemCount) {
+                  if (results.length >= totalItemCount) {
                      rufCallback();
                   }
                   else {
