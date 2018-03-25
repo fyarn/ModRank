@@ -1,6 +1,7 @@
 ﻿var fs = require('fs');
 var request = require('request');
 var parse = require('./Parser');
+var DevKey = JSON.parse(fs.readFileSync("./Protected/keys.json")).DevKey;
 
 function DatabaseUpdater(app) {
    function UpdateAll() {
@@ -26,7 +27,7 @@ function DatabaseUpdater(app) {
             url: 'https://api.steampowered.com/IPublishedFileService/QueryFiles/v1',
             method: 'GET',
             qs: {
-               'key': devKey,
+               'key': devKey || process.env.DevKey,
                'query_type': 0,
                'page': '1',
                'numperpage': '100',
