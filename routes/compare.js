@@ -8,44 +8,29 @@ router.get('/', function (req, res) {
     var comps = [];
     var redirect = false;
 
-    for (var i = 1; i <= app.get('masterDB').length; i++) {
+    var i = 0;
+    // always true, breaks when params end
+    while (++i) {
         var id = req.param('id' + i);
         if (id === undefined) {
             break;
         }
         id = sanitizer.value(id, app.get('parserRegex'));
-        var item = cache.getItem(id);
-
-        if (id !== item.id) {
-            redirect = true;
-        }
-
-        if (item === null) {
-            var title = "ModRank - Not Found";
-            var message = "Item not found.";
-            // render the error page
-            res.status(404);
-            res.render('error', {
-                status: 404,
-                message: message,
-                title: title
-            });
-        }
-        else {
-            comps.push(item);
-        }
+        comps.push(id);
     }
 
-    if (redirect) {
-        url = '/compare?';
-        for (i = 0; i < comps.length; i++) {
-            url += 'id' + (i + 1) + '=' + comps[i].id + '&';
+    cache.getItems(comps, (err, items) => {        
+        if (items.length !== comps.length) {
+            url = '/compare?';
+            for (i = 1; i <= items.length; i++) {
+                url += 'id' + i + '=' + items[i - 1].id + '&';
+            }
+            url = url.substring(0, url.length - 1);
+            res.redirect(url);
         }
-        url = url.substring(0, url.length - 1);
-        res.redirect(url);
-    }
 
-    res.render('compare', { title: 'ModRank Comparison', comps});
+        res.render('compare', { title: 'ModRank Comparison', items});
+    });
 });
 
 module.exports = router;

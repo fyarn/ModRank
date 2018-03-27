@@ -6,25 +6,25 @@ var sanitizer = require('sanitize')();
 router.get('/', function (req, res) {
     var cache = app.get('Cacher');
     var id = sanitizer.value(req.query.id, app.get('parserRegex'));
-    var item = cache.getItem(id);
-
-    if (item === null) {
-        var title = "ModRank - Not Found";
-        var message = "Item not found.";
-        // render the error page
-        res.status(404);
-        res.render('error', {
-            status: 404,
-            message: message,
-            title: title
-        });
-    }
-    else if (id !== item.id) {
-        res.redirect('/item?id=' + item.id);
-    }
-    else {
-        res.render('item', item);
-    }
+    var item = cache.getItem(id, (err, item) => {
+        if (item === null) {
+            var title = "ModRank - Not Found";
+            var message = "Item not found.";
+            // render the error page
+            res.status(404);
+            res.render('error', {
+                status: 404,
+                message: message,
+                title: title
+            });
+        }
+        else if (id !== item.id) {
+            res.redirect('/item?id=' + item.id);
+        }
+        else {
+            res.render('item', item);
+        }
+    });
 });
 
 module.exports = router;

@@ -3,9 +3,9 @@ extends layout
 mixin rankedItem(index, cat)
     a(href='/item?id=' + locals[cat + 'Top' + index].id)
         .row
-            .col-2= '#' + locals[cat + 'Top' + index][cat + 'sRank']
-            .col= locals[cat + 'Top' + index].itemTitle
-            .col.col-sm-3= locals[cat + 'Top' + index][cat+'s'] + (cat === 'unsubscribe' ? '%' : '')
+            .col-2= '#' + locals[cat + 'Top' + index].history[0][cat + 'Rank']
+            .col= locals[cat + 'Top' + index].title
+            .col.col-sm-3= locals[cat + 'Top' + index].history[0][cat] + (cat === 'unsubscribes' ? '%' : '')
 
 block content
     .row
@@ -26,7 +26,7 @@ block content
             h2 Hall of Famers
             hr.bg-white
         .clearfix
-        each cat, i in ['sub', 'fav', 'comment', 'view', 'unsubscribe']
+        each cat, i in ['subcriptions', 'favorites', 'comments', 'views', 'unsubscribes']
             if (i === 3) 
                 .col-lg-2.d-none.d-lg-block
             .col-md-6.col-lg-4(style='margin-bottom:30px')
@@ -34,22 +34,22 @@ block content
                     a(href='/chart?cat=' + cat)
                         li.list-group-item.bg-danger(style='border-bottom:4px solid white')
                             case cat
-                                when 'sub'
+                                when 'subcriptions'
                                     h4 Most Subscribed
-                                when 'fav'
+                                when 'favorites'
                                     h4 Most Favorited
-                                when 'comment'
+                                when 'comments'
                                     h4 Most Commented
-                                when 'view'
+                                when 'views'
                                     h4 Most Viewed
-                                when 'unsubscribe'
-                                    h4 Most Unsubscribed
+                                when 'unsubscribes'
+                                    h4 Least Unsubscriptions
                     each index in [1, 2, 3]
-                        a(href='/item?id=' + locals[cat + 'Top'  + index].id) 
+                        a(href='/item?id=' + locals[cat + 'Top' + index].id) 
                         case index
                             when 1: li.list-group-item.bg-warning
-                                +rankedItem(1, cat)
+                                +rankedItem(index, cat)
                             when 2: li.list-group-item.bg-secondary
-                                +rankedItem(2, cat)
+                                +rankedItem(index, cat)
                             when 3: li.list-group-item.bg-info
-                                +rankedItem(3, cat)
+                                +rankedItem(index, cat)

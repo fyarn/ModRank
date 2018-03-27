@@ -7,7 +7,7 @@ mixin listItem(comp)
             .col-sm-2.margin-auto.d-none.d-sm-block
                 img(data-src=comp.img).img-fluid.lazy
             .col-6.margin-auto= comp.name + ' (' + comp.id + ')'
-            .col-2.margin-auto= comp.hits + (name === "Unsubscriptions" ? '%' : '')
+            .col-2.margin-auto= comp.history[0][name] + (name === "Unsubscribes" ? '%' : '')
 
 block content
     .row

@@ -10,23 +10,23 @@ router.get('/', function (req, res) {
         title: 'ModRank',
         llen: list.length ? list.length : 0,
 
-        favTop1: cache.getMostFavsItem(1),
-        subTop1: cache.getMostSubsItem(1),
-        viewTop1: cache.getMostViewsItem(1),
-        commentTop1: cache.getMostCommentsItem(1),
-        unsubscribeTop1: cache.getMostUnsubscribesItem(1),
+        favoritesTop1: cache.getMostFavsItem(1),
+        subcriptionsTop1: cache.getMostSubsItem(1),
+        viewsTop1: cache.getMostViewsItem(1),
+        commentsTop1: cache.getMostCommentsItem(1),
+        unsubscribesTop1: cache.getMostUnsubscribesItem(1),
 
-        favTop2: cache.getMostFavsItem(2),
-        subTop2: cache.getMostSubsItem(2),
-        viewTop2: cache.getMostViewsItem(2),
-        commentTop2: cache.getMostCommentsItem(2),
-        unsubscribeTop2: cache.getMostUnsubscribesItem(2),
+        favoritesTop2: cache.getMostFavsItem(2),
+        subcriptionsTop2: cache.getMostSubsItem(2),
+        viewsTop2: cache.getMostViewsItem(2),
+        commentsTop2: cache.getMostCommentsItem(2),
+        unsubscribesTop2: cache.getMostUnsubscribesItem(2),
 
-        favTop3: cache.getMostFavsItem(3),
-        subTop3: cache.getMostSubsItem(3),
-        viewTop3: cache.getMostViewsItem(3),
-        commentTop3: cache.getMostCommentsItem(3),
-        unsubscribeTop3: cache.getMostUnsubscribesItem(3)
+        favoritesTop3: cache.getMostFavsItem(3),
+        subcriptionsTop3: cache.getMostSubsItem(3),
+        viewsTop3: cache.getMostViewsItem(3),
+        commentsTop3: cache.getMostCommentsItem(3),
+        unsubscribesTop3: cache.getMostUnsubscribesItem(3)
     });
 });
 

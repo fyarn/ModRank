@@ -59,17 +59,19 @@ function SetupApp() {
 
    router.route('/items/:item_id').get(function (req, res) {
        var cache = app.get('Cacher');
-       var item = cache.getItem(sanitizer.value(req.params.item_id.substring(1), app.get('parserRegex')));
-       visitor.event("API", "Item Lookup", req.params.item_id).send();
-       //item not found
-       if (item === null) {
-           res.status(404).send({error: "404 item not found"});
-           return;
-       }
-       else {
-           res.json(item);
-           return;
-       }
+       var item = cache.getItem(sanitizer.value(req.params.item_id.substring(1), app.get('parserRegex')),
+       (err, doc) => {
+            visitor.event("API", "Item Lookup", req.params.item_id).send();
+            //item not found
+            if (doc === null) {
+                res.status(404).send({error: "404 item not found"});
+                return;
+            }
+            else {
+                res.json(doc);
+                return;
+            }
+        });
    });
 
    // catch 404 and forward to error handler
@@ -98,12 +100,12 @@ function SetupApp() {
    DBUpdater.Update('294100', true);
 
    // check for update every 30 minutes
-   setInterval( () => {DBUpdater.UpdateAll()}, 1000 * 60 * 30);
+   //setInterval( () => {DBUpdater.UpdateAll();}, 1000 * 60 * 30);
 
    app.set('parserRegex', /(https:\/\/steamcommunity\.com\/sharedfiles\/filedetails\/\?id=)?(\d+)|([Rr][Aa][Nn][Dd]([Oo][Mm])?)/);
    app.set('steamRegex', /https:\/\/steamcommunity\.com\/sharedfiles\/filedetails\/\?id=/);
    app.set('idRegex', /\d+/);
    module.exports = app;
-};
+}
 
 SetupApp();

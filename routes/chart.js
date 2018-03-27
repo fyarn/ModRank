@@ -42,31 +42,32 @@ router.get('/', function (req, res) {
         to = 10000000;
     }
 
-    require('../UpdateDB')(app, false);
+    require('../UpdateDB')(app).Update('294100', false);
+
     var list = app.get('masterDB');
     var cache = app.get('Cacher');
     var chart;
     var name = '';
     if (chartName === 'subs' || chartName === 'subscriptions' || chartName === 'sub') {
         chart = app.get('subsDB');
-        name = 'Subscriptions';
+        name = 'subscriptions';
     }
     else if (chartName === 'favs' || chartName === 'favorites' || chartName === 'fav') {
         chart = app.get('favsDB');
-        name = 'Favorites';
+        name = 'favorited';
     }
     else if (chartName === 'comments' || chartName === 'comment') {
         chart = app.get('commentsDB');
-        name = 'Comments';
+        name = 'comments';
     }
     else if (chartName === 'views' || chartName === 'view') {
         chart = app.get('viewsDB');
-        name = 'Views';
+        name = 'views';
     }
-    else if (chartName === 'unsubs' || chartName === 'unsubscribe' || chartName === 'unsubscribes'
-        || chartName === 'unsubscriptions') {
+    else if (chartName === 'unsubs' || chartName === 'unsubscribe' || chartName === 'unsubscribes' || 
+     chartName === 'unsubscriptions') {
         chart = app.get('unsubsDB');
-        name = 'Unsubscriptions';
+        name = 'unsubscribes';
     }
     else {
         // render the error page
@@ -90,7 +91,7 @@ router.get('/', function (req, res) {
 
 
     res.render("chart", {
-        title: 'ModRank - ' + name + ' Charts',
+        title: 'ModRank - ' + name[0].toUpperCase() + name.slice(1) + ' Charts',
         name: name,
         chart: chart,
         from: from,

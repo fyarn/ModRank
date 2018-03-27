@@ -4,12 +4,6 @@ var parse = require('./Parser');
 var DevKey = JSON.parse(fs.readFileSync("./Protected/keys.json")).DevKey;
 
 function DatabaseUpdater(app) {
-   function UpdateAll() {
-      for (appid in app.get('SUPPORTED_APPS')) {
-         Update(appid, false);
-      }
-   }
-
    DatabaseUpdater.prototype.Update = function (appid, forced) {
       //get stored variables
       var contents = JSON.parse(fs.readFileSync('./Protected/keys.json'));
@@ -22,7 +16,6 @@ function DatabaseUpdater(app) {
 
       //if time to update (default 1 day) or file doesn't exist
       if (forced || lastUpdate === undefined || new Date().getTime() - lastUpdate > updateIntervalInMS) {
-         app.set('lastUpdate', new Date().getTime());
          var options = {
             url: 'https://api.steampowered.com/IPublishedFileService/QueryFiles/v1',
             method: 'GET',
@@ -58,7 +51,7 @@ function DatabaseUpdater(app) {
 
       function rufCallback() {
          console.log("Finished with " + results.length + " results");
-         parse(results, appid);
+         parse(results, appid, app, () => console.log('done'));
       }
 
       function requestUntillFilled(page = 1) {
@@ -78,19 +71,19 @@ function DatabaseUpdater(app) {
                   console.log("Result Count: " + results.length);
 
                   //if done
-                  if (results.length >= totalItemCount) {
-                     rufCallback();
+                  if (true || results.length >= totalItemCount) {
+                     return rufCallback();
                   }
                   else {
                      requestUntillFilled(page + 1);
                   }
                }
                else {
-                  rufCallback();
+                  return rufCallback();
                }
             }
          });
       }
-   }
+   };
 }
 module.exports = DatabaseUpdater;
