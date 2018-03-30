@@ -19,7 +19,9 @@ router.get('/', function (req, res) {
         comps.push(id);
     }
 
-    cache.getItems(comps, (err, items) => {        
+    cache.getItems(comps, (err, items) => {    
+        console.log(items);
+        console.log(comps.length); 
         if (items.length !== comps.length) {
             url = '/compare?';
             for (i = 1; i <= items.length; i++) {
@@ -28,7 +30,6 @@ router.get('/', function (req, res) {
             url = url.substring(0, url.length - 1);
             return res.redirect(url);
         }
-
         res.render('compare', { title: 'ModRank Comparison', items});
     });
 });

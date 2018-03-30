@@ -18,9 +18,9 @@ router.get('/', function (req, res) {
                 title: title
             });
         }
-        else if (id !== item.id) {
+        /*else if (id !== item.id) {
             res.redirect('/item?id=' + item.id);
-        }
+        }*/
         else {
             res.render('item', item);
         }
