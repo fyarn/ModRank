@@ -6,7 +6,7 @@ var sanitizer = require('sanitize')();
 router.get('/', function (req, res) {
     var cache = app.get('Cacher');
     var id = sanitizer.value(req.query.id, app.get('parserRegex'));
-    var item = cache.getItem(id, (err, item) => {
+    cache.getItem(id, (err, item) => {
         if (item === null) {
             var title = "ModRank - Not Found";
             var message = "Item not found.";

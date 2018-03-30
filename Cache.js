@@ -1,8 +1,11 @@
 ﻿var fs = require('fs');
 var mongojs = require('mongojs');
 
-function cache(app, appid) {
-    this.master = mongojs('mydb')["Steam_App_" + appid];
+function cache(app, appid, cb) {
+    mongojs('mydb')["Steam_App_" + appid].find((err, docs) => {
+        this.master = docs;
+        cb && cb();
+    });
     this.subs = app.get('subsDB');
     this.favs = app.get('favsDB');
     this.views = app.get('viewsDB');
@@ -39,18 +42,20 @@ function cache(app, appid) {
             else if (id.toLowerCase() === 'rand' || id.toLowerCase() === 'random')
             {
                 //get random id
-                id = app.get('masterDB')[Math.floor(Math.random() * master.length)].id;
+                id = app.get('masterDB')[Math.floor(Math.random() * this.master.length)].id;
             }
             else {
                 id = parseInt(id);
             }
         }
-
-        master.findOne({ id: id }, cb);
+        var x = mongojs('mydb')[appid];
+        x.findOne( {id: id}, (err, doc) => {
+            cb(err, doc);
+        });
     };
 
     cache.prototype.getItems = function (ids, cb) {
-        for (var id in ids) {
+        ids.forEach(id => {
             if (typeof id === "string") {
                 if (id.startsWith('https://steamcommunity.com/sharedfiles/filedetails/?id=') ||
                 id.startsWith('http://steamcommunity.com/sharedfiles/filedetails/?id=')) {
@@ -59,15 +64,15 @@ function cache(app, appid) {
                 else if (id.toLowerCase() === 'rand' || id.toLowerCase() === 'random')
                 {
                     //get random id
-                    id = app.get('masterDB')[Math.floor(Math.random() * master.length)].id;
+                    id = this.master[Math.floor(Math.random() * this.master.length)].id;
                 }
                 else {
                     id = parseInt(id);
                 }
             }
-        }
+        });
 
-        master.find({ id: {$in: ids} }, cb);
+        this.master.find({ id: {$in: ids} }, cb);
     };
 }
 

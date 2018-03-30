@@ -4,34 +4,34 @@ mixin listItem(comp)
     .row
         .col-sm-4.col-lg-2.margin-auto
             a(href=("https://steamcommunity.com/sharedfiles/filedetails/?id=" + comp.id))
-                h4.text-black= comp.itemTitle
+                h4.text-black= comp.title
         .col-4.d-sm-none
                 h1
                     i.fa.fa-download.fa-2(aria-hidden="true")
         .col-8.col-sm-2.margin-auto
-            p.margin-no-bottom= comp.subs
-            p.margin-no-top= "#" + comp.subsRank + " | " + comp.subsPercent + "%"
+            p.margin-no-bottom= comp.history[0].subs
+            p.margin-no-top= "#" + comp.history[0].subsRank + " | " + comp.history[0].subsPercent + "%"
         .col-4.d-sm-none
                 h1
                     i.fa.fa-star.fa-2(aria-hidden="true")
         .col-8.col-sm-2.margin-auto
-            p.margin-no-bottom= comp.favs
-            p.margin-no-top= "#" + comp.favsRank + " | " + comp.favsPercent + "%"
+            p.margin-no-bottom= comp.history[0].favs
+            p.margin-no-top= "#" + comp.history[0].favsRank + " | " + comp.history[0].favsPercent + "%"
         .col-4.d-sm-none
                 h1
                     i.fa.fa-comment.fa-2(aria-hidden="true")
         .col-8.col-sm-2.margin-auto
-            p.margin-no-bottom= comp.comments
-            p.margin-no-top= "#" + comp.commentsRank + " | " + comp.commentsPercent + "%"
+            p.margin-no-bottom= comp.history[0].comments
+            p.margin-no-top= "#" + comp.history[0].commentsRank + " | " + comp.history[0].commentsPercent + "%"
         .col-4.d-sm-none
                 h1
                     i.fa.fa-eye.fa-2(aria-hidden="true")
         .col-8.col-sm-2.margin-auto
-            p.margin-no-bottom= comp.views
-            p.margin-no-top= "#" + comp.viewsRank + " | " + comp.viewsPercent + "%"
+            p.margin-no-bottom= comp.history[0].views
+            p.margin-no-top= "#" + comp.history[0].viewsRank + " | " + comp.history[0].viewsPercent + "%"
         .col-lg-2.d-none.d-lg-block.margin-auto
-            p.margin-no-bottom= comp.unsubscribes + '%'
-            p.margin-no-top= "#" + comp.unsubscribesRank + " | " + comp.unsubscribesPercent + "%"
+            p.margin-no-bottom= comp.history[0].unsubscribes + '%'
+            p.margin-no-top= "#" + comp.history[0].unsubscribesRank + " | " + comp.history[0].unsubscribesPercent + "%"
 
 block content
   h1 ModRank Comparison
@@ -56,8 +56,8 @@ block content
             .col-lg-2.d-none.d-lg-block
                 h1
                     i.fa.fa-times.fa-2(aria-hidden="true")
-    if (comps.length > 0)
-        each comp, index in comps
+    if (items.length > 0)
+        each comp, index in items
             if(index % 2 == 0) 
                 li.list-group-item.bg-info.text-black
                     +listItem(comp)

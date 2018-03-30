@@ -89,7 +89,7 @@ function parser(input, appid, app, cb)
                     console.log('master');
                     record('master', docs);
                     resolve();
-                })
+                });
             }).then(() => new Promise((resolve, reject) => {
                 db[appid].find().sort({"history.0.subscriptions": -1}, (err, docs) => {
                     err && reject(err);

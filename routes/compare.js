@@ -26,7 +26,7 @@ router.get('/', function (req, res) {
                 url += 'id' + i + '=' + items[i - 1].id + '&';
             }
             url = url.substring(0, url.length - 1);
-            res.redirect(url);
+            return res.redirect(url);
         }
 
         res.render('compare', { title: 'ModRank Comparison', items});
