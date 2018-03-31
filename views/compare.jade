@@ -4,34 +4,34 @@ mixin listItem(comp)
     .row
         .col-sm-4.col-lg-2.margin-auto
             a(href=("https://steamcommunity.com/sharedfiles/filedetails/?id=" + comp.id))
-                h4.text-black= comp.itemTitle
+                h4.text-black= comp.title
         .col-4.d-sm-none
                 h1
                     i.fa.fa-download.fa-2(aria-hidden="true")
         .col-8.col-sm-2.margin-auto
-            p.margin-no-bottom= comp.subs
-            p.margin-no-top= "#" + comp.subsRank + " | " + comp.subsPercent + "%"
+            p.margin-no-bottom= comp.history[0].subscriptions
+            p.margin-no-top= "#" + comp.history[0].subscriptionsRank + " | " + comp.history[0].subscriptionsPercent + "%"
         .col-4.d-sm-none
                 h1
                     i.fa.fa-star.fa-2(aria-hidden="true")
         .col-8.col-sm-2.margin-auto
-            p.margin-no-bottom= comp.favs
-            p.margin-no-top= "#" + comp.favsRank + " | " + comp.favsPercent + "%"
+            p.margin-no-bottom= comp.history[0].favorites
+            p.margin-no-top= "#" + comp.history[0].favoritesRank + " | " + comp.history[0].favoritesPercent + "%"
         .col-4.d-sm-none
                 h1
                     i.fa.fa-comment.fa-2(aria-hidden="true")
         .col-8.col-sm-2.margin-auto
-            p.margin-no-bottom= comp.comments
-            p.margin-no-top= "#" + comp.commentsRank + " | " + comp.commentsPercent + "%"
+            p.margin-no-bottom= comp.history[0].comments
+            p.margin-no-top= "#" + comp.history[0].commentsRank + " | " + comp.history[0].commentsPercent + "%"
         .col-4.d-sm-none
                 h1
                     i.fa.fa-eye.fa-2(aria-hidden="true")
         .col-8.col-sm-2.margin-auto
-            p.margin-no-bottom= comp.views
-            p.margin-no-top= "#" + comp.viewsRank + " | " + comp.viewsPercent + "%"
+            p.margin-no-bottom= comp.history[0].views
+            p.margin-no-top= "#" + comp.history[0].viewsRank + " | " + comp.history[0].viewsPercent + "%"
         .col-lg-2.d-none.d-lg-block.margin-auto
-            p.margin-no-bottom= comp.unsubscribes + '%'
-            p.margin-no-top= "#" + comp.unsubscribesRank + " | " + comp.unsubscribesPercent + "%"
+            p.margin-no-bottom= comp.history[0].unsubscribes + '%'
+            p.margin-no-top= "#" + comp.history[0].unsubscribesRank + " | " + comp.history[0].unsubscribesPercent + "%"
 
 block content
   h1 ModRank Comparison
@@ -56,22 +56,22 @@ block content
             .col-lg-2.d-none.d-lg-block
                 h1
                     i.fa.fa-times.fa-2(aria-hidden="true")
-    if (comps.length > 0)
-        each comp, index in comps
-            if(index % 2 == 0) 
+    if (items.length > 0)
+        each comp, index in items
+            if (index % 2 == 0) 
                 li.list-group-item.bg-info.text-black
                     +listItem(comp)
             else
                 li.list-group-item.bg-success.text-black
                     +listItem(comp)
-            if(index == comps.length - 1)
+            if (index == items.length - 1)
                 li.list-group-item.text-black.bg-warning
                     .row
                         .col-md-6(style="margin:auto")
                             form(method='GET' action='/compare')
                                 div.form-group
                                     label(for='id') Add a Mod ID: 
-                                    each comp, idx in comps
+                                    each comp, idx in items
                                         - var currID = "id" + (idx + 1)
                                             input.form-control(name=currID type='text' value=comp.id hidden).text-center
                                     - var newID = "id" + (index + 2);

@@ -1,208 +1,181 @@
 ﻿var fs = require('fs');
+var mongojs = require('mongojs');
 var Cache = require('./Cache');
 
 //parses and records lists based off given database
-function parser(database, app)
+function Parser(input, appid, app, cb, useDatabase=false)
 {
-    database = trimVariablesFrom(database);
-    record('master', database);
-    record('subs', sortBySubscriptions(database));
-    record('favs', sortByFavorited(database));
-    record('views', sortByViews(database));
-    record('unsubs', sortByUnsubscribes(database));
-    record('comments', sortByComments(database));
-    if (app.get('Cacher') === undefined) {
-        app.set('Cacher', new Cache(app));
-    }
-
-    function sortBySubscriptions(database) {
-        var db = [];
-        database.forEach(function (obj) {
-            db.push({
-                id: obj.id,
-                subscriptions: obj.subscriptions,
-                hits: obj.subscriptions,
-                name: obj.title,
-                img: obj.preview_url,
-                rank: -1
-            });
-        });
-
-        db.sort(function (a, b) {
-            if (a.subscriptions < b.subscriptions)
-                return 1;
-            else if (a.subscriptions > b.subscriptions)
-                return -1;
-            else
-                return 0;
-        });
-
-        var rank = 1;
-        for (var i = 0; i < db.length; i++) {
-            db[i].rank = rank++;
-            if (i > 0 && db[i].subscriptions === db[i - 1].subscriptions) {
-                db[i].rank = db[i - 1].rank;
-            }
+    var collectionQueueLength;
+    var db = mongojs(app.get('DBConnection'));
+    appid = 'Steam_App_' + appid;
+    var updateTime = new Date();
+    UpdateCollection();
+    
+    //private methods
+    function UpdateCollection() {
+        //stringify because you can't have number collection titles
+        if (!useDatabase) {
+            console.log("setting last_update to " + updateTime);
+            db[appid].findAndModify({
+                query: { id: "last_update" },
+                upsert: true,
+                update: { $set: { last_update: updateTime } },
+            }, UpdateCB);
+        } else {
+            UpdateCB();
         }
-        return db;
     }
 
-    function sortByFavorited(database) {
-        var db = [];
-        database.forEach(function (obj) {
-            db.push({
-                id: obj.id,
-                favorited: obj.favorited,
-                hits: obj.favorited,
-                name: obj.title,
-                img: obj.preview_url,
-                rank: -1
+    function UpdateCB() {
+        collectionQueueLength = input.length;
+        if (useDatabase) {
+            BackfillRankings();
+        } else {
+            data = trimVariablesFrom(input);
+            data.forEach(datum => {
+                db[appid].findAndModify({
+                    query: { id: datum.id },
+                    upsert: true,
+                    update: { 
+                        $set: {
+                            id: datum.id,
+                            title: datum.title,
+                            preview_url: datum.preview_url
+                        },
+                        $push: { 
+                            history: {
+                                updated: updateTime,
+                                comments: datum.comments,
+                                subscriptions: datum.subscriptions,
+                                favorites: datum.favorited,
+                                views: datum.views,
+                                unsubscribes: datum.unsubscribes,
+                            }
+                        }
+                    }
+                }, (error, doc) => {
+                    if (error) {
+                        console.log(error);
+                    }
+                    BackfillRankings();
+                });
             });
-        });
-
-        db.sort(function (a, b) {
-            if (a.favorited < b.favorited)
-                return 1;
-            else if (a.favorited > b.favorited)
-                return -1;
-            else
-                return 0;
-        });
-
-        var rank = 1;
-        for (var i = 0; i < db.length; i++) {
-            db[i].rank = rank++;
-            if (i > 0 && db[i].favorited === db[i - 1].favorited) {
-                db[i].rank = db[i - 1].rank;
-            }
         }
-
-        return db;
     }
-
-    function sortByViews(database) {
-        var db = [];
-        database.forEach(function (obj) {
-            db.push({
-                id: obj.id,
-                views: obj.views,
-                hits: obj.views,
-                name: obj.title,
-                img: obj.preview_url,
-                rank: -1
-            });
-        });
-
-        db.sort(function (a, b) {
-            if (a.views < b.views)
-                return 1;
-            else if (a.views > b.views)
-                return -1;
-            else
-                return 0;
-        });
-
-        var rank = 1;
-        for (var i = 0; i < db.length; i++) {
-            db[i].rank = rank++;
-            if (i > 0 && db[i].views === db[i - 1].views) {
-                db[i].rank = db[i - 1].rank;
-            }
-        }
-
-        return db;
-    }
-
-    function sortByUnsubscribes(database) {
-        var db = [];
-        database.forEach(function (obj) {
-            db.push({
-                id: obj.id,
-                unsubscribes: obj.unsubscribes,
-                hits: obj.unsubscribes,
-                name: obj.title,
-                img: obj.preview_url,
-                rank: -1
-            });
-        });
-
-        db.sort(function (a, b) {
-            if (a.unsubscribes < b.unsubscribes)
-                return 1;
-            else if (a.unsubscribes > b.unsubscribes)
-                return -1;
-            else
-                return 0;
-        });
-
-        var rank = 1;
-        for (var i = 0; i < db.length; i++) {
-            db[i].rank = rank++;
-            if (i > 0 && db[i].unsubscribes === db[i - 1].unsubscribes) {
-                db[i].rank = db[i - 1].rank;
-            }
-        }
-
-        return db;
-    }
-
-    function sortByComments(database) {
-        var db = [];
-        database.forEach(function (obj) {
-            db.push({
-                id: obj.id,
-                num_comments_public: obj.num_comments_public,
-                hits: obj.num_comments_public,
-                name: obj.title,
-                img: obj.preview_url,
-                rank: -1
-            });
-        });
-
-        db.sort(function (a, b) {
-            if (a.num_comments_public < b.num_comments_public)
-                return 1;
-            else if (a.num_comments_public > b.num_comments_public)
-                return -1;
-            else
-                return 0;
-        });
-
-        var rank = 1;
-        for (var i = 0; i < db.length; i++) {
-            db[i].rank = rank++;
-            if (i > 0 && db[i].num_comments_public === db[i - 1].num_comments_public) {
-                db[i].rank = db[i - 1].rank;
-            }
-        }
-
-        return db;
-    }
-
+    
     function trimVariablesFrom(db) {
         ret = [];
         for (var i = 0; i < db.length; i++) {
-            var subs = db[i].lifetime_subscriptions;
-            //check for undefined subscriptions
-            if (typeof subs !== "number" || isNaN(subs)) {
+            var unsubs = validateUnsubs(db[i].lifetime_subscriptions, db[i].subscriptions);
+            if (!unsubs) {
+                collectionQueueLength--;
                 continue;
             }
-            // prevent / by 0 error
-            subs = subs === 0 ? 1 : subs;
-            // calculate subs as a percentage of unsubscribers
-            subs = parseFloat(((subs - db[i].subscriptions) / subs * 100).toFixed(2));
+            
             ret.push({
                 "id": parseInt(db[i].publishedfileid),
                 "title": db[i].title,
-                "num_comments_public": db[i].num_comments_public,
+                "comments": db[i].num_comments_public,
                 "subscriptions": db[i].subscriptions,
                 "favorited": db[i].favorited,
                 "views": db[i].views,
-                "unsubscribes": subs, 
+                "unsubscribes": unsubs,
                 "preview_url": db[i].preview_url
             });
         }
         return ret;
+    }
+    
+    function validateUnsubs(total, subs) {
+        //check for undefined subscriptions
+        if (typeof total !== "number" || isNaN(total)) {
+            return false;
+        }
+        // prevent / by 0 error
+        total = total || 1;
+        // calculate unsubs as a percentage of unsubscribers
+        return parseFloat(((total - subs) / total * 100).toFixed(2));
+    }
+    
+    function BackfillRankings() {
+        if (--collectionQueueLength == 0 || useDatabase) {
+            new Promise(function(resolve, reject) {
+                db[appid].find({ id: {$type: "number"} }, (err, docs) => {
+                    err && console.log(err);
+                    console.log('master');
+                    record('master', docs);
+                    resolve();
+                });
+            }).then(() => new Promise((resolve, reject) => {
+                db[appid].find({ id: {$type: "number"} }).sort({"history.0.subscriptions": -1}, (err, docs) => {
+                    err && console.log(err);
+                    console.log('subs');
+                    record('subs', rank("subscriptions", docs));
+                    resolve();
+                });
+            })).then(() => new Promise((resolve, reject) => {
+                db[appid].find({ id: {$type: "number"} }).sort({"history.0.views": -1}, (err, docs) => {
+                    err && console.log(err);
+                    console.log('views');
+                    record('views', rank("views", docs));
+                    resolve();
+                });
+            })).then(() => new Promise((resolve, reject) => {
+                db[appid].find({ id: {$type: "number"} }).sort({"history.0.comments": -1}, (err, docs) => {
+                    err && console.log(err);
+                    console.log('comments');
+                    record('comments', rank("comments", docs));
+                    resolve();
+                });
+            })).then(() => new Promise((resolve, reject) => {
+                db[appid].find({ id: {$type: "number"} }).sort({"history.0.unsubscribes": 1}, (err, docs) => {
+                    err && console.log(err);
+                    console.log('unsubs');
+                    record('unsubs', rank("unsubscribes", docs));
+                    resolve();
+                });
+            })).then(() => new Promise((resolve, reject) => {
+                db[appid].find({ id: {$type: "number"} }).sort({"history.0.favorites": -1}, (err, docs) => {
+                    err && console.log(err);
+                    console.log('favs');
+                    record('favs', rank("favorites", docs));
+                    resolve();
+                });
+            })).then(() => new Promise((resolve, reject) => {
+                if (app.get('Cacher') === undefined) {
+                    console.log('cache');
+                    app.set('Cacher', new Cache(app, appid));
+                }
+                resolve(cb);
+            }));
+        }
+    }
+
+    function rank(filter, docs) {
+        var rank = 1;
+        for (var i = 0; i < docs.length; i++) {
+            var doc = docs[i];
+            var l = i;
+            var prev;
+            var prevl;
+            if (i > 0) {
+                prev = docs[i-1];
+            }
+            doc.history[0].rank = rank++;
+            if (i > 0 && doc.history[0][filter] === prev.history[0][filter]) {
+                doc.history[0].rank = prev.history[0].rank;
+            }
+            db[appid].findAndModify({
+                query: { id: doc.id },
+                update: { 
+                    $set: { 
+                        [`history.${0}.${filter}Rank`]: doc.history[0].rank,
+                        [`history.${0}.${filter}Percent`]: (doc.history[0].rank / docs.length * 100).toFixed(2)
+                    }
+                },
+            }, (e, doc) => e && console.error(e));
+        }
+        return docs;
     }
 
     function record(dest, payload) {
@@ -210,4 +183,4 @@ function parser(database, app)
     }
 }
 
-module.exports = parser;
+module.exports = Parser;

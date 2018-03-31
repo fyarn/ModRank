@@ -2,12 +2,12 @@ extends layout
 
 block content
     a(href=("https://steamcommunity.com/sharedfiles/filedetails/?id=" + id))
-        h1.text-black= itemTitle + " (" + id + ")"
+        h1.text-black= title + " (" + id + ")"
     a(href=("https://steamcommunity.com/sharedfiles/filedetails/?id=" + id))
-        img(src=img, alt=itemTitle, style='max-height:150px').img-fluid
+        img(src=preview_url, alt=title, style='max-height:150px').img-fluid
     hr.bg-white
     ul.list-group.text-white
-        li.list-group-item.bg-dark.d-none.d-sm-block
+        li.list-group-locals.bg-dark.d-none.d-sm-block
             .row
                 .col-md-5.col-8
                     h2 Category
@@ -20,56 +20,56 @@ block content
                 .col-md-3
                     h2
                         i.fa.fa-percent
-        li.list-group-item.bg-secondary
+        li.list-group-locals.bg-secondary
             .row
                 .col-md-5.col-12
                     h2= "Subscriptions: "
                 .col-md-2.col
-                    h2= subs
+                    h2= locals.history[0].subscriptions
                 .col-md-2.col
-                    h2= "#" + subsRank + ""
+                    h2= "#" + locals.history[0].subscriptionsRank + ""
                 .col-md-3.col
-                    h2= "Top " + subsPercent + "%"
-        li.list-group-item.bg-primary
+                    h2= "Top " + locals.history[0].subscriptionsPercent + "%"
+        li.list-group-locals.bg-primary
             .row
                 .col-md-5.col-12
                     h2= "Favorites: "
                 .col-md-2.col
-                    h2= favs
+                    h2= locals.history[0].favorites
                 .col-md-2.col
-                    h2= "#" + favsRank + ""
+                    h2= "#" + locals.history[0].favoritesRank + ""
                 .col-md-3.col
-                    h2= "Top " + favsPercent + "%"
-        li.list-group-item.bg-success
+                    h2= "Top " + locals.history[0].favoritesPercent + "%"
+        li.list-group-locals.bg-success
             .row
                 .col-md-5.col-12
                     h2= "Comments: "
                 .col-md-2.col
-                    h2= comments
+                    h2= locals.history[0].comments
                 .col-md-2.col
-                    h2= "#" + commentsRank + ""
+                    h2= "#" + locals.history[0].commentsRank + ""
                 .col-md-3.col
-                    h2= "Top " + commentsPercent + "%"
-        li.list-group-item.bg-danger
+                    h2= "Top " + locals.history[0].commentsPercent + "%"
+        li.list-group-locals.bg-danger
             .row
                 .col-md-5.col-12
                     h2= "Views: "
                 .col-md-2.col
-                    h2= views
+                    h2= locals.history[0].views
                 .col-md-2.col
-                    h2= "#" + viewsRank + ""
+                    h2= "#" + locals.history[0].viewsRank + ""
                 .col-md-3.col
-                    h2= "Top " + viewsPercent + "%"
-        li.list-group-item.bg-warning
+                    h2= "Top " + locals.history[0].viewsPercent + "%"
+        li.list-group-locals.bg-warning
             .row
                 .col-md-5.col-12
                     h2= "Unsubscriptions: "
                 .col-md-2.col
-                    h2= unsubscribes + "%"
+                    h2= locals.history[0].unsubscribes + "%"
                 .col-md-2.col
-                    h2= "#" + unsubscribesRank
+                    h2= "#" + locals.history[0].unsubscribesRank
                 .col-md-3.col
-                    h2= "Top " + unsubscribesPercent + "%"
+                    h2= "Top " + locals.history[0].unsubscribesPercent + "%"
 
     .row
         .col-md-6(style="margin:auto")

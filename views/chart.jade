@@ -3,11 +3,11 @@ extends layout
 mixin listItem(comp)
     a(href=('/item?id=' + comp.id))
         .row
-            .col-2.margin-auto= '#' + comp.rank
+            .col-2.margin-auto= '#' + comp.history[0][name + "Rank"]
             .col-sm-2.margin-auto.d-none.d-sm-block
-                img(data-src=comp.img).img-fluid.lazy
-            .col-6.margin-auto= comp.name + ' (' + comp.id + ')'
-            .col-2.margin-auto= comp.hits + (name === "Unsubscriptions" ? '%' : '')
+                img(data-src=comp.preview_url).img-fluid.lazy
+            .col-6.margin-auto= comp.title + ' (' + comp.id + ')'
+            .col-2.margin-auto= comp.history[0][name] + (title === "Unsubscribes" ? '%' : '')
 
 block content
     .row
