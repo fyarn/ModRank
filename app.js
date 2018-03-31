@@ -99,8 +99,9 @@ function SetupApp() {
    }*/
    DBUpdater.Update('294100');
 
-   // check for update twice a day
-   setInterval( () => {DBUpdater.Update('294100');}, 1000 * 60 * 60 * 12);
+   // TODO: move the setinterval into DBUpdater.Update
+   // check for update hourly, though only update if have waited > 12 hours
+   setInterval( () => {DBUpdater.Update('294100');}, 1000 * 60);
 
    app.set('parserRegex', /(https:\/\/steamcommunity\.com\/sharedfiles\/filedetails\/\?id=)?(\d+)|([Rr][Aa][Nn][Dd]([Oo][Mm])?)/);
    app.set('steamRegex', /https:\/\/steamcommunity\.com\/sharedfiles\/filedetails\/\?id=/);

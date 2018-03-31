@@ -14,7 +14,12 @@ function parser(input, appid, app, cb)
         //stringify because you can't have number collection titles
         appid = 'Steam_App_' + appid;
         var updateTime = new Date();
-        app.set('lastUpdate', updateTime);
+        db[appid].findAndModify({
+            query: { _id: "last_update" },
+            upsert: true,
+            update: { $set: { last_update: updateTime } },
+        });
+
         collectionQueueLength = input.length;
         
         data = trimVariablesFrom(input);
@@ -135,37 +140,37 @@ function parser(input, appid, app, cb)
             }));
     }
 
-function rank(filter, docs) {
-    var rank = 1;
-    for (var i = 0; i < docs.length; i++) {
-        var doc = docs[i];
-        var l = doc.history.length;
-        var prev;
-        var prevl;
-        if (i > 0) {
-            prev = docs[i-1];
-            prevl = prev.history.length;
+    function rank(filter, docs) {
+        var rank = 1;
+        for (var i = 0; i < docs.length; i++) {
+            var doc = docs[i];
+            var l = doc.history.length;
+            var prev;
+            var prevl;
+            if (i > 0) {
+                prev = docs[i-1];
+                prevl = prev.history.length;
+            }
+            doc.history[l - 1].rank = rank++;
+            if (i > 0 && doc.history[l - 1][filter] === prev.history[prevl - 1][filter]) {
+                doc.history[l - 1].rank = prev.history[prevl - 1].rank;
+            }
+            db[appid].findAndModify({
+                query: { id: doc.id },
+                update: { 
+                    $set: { 
+                        [`history.${l - 1}.${filter}Rank`]: doc.history[l - 1].rank,
+                        [`history.${l - 1}.${filter}Percent`]: (doc.history[l - 1].rank / docs.length * 100).toFixed(2)
+                    }
+                },
+            }, (e, doc) => e && console.error(e));
         }
-        doc.history[l - 1].rank = rank++;
-        if (i > 0 && doc.history[l - 1][filter] === prev.history[prevl - 1][filter]) {
-            doc.history[l - 1].rank = prev.history[prevl - 1].rank;
-        }
-        db[appid].findAndModify({
-            query: { id: doc.id },
-            update: { 
-                $set: { 
-                    [`history.${l - 1}.${filter}Rank`]: doc.history[l - 1].rank,
-                    [`history.${l - 1}.${filter}Percent`]: (doc.history[l - 1].rank / docs.length * 100).toFixed(2)
-                }
-            },
-        }, (e, doc) => e && console.error(e));
+        return docs;
     }
-    return docs;
-}
 
-function record(dest, payload) {
-    app.set(dest + "DB", payload);
-}
+    function record(dest, payload) {
+        app.set(dest + "DB", payload);
+    }
 }
 
 module.exports = parser;
