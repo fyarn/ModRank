@@ -1,14 +1,18 @@
 ﻿var fs = require('fs');
 var request = require('request');
 var parse = require('./Parser');
-var DevKey = JSON.parse(fs.readFileSync("./Protected/keys.json")).DevKey;
 var mongojs = require('mongojs');
 
 function DatabaseUpdater(app) {
    DatabaseUpdater.prototype.Update = function (appid, forced = false) {
       //get stored variables
-      var contents = JSON.parse(fs.readFileSync('./Protected/keys.json'));
-      var devKey = contents.DevKey;
+      var devKey;
+      try {
+         var contents = JSON.parse(fs.readFileSync('./Protected/keys.json'));
+         devKey = contents.DevKey;
+      } catch (error) {
+         devKey = process.env.DevKey
+      }
       // 10800000ms = refresh every 3 hours
       var updateIntervalInMS = 10800000 * 4;
       var results = [];
@@ -23,7 +27,7 @@ function DatabaseUpdater(app) {
                url: 'https://api.steampowered.com/IPublishedFileService/QueryFiles/v1',
                method: 'GET',
                qs: {
-                  'key': devKey || process.env.DevKey,
+                  'key': devKey,
                   'query_type': 0,
                   'page': '1',
                   'numperpage': '100',
