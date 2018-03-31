@@ -22,8 +22,9 @@ function DatabaseUpdater(app) {
          var lastUpdate = item && item.last_update;
          console.log("Last Update: " + lastUpdate);
          forced = process.env.ForceUpdate !== undefined;
+         var debug = process.env.debug;
          //if time to update (default 12 hours) or file doesn't exist
-         if (forced || lastUpdate == null || new Date().getTime() - lastUpdate > updateIntervalInMS) {
+         if (forced || (!debug && (lastUpdate == null || new Date().getTime() - lastUpdate > updateIntervalInMS))) {
             var options = {
                url: 'https://api.steampowered.com/IPublishedFileService/QueryFiles/v1',
                method: 'GET',
