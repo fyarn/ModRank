@@ -56,7 +56,7 @@ function SetupApp() {
    });
 
    app.get('/robots.txt', function (req, res) {
-       res.send("User-agent: *\nDisallow:\/*random*");
+       res.send("User-agent: *\nDisallow:\/*random*\nDisallow:\/*rand*\n");
    });
 
 
