@@ -4,7 +4,7 @@ var parse = require('./Parser');
 var DevKey = JSON.parse(fs.readFileSync("./Protected/keys.json")).DevKey;
 
 function DatabaseUpdater(app) {
-   DatabaseUpdater.prototype.Update = function (appid, forced) {
+   DatabaseUpdater.prototype.Update = function (appid, forced = false) {
       //get stored variables
       var contents = JSON.parse(fs.readFileSync('./Protected/keys.json'));
       var devKey = contents.DevKey;
@@ -71,7 +71,7 @@ function DatabaseUpdater(app) {
                   console.log("Result Count: " + results.length);
 
                   //if done
-                  if (true || results.length >= totalItemCount) {
+                  if (results.length >= totalItemCount) {
                      return rufCallback();
                   }
                   else {

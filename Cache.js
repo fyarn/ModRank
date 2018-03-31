@@ -2,7 +2,7 @@
 var mongojs = require('mongojs');
 
 function cache(app, appid, cb) {
-    mongojs('mydb')["Steam_App_" + appid].find((err, docs) => {
+    mongojs('mydb')[appid].find({}, (err, docs) => {
         this.master = docs;
         cb && cb();
     });
@@ -41,8 +41,7 @@ function cache(app, appid, cb) {
             }
             else if (id.toLowerCase() === 'rand' || id.toLowerCase() === 'random')
             {
-                //get random id
-                id = app.get('masterDB')[Math.floor(Math.random() * this.master.length)].id;
+                id = this.master[Math.floor(Math.random() * this.master.length)].id;
             }
             else {
                 id = parseInt(id);
@@ -54,25 +53,23 @@ function cache(app, appid, cb) {
         });
     };
 
-    cache.prototype.getItems = function (ids, cb) {
-        ids.forEach(id => {
+    cache.prototype.getItems = function (ids, callback) {
+        ids = ids.map(id => {
             if (typeof id === "string") {
                 if (id.startsWith('https://steamcommunity.com/sharedfiles/filedetails/?id=') ||
                 id.startsWith('http://steamcommunity.com/sharedfiles/filedetails/?id=')) {
-                    id = parseInt(id.split('=')[1]);
+                    return parseInt(id.split('=')[1]);
                 }
                 else if (id.toLowerCase() === 'rand' || id.toLowerCase() === 'random')
                 {
                     //get random id
-                    id = this.master[Math.floor(Math.random() * this.master.length)].id;
+                    return this.master[Math.floor(Math.random() * this.master.length)].id;
                 }
-                else {
-                    id = parseInt(id);
-                }
+                return parseInt(id);
             }
         });
 
-        this.master.find({ id: {$in: ids} }, cb);
+        mongojs('mydb')[appid].find({ id: {$in: ids} }, callback);
     };
 }
 

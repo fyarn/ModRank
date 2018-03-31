@@ -26,7 +26,7 @@ block content
             h2 Hall of Famers
             hr.bg-white
         .clearfix
-        each cat, i in ['subcriptions', 'favorites', 'comments', 'views', 'unsubscribes']
+        each cat, i in ['subscriptions', 'favorites', 'comments', 'views', 'unsubscribes']
             if (i === 3) 
                 .col-lg-2.d-none.d-lg-block
             .col-md-6.col-lg-4(style='margin-bottom:30px')
@@ -34,7 +34,7 @@ block content
                     a(href='/chart?cat=' + cat)
                         li.list-group-item.bg-danger(style='border-bottom:4px solid white')
                             case cat
-                                when 'subcriptions'
+                                when 'subscriptions'
                                     h4 Most Subscribed
                                 when 'favorites'
                                     h4 Most Favorited

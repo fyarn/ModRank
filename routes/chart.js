@@ -9,7 +9,7 @@ router.get('/', function (req, res) {
         var message = "Category not found.";
         // render the error page
         res.status(404);
-        res.render('error', {
+        return res.render('error', {
             status: 404,
             message: message,
             title: title
@@ -24,14 +24,11 @@ router.get('/', function (req, res) {
         from = 1;
     }
     else {
-        from = parseInt(req.query.from);
-        if (from === null) {
-            from = 1;
-        }
+        from = parseInt(req.query.from) || 1;
     }
 
-    if (req.query.to === undefined
-        || parseInt(req.query.to) === null) {
+    if (req.query.to === undefined || 
+        parseInt(req.query.to) === null) {
         to = from + 100;
     }
     else {
@@ -41,8 +38,6 @@ router.get('/', function (req, res) {
     if (to < 1) {
         to = 10000000;
     }
-
-    require('../UpdateDB')(app).Update('294100', false);
 
     var list = app.get('masterDB');
     var cache = app.get('Cacher');
@@ -72,7 +67,7 @@ router.get('/', function (req, res) {
     else {
         // render the error page
         res.status(404);
-        res.render('error', {
+        return res.render('error', {
             status: 404,
             message: "Category not found",
             title: "ModRank - Not Found"
@@ -82,7 +77,7 @@ router.get('/', function (req, res) {
     if (chart === undefined) {
         // render the error page
         res.status(404);
-        res.render('error', {
+        return res.render('error', {
             status: 404,
             message: "Category not found",
             title: "ModRank - Not Found"

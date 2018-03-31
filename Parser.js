@@ -32,7 +32,7 @@ function parser(input, appid, app, cb)
                         history: {
                             updated: updateTime,
                             comments: datum.comments,
-                            subscribes: datum.subscriptions,
+                            subscriptions: datum.subscriptions,
                             favorites: datum.favorited,
                             views: datum.views,
                             unsubscribes: datum.unsubscribes,
@@ -53,6 +53,7 @@ function parser(input, appid, app, cb)
         for (var i = 0; i < db.length; i++) {
             var unsubs = validateUnsubs(db[i].lifetime_subscriptions, db[i].subscriptions);
             if (!unsubs) {
+                collectionQueueLength--;
                 continue;
             }
             
@@ -85,42 +86,42 @@ function parser(input, appid, app, cb)
         (--collectionQueueLength) ||
             new Promise(function(resolve, reject) {
                 db[appid].find((err, docs) => {
-                    err && reject(err);
+                    err && console.log(err);
                     console.log('master');
                     record('master', docs);
                     resolve();
                 });
             }).then(() => new Promise((resolve, reject) => {
                 db[appid].find().sort({"history.0.subscriptions": -1}, (err, docs) => {
-                    err && reject(err);
+                    err && console.log(err);
                     console.log('subs');
                     record('subs', rank("subscriptions", docs));
                     resolve();
                 });
             })).then(() => new Promise((resolve, reject) => {
                 db[appid].find().sort({"history.0.views": -1}, (err, docs) => {
-                    err && reject(err);
+                    err && console.log(err);
                     console.log('views');
                     record('views', rank("views", docs));
                     resolve();
                 });
             })).then(() => new Promise((resolve, reject) => {
                 db[appid].find().sort({"history.0.comments": -1}, (err, docs) => {
-                    err && reject(err);
+                    err && console.log(err);
                     console.log('comments');
                     record('comments', rank("comments", docs));
                     resolve();
                 });
             })).then(() => new Promise((resolve, reject) => {
                 db[appid].find().sort({"history.0.unsubscribes": 1}, (err, docs) => {
-                    err && reject(err);
+                    err && console.log(err);
                     console.log('unsubs');
                     record('unsubs', rank("unsubscribes", docs));
                     resolve();
                 });
             })).then(() => new Promise((resolve, reject) => {
                 db[appid].find().sort({"history.0.favorites": -1}, (err, docs) => {
-                    err && reject(err);
+                    err && console.log(err);
                     console.log('favs');
                     record('favs', rank("favorites", docs));
                     resolve();

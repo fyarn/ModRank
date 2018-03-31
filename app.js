@@ -97,10 +97,10 @@ function SetupApp() {
       console.log(appid);
       //DBUpdater.Update(appid, true);
    }*/
-   DBUpdater.Update('294100', true);
+   DBUpdater.Update('294100');
 
-   // check for update every 30 minutes
-   //setInterval( () => {DBUpdater.UpdateAll();}, 1000 * 60 * 30);
+   // check for update twice a day
+   setInterval( () => {DBUpdater.Update('294100');}, 1000 * 60 * 60 * 12);
 
    app.set('parserRegex', /(https:\/\/steamcommunity\.com\/sharedfiles\/filedetails\/\?id=)?(\d+)|([Rr][Aa][Nn][Dd]([Oo][Mm])?)/);
    app.set('steamRegex', /https:\/\/steamcommunity\.com\/sharedfiles\/filedetails\/\?id=/);

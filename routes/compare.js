@@ -19,10 +19,8 @@ router.get('/', function (req, res) {
         comps.push(id);
     }
 
-    cache.getItems(comps, (err, items) => {    
-        console.log(items);
-        console.log(comps.length); 
-        if (items.length !== comps.length) {
+    cache.getItems(comps, (err, items) => {
+        if (items.length !== comps.length || comps.includes('random') || comps.includes('rand')) {
             url = '/compare?';
             for (i = 1; i <= items.length; i++) {
                 url += 'id' + i + '=' + items[i - 1].id + '&';
