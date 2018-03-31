@@ -3,7 +3,7 @@ var mongojs = require('mongojs');
 var Cache = require('./Cache');
 
 //parses and records lists based off given database
-function parser(input, appid, app, cb, useDatabase=false)
+function Parser(input, appid, app, cb, useDatabase=false)
 {
     var collectionQueueLength;
     var db = mongojs('mydb');
@@ -15,6 +15,7 @@ function parser(input, appid, app, cb, useDatabase=false)
     function UpdateCollection() {
         //stringify because you can't have number collection titles
         if (!useDatabase) {
+            console.log("setting last_update to " + updateTime);
             db[appid].findAndModify({
                 query: { id: "last_update" },
                 upsert: true,
@@ -154,23 +155,22 @@ function parser(input, appid, app, cb, useDatabase=false)
         var rank = 1;
         for (var i = 0; i < docs.length; i++) {
             var doc = docs[i];
-            var l = doc.history.length;
+            var l = i;
             var prev;
             var prevl;
             if (i > 0) {
                 prev = docs[i-1];
-                prevl = prev.history.length;
             }
-            doc.history[l - 1].rank = rank++;
-            if (i > 0 && doc.history[l - 1][filter] === prev.history[prevl - 1][filter]) {
-                doc.history[l - 1].rank = prev.history[prevl - 1].rank;
+            doc.history[0].rank = rank++;
+            if (i > 0 && doc.history[0][filter] === prev.history[0][filter]) {
+                doc.history[0].rank = prev.history[0].rank;
             }
             db[appid].findAndModify({
                 query: { id: doc.id },
                 update: { 
                     $set: { 
-                        [`history.${l - 1}.${filter}Rank`]: doc.history[l - 1].rank,
-                        [`history.${l - 1}.${filter}Percent`]: (doc.history[l - 1].rank / docs.length * 100).toFixed(2)
+                        [`history.${0}.${filter}Rank`]: doc.history[0].rank,
+                        [`history.${0}.${filter}Percent`]: (doc.history[0].rank / docs.length * 100).toFixed(2)
                     }
                 },
             }, (e, doc) => e && console.error(e));
@@ -183,4 +183,4 @@ function parser(input, appid, app, cb, useDatabase=false)
     }
 }
 
-module.exports = parser;
+module.exports = Parser;

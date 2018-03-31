@@ -45,7 +45,6 @@ block content
                                 when 'unsubscribes'
                                     h4 Least Unsubscriptions
                     each index in [1, 2, 3]
-                        a(href='/item?id=' + locals[cat + 'Top' + index].id) 
                         case index
                             when 1: li.list-group-item.bg-warning
                                 +rankedItem(index, cat)

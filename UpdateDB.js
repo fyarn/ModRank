@@ -21,6 +21,7 @@ function DatabaseUpdater(app) {
       collection.findOne({ id: "last_update" }, (err, item) => {
          var lastUpdate = item && item.last_update;
          console.log("Last Update: " + lastUpdate);
+         forced = process.env.ForceUpdate !== undefined;
          //if time to update (default 12 hours) or file doesn't exist
          if (forced || lastUpdate == null || new Date().getTime() - lastUpdate > updateIntervalInMS) {
             var options = {
