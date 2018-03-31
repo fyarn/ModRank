@@ -6,7 +6,7 @@ var Cache = require('./Cache');
 function Parser(input, appid, app, cb, useDatabase=false)
 {
     var collectionQueueLength;
-    var db = mongojs('mydb');
+    var db = mongojs(app.get('DBConnection'));
     appid = 'Steam_App_' + appid;
     var updateTime = new Date();
     UpdateCollection();

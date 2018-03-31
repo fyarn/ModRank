@@ -2,7 +2,7 @@
 var mongojs = require('mongojs');
 
 function cache(app, appid, cb) {
-    mongojs('mydb')[appid].find({}, (err, docs) => {
+    mongojs(app.get('DBConnection'))[appid].find({}, (err, docs) => {
         this.master = docs;
         cb && cb();
     });
@@ -47,7 +47,7 @@ function cache(app, appid, cb) {
                 id = parseInt(id);
             }
         }
-        var x = mongojs('mydb')[appid];
+        var x = mongojs(app.get('DBConnection'))[appid];
         x.findOne( {id: id}, (err, doc) => {
             cb(err, doc);
         });
@@ -69,7 +69,7 @@ function cache(app, appid, cb) {
             }
         });
 
-        mongojs('mydb')[appid].find({ id: {$in: ids} }, callback);
+        mongojs(app.get('DBConnection'))[appid].find({ id: {$in: ids} }, callback);
     };
 }
 

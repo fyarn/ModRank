@@ -17,7 +17,7 @@ function DatabaseUpdater(app) {
       var updateIntervalInMS = 10800000 * 4;
       var results = [];
       var totalItemCount = -1;
-      var collection = mongojs('mydb')["Steam_App_" + appid];
+      var collection = mongojs(app.get('DBConnection'))["Steam_App_" + appid];
       collection.findOne({ id: "last_update" }, (err, item) => {
          var lastUpdate = item && item.last_update;
          console.log("Last Update: " + lastUpdate);
