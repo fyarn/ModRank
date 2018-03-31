@@ -31,10 +31,11 @@ function SetupApp() {
    app.use(cookieParser());
    app.use(express.static(path.join(__dirname, '/public')));
 
-   var pw = process.env['MONGODB_ADMIN_PASSWORD'];
+   var user = process.env['MONGODB_USER']
+   var pw = process.env['MONGODB_PASSWORD'];
    var ip = process.env['MONGODB_IP'];
-   if (pw && ip) {
-       app.set('DBConnection', "admin:"+pw+"@"+ip+"/mydb");
+   if (user && pw && ip) {
+       app.set('DBConnection', user+":"+pw+"@"+ip+"/mydb");
    } else {
        app.set('DBConnection', 'localhost/mydb');
    }
