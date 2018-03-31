@@ -3,18 +3,18 @@ var mongojs = require('mongojs');
 var Cache = require('./Cache');
 
 //parses and records lists based off given database
-function parser(input, appid, app, cb, useDatabase=true)
+function parser(input, appid, app, cb, useDatabase=false)
 {
     var collectionQueueLength;
     var db = mongojs('mydb');
+    appid = 'Steam_App_' + appid;
+    var updateTime = new Date();
     UpdateCollection();
     
     //private methods
     function UpdateCollection() {
         //stringify because you can't have number collection titles
-        appid = 'Steam_App_' + appid;
-        var updateTime = new Date();
-        if (useDatabase) {
+        if (!useDatabase) {
             db[appid].findAndModify({
                 query: { id: "last_update" },
                 upsert: true,

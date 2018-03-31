@@ -49,7 +49,7 @@ router.get('/', function (req, res) {
     }
     else if (chartName === 'favs' || chartName === 'favorites' || chartName === 'fav') {
         chart = app.get('favsDB');
-        name = 'favorited';
+        name = 'favorites';
     }
     else if (chartName === 'comments' || chartName === 'comment') {
         chart = app.get('commentsDB');
