@@ -3,7 +3,7 @@ var mongojs = require('mongojs');
 var Cache = require('./Cache');
 
 //parses and records lists based off given database
-function parser(input, appid, app, cb)
+function parser(input, appid, app, cb, useDatabase=true)
 {
     var collectionQueueLength;
     var db = mongojs('mydb');
@@ -14,43 +14,52 @@ function parser(input, appid, app, cb)
         //stringify because you can't have number collection titles
         appid = 'Steam_App_' + appid;
         var updateTime = new Date();
-        db[appid].findAndModify({
-            query: { _id: "last_update" },
-            upsert: true,
-            update: { $set: { last_update: updateTime } },
-        });
-
-        collectionQueueLength = input.length;
-        
-        data = trimVariablesFrom(input);
-        data.forEach(datum => {
+        if (useDatabase) {
             db[appid].findAndModify({
-                query: { id: datum.id },
+                query: { id: "last_update" },
                 upsert: true,
-                update: { 
-                    $set: {
-                        id: datum.id,
-                        title: datum.title,
-                        preview_url: datum.preview_url
-                    },
-                    $push: { 
-                        history: {
-                            updated: updateTime,
-                            comments: datum.comments,
-                            subscriptions: datum.subscriptions,
-                            favorites: datum.favorited,
-                            views: datum.views,
-                            unsubscribes: datum.unsubscribes,
+                update: { $set: { last_update: updateTime } },
+            }, UpdateCB);
+        } else {
+            UpdateCB();
+        }
+    }
+
+    function UpdateCB() {
+        collectionQueueLength = input.length;
+        if (useDatabase) {
+            BackfillRankings();
+        } else {
+            data = trimVariablesFrom(input);
+            data.forEach(datum => {
+                db[appid].findAndModify({
+                    query: { id: datum.id },
+                    upsert: true,
+                    update: { 
+                        $set: {
+                            id: datum.id,
+                            title: datum.title,
+                            preview_url: datum.preview_url
+                        },
+                        $push: { 
+                            history: {
+                                updated: updateTime,
+                                comments: datum.comments,
+                                subscriptions: datum.subscriptions,
+                                favorites: datum.favorited,
+                                views: datum.views,
+                                unsubscribes: datum.unsubscribes,
+                            }
                         }
                     }
-                }
-            }, (error, doc) => {
-                if (error) {
-                    console.log(error);
-                }
-                BackfillRankings();
+                }, (error, doc) => {
+                    if (error) {
+                        console.log(error);
+                    }
+                    BackfillRankings();
+                });
             });
-        });
+        }
     }
     
     function trimVariablesFrom(db) {
@@ -88,44 +97,44 @@ function parser(input, appid, app, cb)
     }
     
     function BackfillRankings() {
-        (--collectionQueueLength) ||
+        if (--collectionQueueLength == 0 || useDatabase) {
             new Promise(function(resolve, reject) {
-                db[appid].find((err, docs) => {
+                db[appid].find({ id: {$type: "number"} }, (err, docs) => {
                     err && console.log(err);
                     console.log('master');
                     record('master', docs);
                     resolve();
                 });
             }).then(() => new Promise((resolve, reject) => {
-                db[appid].find().sort({"history.0.subscriptions": -1}, (err, docs) => {
+                db[appid].find({ id: {$type: "number"} }).sort({"history.0.subscriptions": -1}, (err, docs) => {
                     err && console.log(err);
                     console.log('subs');
                     record('subs', rank("subscriptions", docs));
                     resolve();
                 });
             })).then(() => new Promise((resolve, reject) => {
-                db[appid].find().sort({"history.0.views": -1}, (err, docs) => {
+                db[appid].find({ id: {$type: "number"} }).sort({"history.0.views": -1}, (err, docs) => {
                     err && console.log(err);
                     console.log('views');
                     record('views', rank("views", docs));
                     resolve();
                 });
             })).then(() => new Promise((resolve, reject) => {
-                db[appid].find().sort({"history.0.comments": -1}, (err, docs) => {
+                db[appid].find({ id: {$type: "number"} }).sort({"history.0.comments": -1}, (err, docs) => {
                     err && console.log(err);
                     console.log('comments');
                     record('comments', rank("comments", docs));
                     resolve();
                 });
             })).then(() => new Promise((resolve, reject) => {
-                db[appid].find().sort({"history.0.unsubscribes": 1}, (err, docs) => {
+                db[appid].find({ id: {$type: "number"} }).sort({"history.0.unsubscribes": 1}, (err, docs) => {
                     err && console.log(err);
                     console.log('unsubs');
                     record('unsubs', rank("unsubscribes", docs));
                     resolve();
                 });
             })).then(() => new Promise((resolve, reject) => {
-                db[appid].find().sort({"history.0.favorites": -1}, (err, docs) => {
+                db[appid].find({ id: {$type: "number"} }).sort({"history.0.favorites": -1}, (err, docs) => {
                     err && console.log(err);
                     console.log('favs');
                     record('favs', rank("favorites", docs));
@@ -138,6 +147,7 @@ function parser(input, appid, app, cb)
                 }
                 resolve(cb);
             }));
+        }
     }
 
     function rank(filter, docs) {

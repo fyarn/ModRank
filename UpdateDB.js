@@ -13,9 +13,12 @@ function DatabaseUpdater(app) {
       var updateIntervalInMS = 10800000 * 4;
       var results = [];
       var totalItemCount = -1;
-      mongojs('mydb')[appid].findOne({ query: { _id: "last_update" } }, (err, lastUpdate) => {
+      var collection = mongojs('mydb')["Steam_App_" + appid];
+      collection.findOne({ id: "last_update" }, (err, item) => {
+         var lastUpdate = item && item.last_update;
+         console.log("Last Update: " + lastUpdate);
          //if time to update (default 12 hours) or file doesn't exist
-         if (forced || lastUpdate === undefined || new Date().getTime() - lastUpdate > updateIntervalInMS) {
+         if (forced || lastUpdate == null || new Date().getTime() - lastUpdate > updateIntervalInMS) {
             var options = {
                url: 'https://api.steampowered.com/IPublishedFileService/QueryFiles/v1',
                method: 'GET',
@@ -47,6 +50,11 @@ function DatabaseUpdater(app) {
                }
             };
             requestUntillFilled();
+            // if cache isn't already populated, condition on startup
+         } else if (app.get('Cacher') === undefined) {
+            collection.find({$id : {$type: "number"}}, (err, docs) => {
+               parse(docs, appid, app, () => console.log(done), /* useDatabase */ !forced);
+            });
          }
 
          function rufCallback() {
