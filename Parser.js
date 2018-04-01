@@ -100,7 +100,6 @@ function Parser(input, appid, app, cb, useDatabase=false)
         return parseFloat(((total - subs) / total * 100).toFixed(2));
     }
     
-    // TODO: Rank calls needs to be async because it creates a race condition otherwise.
     function BackfillRankings() {
         if (--collectionQueueLength == 0 || useDatabase) {
             new Promise(function(resolve, reject) {
@@ -113,31 +112,26 @@ function Parser(input, appid, app, cb, useDatabase=false)
             }).then(() => new Promise((resolve, reject) => {
                 db[appid].find({ id: {$type: "number"} }).sort({"history.0.subscriptions": -1}, (err, docs) => {
                     err && console.log(err);
-                    //console.log('Ranking subs...');
                     rank("subscriptions", docs, (ranked) => { record('subs', ranked); console.log('subs'); parseSuccess(resolve);});
                 });
             })).then(() => new Promise((resolve, reject) => {
                 db[appid].find({ id: {$type: "number"} }).sort({"history.0.views": -1}, (err, docs) => {
                     err && console.log(err);
-                    //console.log('Ranking views...');
                     rank("views", docs, (ranked) => { record('views', ranked); console.log('views'); parseSuccess(resolve);});
                 });
             })).then(() => new Promise((resolve, reject) => {
                 db[appid].find({ id: {$type: "number"} }).sort({"history.0.comments": -1}, (err, docs) => {
                     err && console.log(err);
-                    //console.log('Ranking comments...');
                     rank("comments", docs, (ranked) => { record('comments', ranked); console.log('comments'); parseSuccess(resolve);});
                 });
             })).then(() => new Promise((resolve, reject) => {
                 db[appid].find({ id: {$type: "number"} }).sort({"history.0.unsubscribes": 1}, (err, docs) => {
                     err && console.log(err);
-                    //console.log('Ranking unsubs...');
                     rank("unsubscribes", docs, (ranked) => { record('unsubs', ranked); console.log('unsubs'); parseSuccess(resolve);});
                 });
             })).then(() => new Promise((resolve, reject) => {
                 db[appid].find({ id: {$type: "number"} }).sort({"history.0.favorites": -1}, (err, docs) => {
                     err && console.log(err);
-                    //console.log('Ranking favorites...');
                     rank("favorites", docs, (ranked) => { record('favs', ranked); console.log('favs'); parseSuccess(resolve);});
                 });
             })).then(() => new Promise((resolve, reject) => {
@@ -149,7 +143,6 @@ function Parser(input, appid, app, cb, useDatabase=false)
     }
 
     function parseSuccess(callback) {
-        //console.log(collectionCount);
         --collectionCount || cb();
         callback && callback();
     }
@@ -179,7 +172,6 @@ function Parser(input, appid, app, cb, useDatabase=false)
                 },
             }, (e, doc) => { 
                 e && console.error(e);
-                //!(ranks % 1000) && console.log(filter+ranks);
                 decrementAndCB();
             });
         }
@@ -187,7 +179,6 @@ function Parser(input, appid, app, cb, useDatabase=false)
         function decrementAndCB() {
             ranks--;
             if (!ranks) {
-                //console.log(filter)
                 callback(docs);
             }
         }
