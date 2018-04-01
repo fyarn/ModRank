@@ -108,59 +108,55 @@ function Parser(input, appid, app, cb, useDatabase=false)
                     err && console.log(err);
                     console.log('master');
                     record('master', docs);
-                    resolve(parseSuccess);
+                    parseSuccess(resolve);
                 });
             }).then(() => new Promise((resolve, reject) => {
                 db[appid].find({ id: {$type: "number"} }).sort({"history.0.subscriptions": -1}, (err, docs) => {
                     err && console.log(err);
-                    console.log('subs');
-                    record('subs', rank("subscriptions", docs));
-                    resolve(parseSuccess);
+                    //console.log('Ranking subs...');
+                    rank("subscriptions", docs, (ranked) => { record('subs', ranked); console.log('subs'); parseSuccess(resolve);});
                 });
             })).then(() => new Promise((resolve, reject) => {
                 db[appid].find({ id: {$type: "number"} }).sort({"history.0.views": -1}, (err, docs) => {
                     err && console.log(err);
-                    console.log('views');
-                    record('views', rank("views", docs));
-                    resolve(parseSuccess);
+                    //console.log('Ranking views...');
+                    rank("views", docs, (ranked) => { record('views', ranked); console.log('views'); parseSuccess(resolve);});
                 });
             })).then(() => new Promise((resolve, reject) => {
                 db[appid].find({ id: {$type: "number"} }).sort({"history.0.comments": -1}, (err, docs) => {
                     err && console.log(err);
-                    console.log('comments');
-                    record('comments', rank("comments", docs));
-                    resolve(parseSuccess);
+                    //console.log('Ranking comments...');
+                    rank("comments", docs, (ranked) => { record('comments', ranked); console.log('comments'); parseSuccess(resolve);});
                 });
             })).then(() => new Promise((resolve, reject) => {
                 db[appid].find({ id: {$type: "number"} }).sort({"history.0.unsubscribes": 1}, (err, docs) => {
                     err && console.log(err);
-                    console.log('unsubs');
-                    record('unsubs', rank("unsubscribes", docs));
-                    resolve(parseSuccess);
+                    //console.log('Ranking unsubs...');
+                    rank("unsubscribes", docs, (ranked) => { record('unsubs', ranked); console.log('unsubs'); parseSuccess(resolve);});
                 });
             })).then(() => new Promise((resolve, reject) => {
                 db[appid].find({ id: {$type: "number"} }).sort({"history.0.favorites": -1}, (err, docs) => {
                     err && console.log(err);
-                    console.log('favs');
-                    record('favs', rank("favorites", docs));
-                    resolve(parseSuccess);
+                    //console.log('Ranking favorites...');
+                    rank("favorites", docs, (ranked) => { record('favs', ranked); console.log('favs'); parseSuccess(resolve);});
                 });
             })).then(() => new Promise((resolve, reject) => {
                 if (app.get('Cacher') === undefined) {
-                    console.log('cache');
-                    app.set('Cacher', new Cache(app, appid));
+                    app.set('Cacher', new Cache(app, appid, () => {console.log('cache'); parseSuccess();}));
                 }
-                resolve(parseSuccess);
             }));
         }
     }
 
-    function parseSuccess() {
+    function parseSuccess(callback) {
+        //console.log(collectionCount);
         --collectionCount || cb();
+        callback && callback();
     }
 
     function rank(filter, docs, callback) {
         var rank = 1;
+        var ranks = docs.length;
         for (var i = 0; i < docs.length; i++) {
             var doc = docs[i];
             var l = i;
@@ -183,10 +179,18 @@ function Parser(input, appid, app, cb, useDatabase=false)
                 },
             }, (e, doc) => { 
                 e && console.error(e);
-                callback && callback();
+                //!(ranks % 1000) && console.log(filter+ranks);
+                decrementAndCB();
             });
         }
-        return docs;
+
+        function decrementAndCB() {
+            ranks--;
+            if (!ranks) {
+                //console.log(filter)
+                callback(docs);
+            }
+        }
     }
 
     function record(dest, payload) {
