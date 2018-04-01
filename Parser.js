@@ -5,7 +5,9 @@ var Cache = require('./Cache');
 //parses and records lists based off given database
 function Parser(input, appid, app, cb, useDatabase=false)
 {
+    const CACHED_ITEM_COUNT = 6; // one for each ranking and the cache object
     var collectionQueueLength;
+    var collectionCount;
     var db = mongojs(app.get('DBConnection'));
     appid = 'Steam_App_' + appid;
     var updateTime = new Date();
@@ -28,6 +30,7 @@ function Parser(input, appid, app, cb, useDatabase=false)
 
     function UpdateCB() {
         collectionQueueLength = input.length;
+        collectionCount = CACHED_ITEM_COUNT;
         if (useDatabase) {
             BackfillRankings();
         } else {
@@ -97,6 +100,7 @@ function Parser(input, appid, app, cb, useDatabase=false)
         return parseFloat(((total - subs) / total * 100).toFixed(2));
     }
     
+    // TODO: Rank calls needs to be async because it creates a race condition otherwise.
     function BackfillRankings() {
         if (--collectionQueueLength == 0 || useDatabase) {
             new Promise(function(resolve, reject) {
@@ -104,54 +108,58 @@ function Parser(input, appid, app, cb, useDatabase=false)
                     err && console.log(err);
                     console.log('master');
                     record('master', docs);
-                    resolve();
+                    resolve(parseSuccess);
                 });
             }).then(() => new Promise((resolve, reject) => {
                 db[appid].find({ id: {$type: "number"} }).sort({"history.0.subscriptions": -1}, (err, docs) => {
                     err && console.log(err);
                     console.log('subs');
                     record('subs', rank("subscriptions", docs));
-                    resolve();
+                    resolve(parseSuccess);
                 });
             })).then(() => new Promise((resolve, reject) => {
                 db[appid].find({ id: {$type: "number"} }).sort({"history.0.views": -1}, (err, docs) => {
                     err && console.log(err);
                     console.log('views');
                     record('views', rank("views", docs));
-                    resolve();
+                    resolve(parseSuccess);
                 });
             })).then(() => new Promise((resolve, reject) => {
                 db[appid].find({ id: {$type: "number"} }).sort({"history.0.comments": -1}, (err, docs) => {
                     err && console.log(err);
                     console.log('comments');
                     record('comments', rank("comments", docs));
-                    resolve();
+                    resolve(parseSuccess);
                 });
             })).then(() => new Promise((resolve, reject) => {
                 db[appid].find({ id: {$type: "number"} }).sort({"history.0.unsubscribes": 1}, (err, docs) => {
                     err && console.log(err);
                     console.log('unsubs');
                     record('unsubs', rank("unsubscribes", docs));
-                    resolve();
+                    resolve(parseSuccess);
                 });
             })).then(() => new Promise((resolve, reject) => {
                 db[appid].find({ id: {$type: "number"} }).sort({"history.0.favorites": -1}, (err, docs) => {
                     err && console.log(err);
                     console.log('favs');
                     record('favs', rank("favorites", docs));
-                    resolve();
+                    resolve(parseSuccess);
                 });
             })).then(() => new Promise((resolve, reject) => {
                 if (app.get('Cacher') === undefined) {
                     console.log('cache');
                     app.set('Cacher', new Cache(app, appid));
                 }
-                resolve(cb);
+                resolve(parseSuccess);
             }));
         }
     }
 
-    function rank(filter, docs) {
+    function parseSuccess() {
+        --collectionCount || cb();
+    }
+
+    function rank(filter, docs, callback) {
         var rank = 1;
         for (var i = 0; i < docs.length; i++) {
             var doc = docs[i];
@@ -173,7 +181,10 @@ function Parser(input, appid, app, cb, useDatabase=false)
                         [`history.${0}.${filter}Percent`]: (doc.history[0].rank / docs.length * 100).toFixed(2)
                     }
                 },
-            }, (e, doc) => e && console.error(e));
+            }, (e, doc) => { 
+                e && console.error(e);
+                callback && callback();
+            });
         }
         return docs;
     }
