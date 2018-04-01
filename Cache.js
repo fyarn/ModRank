@@ -2,15 +2,13 @@
 var mongojs = require('mongojs');
 
 function cache(app, appid, cb) {
-    mongojs(app.get('DBConnection'))[appid].find({}, (err, docs) => {
-        this.master = docs;
-        cb && cb();
-    });
+    this.master = app.get('masterDB');
     this.subs = app.get('subsDB');
     this.favs = app.get('favsDB');
     this.views = app.get('viewsDB');
     this.unsubscribes = app.get('unsubsDB');
     this.comments = app.get('commentsDB');
+    cb && cb();
 
     //all of these are 1 indexed (getMostSubsItem(1) returns the first best item)
     cache.prototype.getMostSubsItem = function (index = 1) {
