@@ -59,7 +59,7 @@ function DatabaseUpdater(app) {
             // if cache isn't already populated, condition on startup
          } else if (app.get('Cacher') === undefined) {
             collection.find({$id : {$type: "number"}}, (err, docs) => {
-               parse(docs, appid, app, () => console.log(done), /* useDatabase */ true);
+               parse(docs, appid, app, () => console.log('done'), /* useDatabase */ true);
             });
          }
 
