@@ -135,9 +135,7 @@ function Parser(input, appid, app, cb, useDatabase=false)
                     rank("favorites", docs, (ranked) => { record('favs', ranked); console.log('favs'); parseSuccess(resolve);});
                 });
             })).then(() => new Promise((resolve, reject) => {
-                if (app.get('Cacher') === undefined) {
-                    app.set('Cacher', new Cache(app, appid, () => {console.log('cache'); parseSuccess();}));
-                }
+                app.set('Cacher', new Cache(app, appid, () => {console.log('cache'); parseSuccess();}));
             }));
         }
     }
