@@ -6,10 +6,10 @@ services:
       - "27017"
     volumes:
       - ./mongodb:/data/db
-      - ./Logs:/opt/ModRank/Logs
+      - /opt/ModRank/Logs:/Logs
     environment:
-      - MONGO_LOG_DIR=/opt/ModRank/Logs/db.log
-    command: mongod --smallfiles
+      - MONGO_LOG_DIR=/Logs/db.log
+    command: ["sh", "-c",  "mongod --smallfiles --quiet --bind_ip_all 1>/dev/null 2>> /Logs/db.log"]
     restart: always
   node:
     build: "./node/"
@@ -20,7 +20,7 @@ services:
       - ./Logs:/opt/ModRank/Logs
     depends_on:
       - mongodb
-    restart: always 
+    restart: always
 #  react:
 #    build: ./react/
 #    ports:
