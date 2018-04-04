@@ -1,0 +1,28 @@
+version: '2'
+services:
+  mongodb:
+    image: "mongo"
+    expose:
+      - "27017"
+    environment:
+      - MONGO_DATA_DIR=/data/db
+      - MONGO_LOG_DIR=/opt/ModRank/Logs/db.log
+    command: mongod --smallfiles
+    restart: always
+  node:
+    build: "./node/"
+    ports:
+      - "80:8080"
+    volumes:
+      - .:/opt/Modrank
+    depends_on:
+      - mongodb
+    restart: always 
+#  react:
+#    build: ./react/
+#    ports:
+#      - "80:3000"
+#    volumes:
+#      - ./react:/opt/ModRank
+#    depends_on:
+#      - backend
