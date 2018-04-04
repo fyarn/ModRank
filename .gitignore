@@ -262,3 +262,6 @@ __pycache__/
 *.pyc
 /ModRank/modrank - Web Deploy.pubxml
 /ModRank/modrank - FTP.pubxml
+mongodb/
+Logs/
+.DS_Store

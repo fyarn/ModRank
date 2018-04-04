@@ -4,8 +4,10 @@ services:
     image: "mongo"
     expose:
       - "27017"
+    volumes:
+      - ./mongodb:/data/db
+      - ./Logs:/opt/ModRank/Logs
     environment:
-      - MONGO_DATA_DIR=/data/db
       - MONGO_LOG_DIR=/opt/ModRank/Logs/db.log
     command: mongod --smallfiles
     restart: always
@@ -15,6 +17,7 @@ services:
       - "80:8080"
     volumes:
       - .:/opt/Modrank
+      - ./Logs:/opt/ModRank/Logs
     depends_on:
       - mongodb
     restart: always 
