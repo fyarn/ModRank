@@ -1,0 +1,20 @@
+# Adapted from https://gist.github.com/Luzifer/7c54c8b0b61da450d10258f0abd3c917
+# Located at /etc/systemd/system/multi-user.wants/docker-compose.service
+[Unit]
+Description=hooklistener
+After=docker.service network-online.target
+Requires=docker.service network-online.target
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+WorkingDirectory=/var/www/ModRank
+Type=oneshot
+RemainAfterExit=yes
+
+ExecStart=/usr/local/bin/docker-compose up -d
+ExecStop=/usr/local/bin/docker-compose down
+ExecReload=/usr/local/bin/docker-compose up -d
+
+Restart=always

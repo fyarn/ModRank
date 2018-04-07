@@ -1,0 +1,11 @@
+# Adapted from https://unix.stackexchange.com/a/74623
+# Located at /etc/systemd/system/hooklistener.service
+[Unit]
+Description=hooklistener
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+ExecStart=/usr/local/bin/docker-hook -c /var/www/ModRank/build.sh
+Restart=always
