@@ -6,7 +6,7 @@ services:
       - "27017"
     volumes:
       - ./mongodb:/data/db
-      - /opt/ModRank/Logs:/Logs
+      - ./Logs:/Logs
     environment:
       - MONGO_LOG_DIR=/Logs/db.log
     command: ["sh", "-c",  "mongod --smallfiles --quiet --bind_ip_all 1>/dev/null 2>> /Logs/db.log"]
@@ -16,8 +16,8 @@ services:
     ports:
       - "80:8080"
     volumes:
-      - .:/opt/Modrank
-      - ./Logs:/opt/ModRank/Logs
+      - ./ModRank:/Modrank
+      - ./Logs:/Logs
     depends_on:
       - mongodb
     restart: always

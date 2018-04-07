@@ -1,10 +1,10 @@
 FROM node:carbon
 RUN mkdir -p /opt/ModRank
-WORKDIR /opt/ModRank
+WORKDIR /ModRank
 
-COPY package*.json /opt/ModRank/
+COPY package*.json /ModRank/
 RUN npm install
-COPY . /opt/ModRank
+COPY . /ModRank
 
 ENV NODE_ENV production
 
