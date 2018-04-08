@@ -7,5 +7,6 @@ Description=hooklistener
 WantedBy=multi-user.target
 
 [Service]
+EnvironmentFile=/etc/default/ModRank
 ExecStart=/usr/local/bin/docker-hook -c /var/www/ModRank/build.sh
 Restart=always
