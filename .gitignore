@@ -265,3 +265,4 @@ __pycache__/
 mongodb/
 Logs/
 .DS_Store
+Protected/*
