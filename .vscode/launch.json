@@ -8,9 +8,9 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Program",
-            "program": "${workspaceFolder}/bin/www"
+            "program": "${workspaceFolder}/node/bin/www",
             "env": {
-                "debug": true
+                "debug": "true"
             }
         }
     ]

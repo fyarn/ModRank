@@ -1,48 +1,49 @@
-﻿import {
-  readFileSync
-} from "fs";
-import request from "request";
-import parse from "./Parser";
-import mongojs from "mongojs";
-import mongoist from "mongoist";
-import {log, warning, error} from "console";
-import { builtinModules } from "module";
+﻿let readFileSync = require('fs').readFileSync;
+let console = require('console');
+let request = require("request");
+let parse = require("./Parser");
+let mongojs = require("mongojs");
+let mongoist = require("mongoist");
+let updateIntervalInMS = 10800000 * 4;
 
-class SteamWorker {
-
+class SteamAPIWorker {
   constructor(app, steamid) {
     this.app = app;
     this.steamid = steamid;
     this.db = mongoist(mongojs(app.get('DBConnection')))[steamid];
-    this.updateIntervalInMS = 10800000 * 4;
     this.results = [];
     this.totalItemCount = -1;
-  }
-
-  async Update(forced = false) {
     //get stored variables
     var devKey = process.env.DevKey;
     try {
-      devKey = JSON.parse(readFileSync('./Protected/keys.json')).DevKey;
+      devKey = JSON.parse(readFileSync('./node/Protected/keys.json')).DevKey;
     } catch (err) {
-      error(err);
+      console.warn(err);
     }
     this.DevKey = devKey;
+    this.forced = process.env.ForceUpdate !== undefined;
+    this.debug = process.env.debug;
+  }
 
+  keepUpToDate() {
+    this.update();
+    setInterval(this.update, 1000 * 60 * 60);
+  }
+
+  async update(forced = false) {
     try {
-      lastUpdateRecord = await db.findOne({ id: "last_update" });
+      lastUpdateRecord = await this.db.findOne({ id: "last_update" });
     } catch (err) {
-      error(err);
+      return console.error(err);
     }
+    
     this.lastUpdate = lastUpdateRecord && lastUpdateRecord.last_update;
-    log("Last Update: " + this.lastUpdate);
+    console.log("Last Update: " + this.lastUpdate);
 
-    let forced = process.env.ForceUpdate !== undefined;
-    let debug = process.env.debug;
     //if time to update (default 12 hours) or file doesn't exist
-    if (forced ||
-      lastUpdate == null ||
-      (!debug && new Date().getTime() - lastUpdate > updateIntervalInMS)) {
+    if (this.forced ||
+      this.lastUpdate == null ||
+      (!this.debug && new Date().getTime() - lastUpdate > updateIntervalInMS)) {
       let options = {
         url: 'https://api.steampowered.com/IPublishedFileService/QueryFiles/v1',
         method: 'GET',
@@ -73,49 +74,49 @@ class SteamWorker {
           'return_playtime_stats': 7
         }
       };
-      requestUntillFilled(options);
+      this.requestUntillFilled(options);
       // if cache isn't already populated, condition on startup
     } else if (app.get('Cacher') === undefined) {
       let docs = await db.find({ $id: { $type: "number" } });
-      parseRequests(docs, true);
+      this.parseRequests(docs, true);
     }
   }
 
   parseRequests(docs, useDB = false) {
-    parse(docs, this.steamid, this.app, () => console.log('Downloaded, parsing...'), useDB);
+    parse(docs, this.steamid, this.app, () => console.console.log('Downloaded, parsing...'), useDB);
   }
 
   requestUntillFilled(options) {
     options.qs.page++;
     request(options, (err, response, body) => {
       if (err) {
-        error(err);
+        console.error(err);
       }
 
       body = JSON.parse(body);
       if (body.response.publishedfiledetails === undefined) {
-        log("Finished with " + this.results.length + " results");
-        return parseRequests(this.results);
+        console.log("Finished with " + this.results.length + " results");
+        return this.parseRequests(this.results);
       }
 
       //if first call
       if (this.totalItemCount < 0) {
         this.totalItemCount = body.response.total;
-        log("Total Items: " + this.totalItemCount);
+        console.log("Total Items: " + this.totalItemCount);
       }
 
       this.results = this.results.concat(body.response.publishedfiledetails);
-      log("Result Count: " + this.results.length);
+      console.log("Result Count: " + this.results.length);
 
       //if done
       if (results.length >= totalItemCount) {
-        log("Finished with " + this.results.length + " results");
-        return parseRequests(this.results);
+        console.log("Finished with " + this.results.length + " results");
+        return this.parseRequests(this.results);
       }
 
-      requestUntillFilled(options);
+      this.requestUntillFilled(options);
     });
   }
 }
 
-export default SteamWorker;
+module.exports = SteamAPIWorker;

@@ -15,7 +15,7 @@ var chart = require('./routes/chart');
 var router = express.Router();
 var visitor = ua('UA-64719618-2');
 var mongojs = require('mongojs');
-var UpdateDB = require('./UpdateDB');
+var SteamAPIWorker = require('./SteamAPIWorker');
 
 function SetupApp() {
     // view engine setup
@@ -40,6 +40,7 @@ function SetupApp() {
     app.use('/compare', compare);
     app.use('/chart', chart);
     app.use('/api', router);
+
     //replace double slashes after URL
     app.use('//', function (req, res) {
         res.redirect(req.url.replace(/([^:]\/)\/+/g, "$1"));
@@ -100,18 +101,16 @@ function SetupApp() {
         res.render('error');
     });
 
-    var DBUpdater = new UpdateDB(app);
+    let DBUpdater = new SteamAPIWorker(app, '294100');
     /*for (appid in ['294100']) {
        console.log(appid);
        //DBUpdater.Update(appid, true);
     }*/
-    DBUpdater.Update('294100');
+    DBUpdater.keepUpToDate();
 
     // TODO: move the setinterval into DBUpdater.Update
     // check for update hourly, though only update if have waited > 12 hours
-    setInterval(() => {
-        DBUpdater.Update('294100');
-    }, 1000 * 60 * 60);
+    
 
     app.set('parserRegex', /(https:\/\/steamcommunity\.com\/sharedfiles\/filedetails\/\?id=)?(\d+)|([Rr][Aa][Nn][Dd]([Oo][Mm])?)/);
     app.set('steamRegex', /https:\/\/steamcommunity\.com\/sharedfiles\/filedetails\/\?id=/);
