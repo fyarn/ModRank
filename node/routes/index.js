@@ -4,7 +4,7 @@ var router = express.Router();
 /* GET home page. */
 router.get('/', function (req, res) {
     var list = app.get('masterDB');
-    var cache = app.get('Cacher');
+    var cache = app.get('Cache');
 
     res.render("index", {
         title: 'ModRank',

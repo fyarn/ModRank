@@ -76,7 +76,7 @@ class SteamAPIWorker {
       };
       this.requestUntillFilled(options);
       // if cache isn't already populated, condition on startup
-    } else if (app.get('Cacher') === undefined) {
+    } else if (app.get('Cache') === undefined) {
       let docs = await db.find({ $id: { $type: "number" } });
       this.parseRequests(docs, true);
     }

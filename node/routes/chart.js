@@ -40,7 +40,6 @@ router.get('/', function (req, res) {
     }
 
     var list = app.get('masterDB');
-    var cache = app.get('Cacher');
     var chart;
     var name = '';
     if (chartName === 'subs' || chartName === 'subscriptions' || chartName === 'sub') {

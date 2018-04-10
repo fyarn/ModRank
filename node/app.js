@@ -65,22 +65,14 @@ function SetupApp() {
         visitor.event("API", "Item Connection Test").send();
     });
 
-    router.route('/items/:item_id').get(function (req, res) {
-        var cache = app.get('Cacher');
-        var item = cache.getItem(sanitizer.value(req.params.item_id.substring(1), app.get('parserRegex')),
-            (err, doc) => {
-                visitor.event("API", "Item Lookup", req.params.item_id).send();
-                //item not found
-                if (doc === null) {
-                    res.status(404).send({
-                        error: "404 item not found"
-                    });
-                    return;
-                } else {
-                    res.json(doc);
-                    return;
-                }
-            });
+    router.route('/items/:item_id').get(async function (req, res) {
+        let cache = app.get('Cache');
+        let item = await cache.getItem(sanitizer.value(req.params.item_id.substring(1), app.get('parserRegex')));
+        visitor.event("API", "Item Lookup", req.params.item_id).send();
+        //item not found
+        item === null ?
+          res.status(404).send({ error: "404 item not found" }) :
+          res.json(doc);
     });
 
     // catch 404 and forward to error handler

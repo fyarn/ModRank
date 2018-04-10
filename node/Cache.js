@@ -1,74 +1,60 @@
-﻿var fs = require('fs');
-var mongojs = require('mongojs');
+﻿let mongojs = require('mongojs');
+let mongoist = require("mongoist");
 
-function cache(app, appid, cb) {
+class Cache {
+  constructor(app, steamid) {
+    this.app = app;
+    this.steamid = steamid;
     this.master = app.get('masterDB');
     this.subs = app.get('subsDB');
     this.favs = app.get('favsDB');
     this.views = app.get('viewsDB');
     this.unsubscribes = app.get('unsubsDB');
     this.comments = app.get('commentsDB');
-    cb && cb();
+    this.db = mongoist(mongojs(this.app.get('DBConnection')))[this.steamid];
+  }
 
-    //all of these are 1 indexed (getMostSubsItem(1) returns the first best item)
-    cache.prototype.getMostSubsItem = function (index = 1) {
-        return this.subs[index - 1];
-    };
+  //all of these are 1 indexed (getMostSubsItem(1) returns the first best item)
+  getMostSubsItem(index = 1) {
+    return this.subs[index - 1];
+  }
 
-    cache.prototype.getMostFavsItem = function (index = 1) {
-        return this.favs[index - 1];
-    };
+  getMostFavsItem(index = 1) {
+    return this.favs[index - 1];
+  }
 
-    cache.prototype.getMostViewsItem = function (index = 1) {
-        return this.views[index - 1];
-    };
+  getMostViewsItem(index = 1) {
+    return this.views[index - 1];
+  }
 
-    cache.prototype.getMostUnsubscribesItem = function (index = 1) {
-        return this.unsubscribes[index - 1];
-    };
+  getMostUnsubscribesItem(index = 1) {
+    return this.unsubscribes[index - 1];
+  }
 
-    cache.prototype.getMostCommentsItem = function (index = 1) {
-        return this.comments[index - 1];
-    };
+  getMostCommentsItem(index = 1) {
+    return this.comments[index - 1];
+  }
 
-    cache.prototype.getItem = function (id, cb) {
-        if (typeof id === "string") {
-            if (id.startsWith('https://steamcommunity.com/sharedfiles/filedetails/?id=') ||
-                id.startsWith('http://steamcommunity.com/sharedfiles/filedetails/?id=')) {
-                id = parseInt(id.split('=')[1]);
-            }
-            else if (id.toLowerCase() === 'rand' || id.toLowerCase() === 'random')
-            {
-                id = this.master[Math.floor(Math.random() * this.master.length)].id;
-            }
-            else {
-                id = parseInt(id);
-            }
-        }
-        var x = mongojs(app.get('DBConnection'))[appid];
-        x.findOne( {id: id}, (err, doc) => {
-            cb(err, doc);
-        });
-    };
+  async getItem(id) {
+    if (typeof id === "string") {
+      if (id.startsWith('https://steamcommunity.com/sharedfiles/filedetails/?id=') ||
+        id.startsWith('http://steamcommunity.com/sharedfiles/filedetails/?id=')) {
+        id = parseInt(id.split('=')[1]);
+      } else if (id.toLowerCase() === 'rand' || id.toLowerCase() === 'random') {
+        id = this.master[Math.floor(Math.random() * this.master.length)].id;
+      } else {
+        id = parseInt(id);
+      }
+    }
 
-    cache.prototype.getItems = function (ids, callback) {
-        ids = ids.map(id => {
-            if (typeof id === "string") {
-                if (id.startsWith('https://steamcommunity.com/sharedfiles/filedetails/?id=') ||
-                id.startsWith('http://steamcommunity.com/sharedfiles/filedetails/?id=')) {
-                    return parseInt(id.split('=')[1]);
-                }
-                else if (id.toLowerCase() === 'rand' || id.toLowerCase() === 'random')
-                {
-                    //get random id
-                    return this.master[Math.floor(Math.random() * this.master.length)].id;
-                }
-                return parseInt(id);
-            }
-        });
+    return await db.findOne({ id: id });
+  };
 
-        mongojs(app.get('DBConnection'))[appid].find({ id: {$in: ids} }, callback);
-    };
+  async getItems(ids) {
+    return ids.map(async function(id) {
+      return await this.getItem(id)
+    });
+  }
 }
 
-module.exports = cache;
+module.exports = Cache;

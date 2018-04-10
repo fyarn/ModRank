@@ -1,5 +1,4 @@
-﻿var fs = require('fs');
-var mongojs = require('mongojs');
+﻿var mongojs = require('mongojs');
 var Cache = require('./Cache');
 
 //parses and records lists based off given database
@@ -135,7 +134,9 @@ function Parser(input, appid, app, cb, useDatabase=false)
                     rank("favorites", docs, (ranked) => { record('favs', ranked); console.log('favs'); parseSuccess(resolve);});
                 });
             })).then(() => new Promise((resolve, reject) => {
-                app.set('Cacher', new Cache(app, appid, () => {console.log('cache'); parseSuccess();}));
+                app.set('Cache', new Cache(app, appid)); 
+                console.log('Cache loaded')
+                parseSuccess();
             }));
         }
     }
