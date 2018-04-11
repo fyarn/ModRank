@@ -1,7 +1,7 @@
 ﻿let readFileSync = require('fs').readFileSync;
 let console = require('console');
 let request = require("request");
-let parse = require("./Parser");
+let Parser = require("./Parser");
 let mongojs = require("mongojs");
 let mongoist = require("mongoist");
 let updateIntervalInMS = 10800000 * 4;
@@ -10,7 +10,7 @@ class SteamAPIWorker {
   constructor(app, steamid) {
     this.app = app;
     this.steamid = steamid;
-    this.db = mongoist(mongojs(app.get('DBConnection')))[steamid];
+    this.db = mongoist(mongojs(app.get('DBConnection')))['Steam_App_' + steamid];
     this.results = [];
     this.totalItemCount = -1;
     //get stored variables
@@ -32,11 +32,13 @@ class SteamAPIWorker {
 
   async update(forced = false) {
     try {
-      lastUpdateRecord = await this.db.findOne({ id: "last_update" });
+      lastUpdateRecord = await this.db.findOne({
+        id: "last_update"
+      });
     } catch (err) {
       return console.error(err);
     }
-    
+
     this.lastUpdate = lastUpdateRecord && lastUpdateRecord.last_update;
     console.log("Last Update: " + this.lastUpdate);
 
@@ -77,13 +79,17 @@ class SteamAPIWorker {
       this.requestUntillFilled(options);
       // if cache isn't already populated, condition on startup
     } else if (app.get('Cache') === undefined) {
-      let docs = await db.find({ $id: { $type: "number" } });
+      let docs = await db.find({
+        $id: {
+          $type: "number"
+        }
+      });
       this.parseRequests(docs, true);
     }
   }
 
   parseRequests(docs, useDB = false) {
-    parse(docs, this.steamid, this.app, () => console.console.log('Downloaded, parsing...'), useDB);
+    new Parser(this.app, this.steamid, useDB).consume(docs);
   }
 
   requestUntillFilled(options) {

@@ -1,191 +1,197 @@
 ﻿var mongojs = require('mongojs');
 var Cache = require('./Cache');
+let mongoist = require('mongoist');
+const CACHED_ITEM_COUNT = 6; // one for each ranking and the cache object
 
 //parses and records lists based off given database
-function Parser(input, appid, app, cb, useDatabase=false)
-{
-    const CACHED_ITEM_COUNT = 6; // one for each ranking and the cache object
-    var collectionQueueLength;
-    var collectionCount;
-    var db = mongojs(app.get('DBConnection'));
-    appid = 'Steam_App_' + appid;
-    var updateTime = new Date();
-    UpdateCollection();
-    
-    //private methods
-    function UpdateCollection() {
-        //stringify because you can't have number collection titles
-        if (!useDatabase) {
-            console.log("setting last_update to " + updateTime);
-            db[appid].findAndModify({
-                query: { id: "last_update" },
-                upsert: true,
-                update: { $set: { last_update: updateTime } },
-            }, UpdateCB);
-        } else {
-            UpdateCB();
-        }
+class Parser {
+  constructor(app, appid, useDB) {
+    this.db = mongoist(mongojs(app.get('DBConnection')))['Steam_App_' + appid];
+    this.useDB = useDB;
+    this.collectionQueueLength = 0;
+    this.collectionCount = 0;
+  }
+
+  async consume(input) {
+    let updateTime = new Date();
+    if (!this.useDB) {
+      console.log("setting last_update to " + updateTime);
+      await this.db.findAndModify({
+        query: {
+          id: "last_update"
+        },
+        upsert: true,
+        update: {
+          $set: {
+            last_update: updateTime
+          }
+        },
+      });
     }
 
-    function UpdateCB() {
-        collectionQueueLength = input.length;
-        collectionCount = CACHED_ITEM_COUNT;
-        if (useDatabase) {
-            BackfillRankings();
-        } else {
-            data = trimVariablesFrom(input);
-            data.forEach(datum => {
-                db[appid].findAndModify({
-                    query: { id: datum.id },
-                    upsert: true,
-                    update: { 
-                        $set: {
-                            id: datum.id,
-                            title: datum.title,
-                            preview_url: datum.preview_url
-                        },
-                        $push: { 
-                            history: {
-                                updated: updateTime,
-                                comments: datum.comments,
-                                subscriptions: datum.subscriptions,
-                                favorites: datum.favorited,
-                                views: datum.views,
-                                unsubscribes: datum.unsubscribes,
-                            }
-                        }
-                    }
-                }, (error, doc) => {
-                    if (error) {
-                        console.log(error);
-                    }
-                    BackfillRankings();
-                });
-            });
-        }
+    this.collectionQueueLength = input.length;
+    this.collectionCount = CACHED_ITEM_COUNT;
+    if (this.useDB) {
+      return BackfillRankings();
     }
-    
-    function trimVariablesFrom(db) {
-        ret = [];
-        for (var i = 0; i < db.length; i++) {
-            var unsubs = validateUnsubs(db[i].lifetime_subscriptions, db[i].subscriptions);
-            if (!unsubs) {
-                collectionQueueLength--;
-                continue;
+
+    data = trimVariablesFrom(input);
+    data.forEach(datum => {
+      db.findAndModify({
+        query: {
+          id: datum.id
+        },
+        upsert: true,
+        update: {
+          $set: {
+            id: datum.id,
+            title: datum.title,
+            preview_url: datum.preview_url
+          },
+          $push: {
+            history: {
+              updated: updateTime,
+              comments: datum.comments,
+              subscriptions: datum.subscriptions,
+              favorites: datum.favorited,
+              views: datum.views,
+              unsubscribes: datum.unsubscribes,
             }
-            
-            ret.push({
-                "id": parseInt(db[i].publishedfileid),
-                "title": db[i].title,
-                "comments": db[i].num_comments_public,
-                "subscriptions": db[i].subscriptions,
-                "favorited": db[i].favorited,
-                "views": db[i].views,
-                "unsubscribes": unsubs,
-                "preview_url": db[i].preview_url
-            });
+          }
         }
-        return ret;
-    }
-    
-    function validateUnsubs(total, subs) {
-        //check for undefined subscriptions
-        if (typeof total !== "number" || isNaN(total)) {
-            return false;
-        }
-        // prevent / by 0 error
-        total = total || 1;
-        // calculate unsubs as a percentage of unsubscribers
-        return parseFloat(((total - subs) / total * 100).toFixed(2));
-    }
-    
-    function BackfillRankings() {
-        if (--collectionQueueLength == 0 || useDatabase) {
-            new Promise(function(resolve, reject) {
-                db[appid].find({ id: {$type: "number"} }, (err, docs) => {
-                    err && console.log(err);
-                    console.log('master');
-                    record('master', docs);
-                    parseSuccess(resolve);
-                });
-            }).then(() => new Promise((resolve, reject) => {
-                db[appid].find({ id: {$type: "number"} }).sort({"history.0.subscriptions": -1}, (err, docs) => {
-                    err && console.log(err);
-                    rank("subscriptions", docs, (ranked) => { record('subs', ranked); console.log('subs'); parseSuccess(resolve);});
-                });
-            })).then(() => new Promise((resolve, reject) => {
-                db[appid].find({ id: {$type: "number"} }).sort({"history.0.views": -1}, (err, docs) => {
-                    err && console.log(err);
-                    rank("views", docs, (ranked) => { record('views', ranked); console.log('views'); parseSuccess(resolve);});
-                });
-            })).then(() => new Promise((resolve, reject) => {
-                db[appid].find({ id: {$type: "number"} }).sort({"history.0.comments": -1}, (err, docs) => {
-                    err && console.log(err);
-                    rank("comments", docs, (ranked) => { record('comments', ranked); console.log('comments'); parseSuccess(resolve);});
-                });
-            })).then(() => new Promise((resolve, reject) => {
-                db[appid].find({ id: {$type: "number"} }).sort({"history.0.unsubscribes": 1}, (err, docs) => {
-                    err && console.log(err);
-                    rank("unsubscribes", docs, (ranked) => { record('unsubs', ranked); console.log('unsubs'); parseSuccess(resolve);});
-                });
-            })).then(() => new Promise((resolve, reject) => {
-                db[appid].find({ id: {$type: "number"} }).sort({"history.0.favorites": -1}, (err, docs) => {
-                    err && console.log(err);
-                    rank("favorites", docs, (ranked) => { record('favs', ranked); console.log('favs'); parseSuccess(resolve);});
-                });
-            })).then(() => new Promise((resolve, reject) => {
-                app.set('Cache', new Cache(app, appid)); 
-                console.log('Cache loaded')
-                parseSuccess();
-            }));
-        }
-    }
+      }).then(this.BackfillRankings, err => console.error(err));
+    });
+  }
 
-    function parseSuccess(callback) {
-        --collectionCount || cb();
-        callback && callback();
-    }
+  trimVariablesFrom(data) {
+    ret = [];
+    for (var i = 0; i < data.length; i++) {
+      var unsubs = this.validateUnsubs(data[i].lifetime_subscriptions, data[i].subscriptions);
+      if (unsubs === false) {
+        collectionQueueLength--;
+        continue;
+      }
 
-    function rank(filter, docs, callback) {
-        var rank = 1;
-        var ranks = docs.length;
-        for (var i = 0; i < docs.length; i++) {
-            var doc = docs[i];
-            var l = i;
-            var prev;
-            var prevl;
-            if (i > 0) {
-                prev = docs[i-1];
-            }
-            doc.history[0].rank = rank++;
-            if (i > 0 && doc.history[0][filter] === prev.history[0][filter]) {
-                doc.history[0].rank = prev.history[0].rank;
-            }
-            db[appid].findAndModify({
-                query: { id: doc.id },
-                update: { 
-                    $set: { 
-                        [`history.${0}.${filter}Rank`]: doc.history[0].rank,
-                        [`history.${0}.${filter}Percent`]: (doc.history[0].rank / docs.length * 100).toFixed(2)
-                    }
-                },
-            }, (e, doc) => { 
-                e && console.error(e);
-                decrementAndCB();
-            });
+      ret.push({
+        "id": parseInt(data[i].publishedfileid),
+        "title": data[i].title,
+        "comments": data[i].num_comments_public,
+        "subscriptions": data[i].subscriptions,
+        "favorited": data[i].favorited,
+        "views": data[i].views,
+        "unsubscribes": unsubs,
+        "preview_url": data[i].preview_url
+      });
+    }
+    return ret;
+  }
+
+  validateUnsubs(total, subs) {
+    //check for undefined subscriptions
+    if (typeof total !== "number" || isNaN(total)) {
+      return false;
+    }
+    // prevent / by 0 error
+    total = total || 1;
+    // calculate unsubs as a percentage of unsubscribers
+    let ret = parseFloat(((total - subs) / total * 100).toFixed(2));
+    if (ret === undefined) {
+      console.warn('undefined ret: ' + (total - subs) + ' / ' + total);
+    }
+    return ret;
+  }
+
+  async BackfillRankings() {
+    if (--this.collectionQueueLength == 0 || this.useDB) {
+      record('master', await this.db.find({
+        id: {
+          $type: "number"
         }
+      }));
 
-        function decrementAndCB() {
-            ranks--;
-            if (!ranks) {
-                callback(docs);
-            }
+      var docs = this.db.findAsCursor({
+          id: {
+            $type: "number"
+          }
+        })
+        .sort({
+          "history.0.subscriptions": -1
+        });
+      record('subs', await rank("subscriptions", docs));
+
+      docs = this.db.findAsCursor({
+        id: {
+          $type: "number"
         }
-    }
+      }).sort({
+        "history.0.views": -1
+      });
+      record('views', await rank("views", docs));
 
-    function record(dest, payload) {
-        app.set(dest + "DB", payload);
+      docs = this.db.findAsCursor({
+        id: {
+          $type: "number"
+        }
+      }).sort({
+        "history.0.comments": -1
+      });
+      record('comments', await rank("comments", docs));
+
+      docs = this.db.findAsCursor({
+        id: {
+          $type: "number"
+        }
+      }).sort({
+        "history.0.unsubscribes": 1
+      });
+      record('unsubs', await rank("unsubscribes", docs));
+
+      docs = this.db.findAsCursor({
+        id: {
+          $type: "number"
+        }
+      }).sort({
+        "history.0.favorites": -1
+      });
+      record('favs', await rank("favorites", docs));
+
+      app.set('Cache', new Cache(this.app, this.appid));
+      console.log('Cache loaded')
     }
+  }
+
+  async rank(filter, docs) {
+    var rank = 1;
+    for (var i = 0; i < docs.length; i++) {
+      var doc = docs[i];
+      var l = i;
+      var prev;
+      var prevl;
+      if (i > 0) {
+        prev = docs[i - 1];
+      }
+      doc.history[0].rank = rank++;
+      if (i > 0 && doc.history[0][filter] === prev.history[0][filter]) {
+        doc.history[0].rank = prev.history[0].rank;
+      }
+      await db.findAndModify({
+        query: {
+          id: doc.id
+        },
+        update: {
+          $set: {
+            [`history.${0}.${filter}Rank`]: doc.history[0].rank,
+            [`history.${0}.${filter}Percent`]: (doc.history[0].rank / docs.length * 100).toFixed(2)
+          }
+        },
+      });
+    }
+  }
+
+  record(dest, payload) {
+    console.log(dest);
+    app.set(dest + "DB", payload);
+  }
 }
 
 module.exports = Parser;
