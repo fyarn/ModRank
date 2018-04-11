@@ -16,7 +16,7 @@ class SteamAPIWorker {
     //get stored variables
     var devKey = process.env.DevKey;
     try {
-      devKey = JSON.parse(readFileSync('./node/Protected/keys.json')).DevKey;
+      devKey = JSON.parse(readFileSync('./Protected/keys.json')).DevKey;
     } catch (err) {
       console.warn(err);
     }
