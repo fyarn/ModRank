@@ -13,9 +13,9 @@ class SteamAPIWorker {
     this.db = mongoist(mongojs(app.get('DBConnection')))['Steam_App_' + steamid];
     this.results = [];
     this.totalItemCount = -1;
-    this.maxItemCount = 99;
+    //this.maxItemCount = 99;
     //get stored variables
-    var devKey = process.env.DevKey;
+    let devKey = process.env.DevKey;
     try {
       devKey = JSON.parse(readFileSync('/Protected/keys.json')).DevKey;
     } catch (err) {

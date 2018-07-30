@@ -8,14 +8,12 @@ router.get('/', async function (req, res) {
     const cache = app.get('Cache');
     const id = sanitizer.value(req.query.id, app.get('parserRegex'));
     let item = await cache.getItem(id);
-    if (item === null) {
-        var title = "ModRank - Not Found";
-        var message = "Item not found.";
+    if (!item) {
         // render the error page
-        return res.status(404).render('error', {
+        return res.render('error', {
             status: 404,
-            message: message,
-            title: title
+            message: "Item not found.",
+            title: "ModRank - Not Found"
         });
     }
 

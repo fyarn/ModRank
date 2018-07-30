@@ -1,38 +1,33 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express'),
+    router = express.Router();
 
 /* GET chart. */
 router.get('/', function (req, res) {
     const app = req.app;
-    var chartName = req.query.cat;
+    let chartName = req.query.cat;
     if (chartName === undefined) {
-        var title = "ModRank - Not Found";
-        var message = "Category not found.";
         // render the error page
-        res.status(404);
         return res.render('error', {
             status: 404,
-            message: message,
-            title: title
+            message: "Category not found.",
+            title: "ModRank - Not Found"
         });
-    }
-    else {
+    } else {
         chartName = chartName.toLowerCase();
     }
 
-    var from;
+    let from;
     if (req.query.from === undefined) {
         from = 1;
-    }
-    else {
+    } else {
         from = parseInt(req.query.from) || 1;
     }
 
+    let to;
     if (req.query.to === undefined || 
         parseInt(req.query.to) === null) {
         to = from + 100;
-    }
-    else {
+    } else {
         to = parseInt(req.query.to);
     }
 
@@ -40,43 +35,26 @@ router.get('/', function (req, res) {
         to = 10000000;
     }
 
-    var list = app.get('masterDB');
-    var chart;
-    var name = '';
+    let chart;
+    let name = '';
     if (chartName === 'subs' || chartName === 'subscriptions' || chartName === 'sub') {
         chart = app.get('subsDB');
         name = 'subscriptions';
-    }
-    else if (chartName === 'favs' || chartName === 'favorites' || chartName === 'fav') {
+    } else if (chartName === 'favs' || chartName === 'favorites' || chartName === 'fav') {
         chart = app.get('favsDB');
         name = 'favorites';
-    }
-    else if (chartName === 'comments' || chartName === 'comment') {
+    } else if (chartName === 'comments' || chartName === 'comment') {
         chart = app.get('commentsDB');
         name = 'comments';
-    }
-    else if (chartName === 'views' || chartName === 'view') {
+    } else if (chartName === 'views' || chartName === 'view') {
         chart = app.get('viewsDB');
         name = 'views';
-    }
-    else if (chartName === 'unsubs' || chartName === 'unsubscribe' || chartName === 'unsubscribes' || 
+    } else if (chartName === 'unsubs' || chartName === 'unsubscribe' || chartName === 'unsubscribes' || 
      chartName === 'unsubscriptions') {
         chart = app.get('unsubsDB');
         name = 'unsubscribes';
-    }
-    else {
+    } else {
         // render the error page
-        res.status(404);
-        return res.render('error', {
-            status: 404,
-            message: "Category not found",
-            title: "ModRank - Not Found"
-        });
-    }
-
-    if (chart === undefined) {
-        // render the error page
-        res.status(404);
         return res.render('error', {
             status: 404,
             message: "Category not found",

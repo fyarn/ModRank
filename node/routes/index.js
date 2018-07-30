@@ -1,11 +1,11 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express'),
+    router = express.Router();
 
 /* GET home page. */
 router.get('/', function (req, res) {
-    const app = req.app;
-    var list = app.get('masterDB');
-    var cache = app.get('Cache');
+    const app = req.app,
+        list = app.get('masterDB'),
+        cache = app.get('Cache');
     
     res.render("index", {
         title: 'ModRank',

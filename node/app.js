@@ -1,20 +1,18 @@
-var express = require('express');
-var path = require('path');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var ua = require('universal-analytics');
-var sanitizer = require('sanitize')();
-
-const app = express();
-var index = require('./routes/index');
-var item = require('./routes/item');
-var compare = require('./routes/compare');
-var chart = require('./routes/chart');
-
-var router = express.Router();
-var visitor = ua('UA-64719618-2');
-var SteamAPIWorker = require('./SteamAPIWorker');
+const express = require('express'),
+    path = require('path'),
+    logger = require('morgan'),
+    cookieParser = require('cookie-parser'),
+    bodyParser = require('body-parser'),
+    ua = require('universal-analytics'),
+    sanitizer = require('sanitize')(),
+    app = express(),
+    index = require('./routes/index'),
+    item = require('./routes/item'),
+    compare = require('./routes/compare'),
+    chart = require('./routes/chart'),
+    router = express.Router(),
+    visitor = ua('UA-64719618-2'),
+    SteamAPIWorker = require('./SteamAPIWorker');
 
 function SetupApp() {
     // view engine setup
@@ -64,18 +62,18 @@ function SetupApp() {
     });
 
     router.route('/items/:item_id').get(async function (req, res) {
-        let cache = app.get('Cache');
-        let item = await cache.getItem(sanitizer.value(req.params.item_id.substring(1), app.get('parserRegex')));
+        const cache = app.get('Cache');
+        const item = await cache.getItem(sanitizer.value(req.params.item_id.substring(1), app.get('parserRegex')));
         visitor.event("API", "Item Lookup", req.params.item_id).send();
         //item not found
         item === null ?
           res.status(404).send({ error: "404 item not found" }) :
-          res.json(doc);
+          res.json(item);
     });
 
     // catch 404 and forward to error handler
     app.use(function (req, res, next) {
-        var err = new Error('Not Found');
+        const err = new Error('Not Found');
         err.status = 404;
         next(err);
     });

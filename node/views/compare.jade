@@ -72,9 +72,9 @@ block content
                                 div.form-group
                                     label(for='id') Add a Mod ID: 
                                     each comp, idx in items
-                                        - var currID = "id" + (idx + 1)
+                                        - let currID = "id" + (idx + 1)
                                             input.form-control(name=currID type='text' value=comp.id hidden).text-center
-                                    - var newID = "id" + (index + 2);
+                                    - let newID = "id" + (index + 2);
                                         input#id.form-control(type='text' name=newID placeholder="Add an ID" required).text-center
                                 button.btn.btn-primary(type='submit') Search
     else

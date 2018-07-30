@@ -1,7 +1,7 @@
-﻿var mongojs = require('mongojs');
-var Cache = require('./Cache');
-let mongoist = require('mongoist');
-const CACHED_ITEM_COUNT = 6; // one for each ranking and the cache object
+﻿const mongojs = require('mongojs'),
+  Cache = require('./Cache'),
+  mongoist = require('mongoist'),
+  CACHED_ITEM_COUNT = 6; // one for each ranking and the cache object
 
 //parses and records lists based off given database
 class Parser {
@@ -67,7 +67,7 @@ class Parser {
 
   trimVariablesFrom(data) {
     const ret = [];
-    for (var i = 0; i < data.length; i++) {
+    for (let i = 0; i < data.length; i++) {
       const unsubs = this.validateUnsubs(data[i].lifetime_subscriptions, data[i].subscriptions);
       if (unsubs === false) {
         this.collectionQueueLength--;
@@ -165,23 +165,27 @@ class Parser {
   async rank(filter, docs) {
     let rank = 1;
     for (let i = 0; i < docs.length; i++) {
-      const doc = docs[i];
-      let prev;
-      if (i > 0) {
-        prev = docs[i - 1];
-      }
-      doc.history[0].rank = rank++;
+      const doc = docs[i],
+        prev    = i > 0 ? docs[i-1] : null;
+
+      let docRank = rank++;
       if (i > 0 && doc.history[0][filter] === prev.history[0][filter]) {
-        doc.history[0].rank = prev.history[0].rank;
+        docRank = prev.history[0].rank;
       }
+      const docPercent = (docRank / docs.length * 100).toFixed(2);
+
+      doc.history[0].rank = docRank;
+      doc.history[0][`${filter}Rank`] = docRank;
+      doc.history[0][`${filter}Percent`] = docPercent;
+
       await this.db.findAndModify({
         query: {
           id: doc.id
         },
         update: {
           $set: {
-            [`history.0.${filter}Rank`]: doc.history[0].rank,
-            [`history.0.${filter}Percent`]: (doc.history[0].rank / docs.length * 100).toFixed(2)
+            [`history.0.${filter}Rank`]: docRank,
+            [`history.0.${filter}Percent`]: docPercent
           }
         },
       });
