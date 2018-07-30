@@ -18,6 +18,7 @@ services:
     volumes:
       - ./ModRank:/Modrank
       - ./Logs:/Logs
+      - ./Protected:/Protected
     depends_on:
       - mongodb
     restart: always

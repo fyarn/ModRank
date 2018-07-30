@@ -3,6 +3,7 @@ var router = express.Router();
 
 /* GET chart. */
 router.get('/', function (req, res) {
+    const app = req.app;
     var chartName = req.query.cat;
     if (chartName === undefined) {
         var title = "ModRank - Not Found";

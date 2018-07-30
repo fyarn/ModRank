@@ -1,10 +1,10 @@
-﻿let readFileSync = require('fs').readFileSync;
-let console = require('console');
-let request = require("request");
-let Parser = require("./Parser");
-let mongojs = require("mongojs");
-let mongoist = require("mongoist");
-let updateIntervalInMS = 10800000 * 4;
+﻿const readFileSync = require('fs').readFileSync,
+  console = require('console'),
+  request = require("request"),
+  Parser = require("./Parser"),
+  mongojs = require("mongojs"),
+  mongoist = require("mongoist"),
+  updateIntervalInMS = 10800000 * 4;
 
 class SteamAPIWorker {
   constructor(app, steamid) {
@@ -13,10 +13,11 @@ class SteamAPIWorker {
     this.db = mongoist(mongojs(app.get('DBConnection')))['Steam_App_' + steamid];
     this.results = [];
     this.totalItemCount = -1;
+    this.maxItemCount = 99;
     //get stored variables
     var devKey = process.env.DevKey;
     try {
-      devKey = JSON.parse(readFileSync('./Protected/keys.json')).DevKey;
+      devKey = JSON.parse(readFileSync('/Protected/keys.json')).DevKey;
     } catch (err) {
       console.warn(err);
     }
@@ -31,6 +32,7 @@ class SteamAPIWorker {
   }
 
   async update(forced = false) {
+    let lastUpdateRecord;
     try {
       lastUpdateRecord = await this.db.findOne({
         id: "last_update"
@@ -45,7 +47,7 @@ class SteamAPIWorker {
     //if time to update (default 12 hours) or file doesn't exist
     if (this.forced ||
       this.lastUpdate == null ||
-      (!this.debug && new Date().getTime() - lastUpdate > updateIntervalInMS)) {
+      (!this.debug && new Date().getTime() - this.lastUpdate > updateIntervalInMS)) {
       let options = {
         url: 'https://api.steampowered.com/IPublishedFileService/QueryFiles/v1',
         method: 'GET',
@@ -78,8 +80,8 @@ class SteamAPIWorker {
       };
       this.requestUntillFilled(options);
       // if cache isn't already populated, condition on startup
-    } else if (app.get('Cache') === undefined) {
-      let docs = await db.find({
+    } else if (this.app.get('Cache') === undefined) {
+      let docs = await this.db.find({
         $id: {
           $type: "number"
         }
@@ -115,7 +117,8 @@ class SteamAPIWorker {
       console.log("Result Count: " + this.results.length);
 
       //if done
-      if (results.length >= totalItemCount) {
+      if (this.results.length >= this.totalItemCount ||
+        (this.maxItemCount && this.results.length >= this.maxItemCount)) {
         console.log("Finished with " + this.results.length + " results");
         return this.parseRequests(this.results);
       }

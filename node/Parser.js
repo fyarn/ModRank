@@ -10,6 +10,8 @@ class Parser {
     this.useDB = useDB;
     this.collectionQueueLength = 0;
     this.collectionCount = 0;
+    this.app = app;
+    this.appid = appid;
   }
 
   async consume(input) {
@@ -32,12 +34,12 @@ class Parser {
     this.collectionQueueLength = input.length;
     this.collectionCount = CACHED_ITEM_COUNT;
     if (this.useDB) {
-      return BackfillRankings();
+      return this.BackfillRankings();
     }
 
-    data = trimVariablesFrom(input);
+    const data = this.trimVariablesFrom(input);
     data.forEach(datum => {
-      db.findAndModify({
+      this.db.findAndModify({
         query: {
           id: datum.id
         },
@@ -59,16 +61,16 @@ class Parser {
             }
           }
         }
-      }).then(this.BackfillRankings, err => console.error(err));
+      }).then(_ => this.BackfillRankings(), err => console.error(err));
     });
   }
 
   trimVariablesFrom(data) {
-    ret = [];
+    const ret = [];
     for (var i = 0; i < data.length; i++) {
-      var unsubs = this.validateUnsubs(data[i].lifetime_subscriptions, data[i].subscriptions);
+      const unsubs = this.validateUnsubs(data[i].lifetime_subscriptions, data[i].subscriptions);
       if (unsubs === false) {
-        collectionQueueLength--;
+        this.collectionQueueLength--;
         continue;
       }
 
@@ -94,7 +96,7 @@ class Parser {
     // prevent / by 0 error
     total = total || 1;
     // calculate unsubs as a percentage of unsubscribers
-    let ret = parseFloat(((total - subs) / total * 100).toFixed(2));
+    const ret = parseFloat(((total - subs) / total * 100).toFixed(2));
     if (ret === undefined) {
       console.warn('undefined ret: ' + (total - subs) + ' / ' + total);
     }
@@ -103,70 +105,68 @@ class Parser {
 
   async BackfillRankings() {
     if (--this.collectionQueueLength == 0 || this.useDB) {
-      record('master', await this.db.find({
+      this.record('master', await this.db.find({
         id: {
           $type: "number"
         }
       }));
 
-      var docs = this.db.findAsCursor({
+      let docs = await this.db.findAsCursor({
           id: {
             $type: "number"
           }
         })
         .sort({
           "history.0.subscriptions": -1
-        });
-      record('subs', await rank("subscriptions", docs));
+        }).toArray();
+      this.record('subs', await this.rank("subscriptions", docs));
 
-      docs = this.db.findAsCursor({
+      docs = await this.db.findAsCursor({
         id: {
           $type: "number"
         }
       }).sort({
         "history.0.views": -1
-      });
-      record('views', await rank("views", docs));
+      }).toArray();
+      this.record('views', await this.rank("views", docs));
 
-      docs = this.db.findAsCursor({
+      docs = await this.db.findAsCursor({
         id: {
           $type: "number"
         }
       }).sort({
         "history.0.comments": -1
-      });
-      record('comments', await rank("comments", docs));
+      }).toArray();
+      this.record('comments', await this.rank("comments", docs));
 
-      docs = this.db.findAsCursor({
+      docs = await this.db.findAsCursor({
         id: {
           $type: "number"
         }
       }).sort({
         "history.0.unsubscribes": 1
-      });
-      record('unsubs', await rank("unsubscribes", docs));
+      }).toArray();
+      this.record('unsubs', await this.rank("unsubscribes", docs));
 
-      docs = this.db.findAsCursor({
+      docs = await this.db.findAsCursor({
         id: {
           $type: "number"
         }
       }).sort({
         "history.0.favorites": -1
-      });
-      record('favs', await rank("favorites", docs));
+      }).toArray();
+      this.record('favs', await this.rank("favorites", docs));
 
-      app.set('Cache', new Cache(this.app, this.appid));
-      console.log('Cache loaded')
+      this.app.set('Cache', new Cache(this.app, this.appid));
+      console.log('Cache loaded');
     }
   }
 
   async rank(filter, docs) {
-    var rank = 1;
-    for (var i = 0; i < docs.length; i++) {
-      var doc = docs[i];
-      var l = i;
-      var prev;
-      var prevl;
+    let rank = 1;
+    for (let i = 0; i < docs.length; i++) {
+      const doc = docs[i];
+      let prev;
       if (i > 0) {
         prev = docs[i - 1];
       }
@@ -174,23 +174,25 @@ class Parser {
       if (i > 0 && doc.history[0][filter] === prev.history[0][filter]) {
         doc.history[0].rank = prev.history[0].rank;
       }
-      await db.findAndModify({
+      await this.db.findAndModify({
         query: {
           id: doc.id
         },
         update: {
           $set: {
-            [`history.${0}.${filter}Rank`]: doc.history[0].rank,
-            [`history.${0}.${filter}Percent`]: (doc.history[0].rank / docs.length * 100).toFixed(2)
+            [`history.0.${filter}Rank`]: doc.history[0].rank,
+            [`history.0.${filter}Percent`]: (doc.history[0].rank / docs.length * 100).toFixed(2)
           }
         },
       });
     }
+
+    return docs;
   }
 
   record(dest, payload) {
     console.log(dest);
-    app.set(dest + "DB", payload);
+    this.app.set(dest + "DB", payload);
   }
 }
 

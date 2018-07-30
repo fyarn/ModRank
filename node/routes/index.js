@@ -3,9 +3,10 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function (req, res) {
+    const app = req.app;
     var list = app.get('masterDB');
     var cache = app.get('Cache');
-
+    
     res.render("index", {
         title: 'ModRank',
         llen: list.length ? list.length : 0,

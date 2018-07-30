@@ -11,7 +11,7 @@ class Cache {
     this.views = app.get('viewsDB');
     this.unsubscribes = app.get('unsubsDB');
     this.comments = app.get('commentsDB');
-    this.db = mongoist(mongojs(this.app.get('DBConnection')))[this.steamid];
+    this.db = mongoist(mongojs(this.app.get('DBConnection')))[`Steam_App_${this.steamid}`];
   }
 
   //all of these are 1 indexed (getMostSubsItem(1) returns the first best item)
@@ -46,14 +46,12 @@ class Cache {
         id = parseInt(id);
       }
     }
-
-    return await db.findOne({ id: id });
-  };
+    
+    return await this.db.findOne({ id: id });
+  }
 
   async getItems(ids) {
-    return ids.map(async function(id) {
-      return await this.getItem(id)
-    });
+    return await Promise.all(ids.map(async id => this.getItem(id)));
   }
 }
 

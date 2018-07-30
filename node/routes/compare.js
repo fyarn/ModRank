@@ -1,26 +1,25 @@
-﻿var express = require('express');
-var router = express.Router();
-var sanitizer = require('sanitize')();
+﻿const express = require('express');
+const router = express.Router();
+const sanitizer = require('sanitize')();
+
 
 /* GET compare listings. */
 router.get('/', async function (req, res) {
-    var cache = app.get('Cache');
-    var comps = [];
-    var redirect = false;
+    const app = req.app;
+    const cache = app.get('Cache');
+    const comps = [];
 
-    var i = 0;
+    let i = 0;
     // always true, breaks when params end
     while (++i) {
-        var id = req.param('id' + i);
+        const id = req.query[`id${i}`];
         if (id === undefined) {
             break;
         }
-        id = sanitizer.value(id, app.get('parserRegex'));
-        comps.push(id);
+        comps.push(sanitizer.value(id, app.get('parserRegex')));
     }
 
-    let items = await cache.getItems(comps);
-  
+    const items = await cache.getItems(comps);
     if (items.length !== comps.length || comps.includes('random') || comps.includes('rand')) {
         url = '/compare?';
         for (i = 1; i <= items.length; i++) {

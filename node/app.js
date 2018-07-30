@@ -3,10 +3,10 @@ var path = require('path');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var fs = require('fs');
 var ua = require('universal-analytics');
 var sanitizer = require('sanitize')();
 
+const app = express();
 var index = require('./routes/index');
 var item = require('./routes/item');
 var compare = require('./routes/compare');
@@ -14,12 +14,10 @@ var chart = require('./routes/chart');
 
 var router = express.Router();
 var visitor = ua('UA-64719618-2');
-var mongojs = require('mongojs');
 var SteamAPIWorker = require('./SteamAPIWorker');
 
 function SetupApp() {
     // view engine setup
-    app = express();
     //app.set('SUPPORTED_APPS', SUPPORTED_APPS);
     app.set('visitor', visitor);
     app.set('views', path.join(__dirname, 'views'));
@@ -90,6 +88,7 @@ function SetupApp() {
 
         // render the error page
         res.status(err.status || 500);
+        console.error(err);
         res.render('error');
     });
 
